@@ -27,7 +27,9 @@ public class ArcBaseServer {
             "#j#", "#k#", "#l#", "#m#",
             "#n#", "#o#", "#p#", "#q#", "#r#", "#s#",
             "#t#", "#u#", "#v#", "#w#", "#x#", "#y#",
-            "#z#", "#-#", "#=#", "#/#", "#.#", "#,#"};
+            "#z#",
+//            "#-#", "#=#", "#/#", "#.#", "#,#"
+    };
 
 
     public <T extends ArcBaseServer> void boost(Class<T> SonClass) {
@@ -131,14 +133,14 @@ public class ArcBaseServer {
         return head;
     }
 
-    private List unpkgBody(String buf) {
+    protected List unpkgBody(String buf) {
         System.out.println("buf- >" + buf);
         List args = new ArrayList();
         int init = 0;
         int start = buf.indexOf(size[init]);
         while (true) {
             String end_str = buf.substring(start, start + 3);
-            boolean isEnd = end_str == size[size.length - 1];
+            boolean isEnd = end_str.equals(size[size.length - 1]);
             if (isEnd) {
                 break;
             }
@@ -151,7 +153,7 @@ public class ArcBaseServer {
                 }
                 String sub_pkg = buf.substring(start, start + 6);
                 System.out.println("SUB_PKG->  " + sub_pkg);
-                boolean is_un_pkg = sub_pkg == size[init] + size[0];
+                boolean is_un_pkg = sub_pkg.equals(size[init] + size[0]);
                 // 判断是否为未分割的参数
                 if (is_un_pkg) {
                     String un_pkg = buf.substring(start + 3, buf.length() - 3);
@@ -163,9 +165,14 @@ public class ArcBaseServer {
                 }
                 break;
             } else {
-                boolean isObject = buf.substring(start, start + 6) == size[init] + size[0];
+                boolean isObject = buf.substring(start, start + 6).equals(size[init] + size[0]);
                 if (isObject) {
-                    int end = buf.indexOf(size[size.length - 1] + size[init + 1]);
+
+                    final String currEndStr = size[size.length - 1] + size[init + 1];
+                    final String breakEndStr = size[size.length - 1] + size[size.length - 1];
+                    int end = buf.indexOf(currEndStr);
+
+
                     String un_pkg = buf.substring(start + 3, end + 3);
                     List getargs = this.unpkgBody(un_pkg);
                     args.add(init, getargs);
@@ -188,4 +195,24 @@ public class ArcBaseServer {
     }
 
 
+}
+
+class Testclass{
+    public static void main(String[] args) {
+
+        String a = "#a#1#b##a#tom#b#jump#c#12#d#[1,2,3,4,5]#z##c#2#z#";
+        String c = "#a##a#tom#b#jump#c#12#d#[1,2,3,4,5]#z#" +
+                "#b#tom#c#jump#d##a#tom#b#jump#c#12#d#[1,2,3," +
+                "4,5]#z##e##a#tom#b#jump#c#12#d#[1,2,3,4,5]#e##a#t" +
+                "om#b#jump#c#12#d#[1,2,3,4,5]#z##z##f#12#g#[1,2,3,4," +
+                "5]#h##a#tom#b#jump#c#12#d#[1,2,3,4,5]#e##a#tom#b#jump" +
+                "#c#12#d#[1,2,3,4,5]#e##a#tom#b#jump#c#12#d#[1,2,3,4,5]#e##a" +
+                "#tom#b#jump#c#12#d#[1,2,3,4,5]#z##z##z##z##z#";
+
+        final ArcBaseServer arcBaseServer = new ArcBaseServer();
+        final List list = arcBaseServer.unpkgBody(c);
+        final List list1 = arcBaseServer.unpkgBody(a);
+        System.out.println(list);
+        System.out.println(list1);
+    }
 }

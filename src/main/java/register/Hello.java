@@ -15,8 +15,7 @@ public class Hello extends ArcInterFace {
         for (String s:args){
             System.out.println(s);
         }
-        final Object o = JSONObject.toJSONString(args);
-        ret success = ret.success(o);
+        ret success = ret.success(args);
         return success;
     }
 
