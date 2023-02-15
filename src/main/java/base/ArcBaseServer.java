@@ -6,7 +6,6 @@ import decorator.ArcServerApplication;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -28,14 +27,13 @@ public class ArcBaseServer {
             "#n#", "#o#", "#p#", "#q#", "#r#", "#s#",
             "#t#", "#u#", "#v#", "#w#", "#x#", "#y#",
             "#z#",
-//            "#-#", "#=#", "#/#", "#.#", "#,#"
     };
 
 
     public <T extends ArcBaseServer> void boost(Class<T> SonClass) {
         boolean hasAnnotation = SonClass.isAnnotationPresent(ArcServerApplication.class);
         if (hasAnnotation) {
-            ArcServerApplication testAnnotation = (ArcServerApplication) SonClass.getAnnotation(ArcServerApplication.class);
+            ArcServerApplication testAnnotation =  SonClass.getAnnotation(ArcServerApplication.class);
             // 拿到 Port
             Integer PORT = testAnnotation.port();
             this.setContainers();
@@ -50,7 +48,7 @@ public class ArcBaseServer {
     }
 
     private void setContainers(){
-        final int size = ArcInterFace.ClazzMap.size();
+        final int size = ArcBaseClass.ClazzMap.size();
         System.out.println("总共有"+size+"个代理类");
     }
 
@@ -72,8 +70,6 @@ public class ArcBaseServer {
                 StringBuffer stf = new StringBuffer();
 
                 String str = "";
-                System.out.println("接收到消息"+br);
-
                 while ((str = br.readLine()) != null) {
                     str = str.trim();
                     stf.append(str);
@@ -81,26 +77,19 @@ public class ArcBaseServer {
                     // 执行 结束 语句 并且 拆分相关字节流
                     if (str.endsWith("[#ENDL#]")) {
 
-                        String clazz = this.unpkgHead(0, stf);
+                        String interFace = this.unpkgHead(0, stf);
                         String method = this.unpkgHead(1, stf);
                         String timeout = this.unpkgHead(2, stf);
-                        ArcInterFace arcInterFace = ArcInterFace.ClazzMap.get(clazz);
 
-                        try {
-                            Class<? extends ArcInterFace> aClass = arcInterFace.getClass();
-                            Method getMethod = aClass.getMethod(method, String[].class);
-                            int index = stf.indexOf("[##]");
-                            String buf = stf.substring(index + 4, stf.length() - 8);
-                            List list = this.unpkgBody(buf);
-                            String[] args = new String[list.size()];
-                            Object[] array = list.toArray(args);
-                            ret data =  (ret) getMethod.invoke(arcInterFace, (Object) array);
-                            bw.write(data.toString());
-                            bw.flush();
-                            stf.delete(0,stf.length());
-                        } catch (NoSuchMethodException e) {
-                            e.printStackTrace();
-                        }
+                        ArcBaseClass ArcInstance = ArcBaseClass.ClazzMap.get(interFace);
+                        int index = stf.indexOf("[##]");
+                        String buf = stf.substring(index + 4, stf.length() - 8);
+                        List list = this.unpkgBody(buf);
+
+                        final ret data = ArcInstance.invokeMethod(interFace, method, list);
+                        bw.write(data.toString());
+                        bw.flush();
+                        stf.delete(0,stf.length());
                     }
                 }
 
@@ -134,7 +123,6 @@ public class ArcBaseServer {
     }
 
     protected List unpkgBody(String buf) {
-        System.out.println("buf- >" + buf);
         List args = new ArrayList();
         int init = 0;
         int start = buf.indexOf(size[init]);
@@ -145,14 +133,12 @@ public class ArcBaseServer {
                 break;
             }
             int next = buf.indexOf(size[init + 1], start);
-            System.out.println("next- >" + next);
 
             if (next == -1) {
                 if (start + size[init].length() == buf.length()) {
                     break;
                 }
                 String sub_pkg = buf.substring(start, start + 6);
-                System.out.println("SUB_PKG->  " + sub_pkg);
                 boolean is_un_pkg = sub_pkg.equals(size[init] + size[0]);
                 // 判断是否为未分割的参数
                 if (is_un_pkg) {
@@ -201,6 +187,7 @@ class Testclass{
     public static void main(String[] args) {
 
         String a = "#a#1#b##a#tom#b#jump#c#12#d#[1,2,3,4,5]#z##c#2#z#";
+        String b = "#a##a#tom#b#jump#c#12#d#[1,2,3,4,5]#z##b#End#z#";
         String c = "#a##a#tom#b#jump#c#12#d#[1,2,3,4,5]#z#" +
                 "#b#tom#c#jump#d##a#tom#b#jump#c#12#d#[1,2,3," +
                 "4,5]#z##e##a#tom#b#jump#c#12#d#[1,2,3,4,5]#e##a#t" +
@@ -210,9 +197,12 @@ class Testclass{
                 "#tom#b#jump#c#12#d#[1,2,3,4,5]#z##z##z##z##z#";
 
         final ArcBaseServer arcBaseServer = new ArcBaseServer();
-        final List list = arcBaseServer.unpkgBody(c);
-        final List list1 = arcBaseServer.unpkgBody(a);
-        System.out.println(list);
-        System.out.println(list1);
+//        final List list = arcBaseServer.unpkgBody(c);
+//        final List list1 = arcBaseServer.unpkgBody(a);
+        final List list2 = arcBaseServer.unpkgBody(b);
+//        System.out.println(list);
+//        System.out.println(list1);
+        System.out.println(list2);
+
     }
 }

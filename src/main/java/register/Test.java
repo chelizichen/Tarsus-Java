@@ -1,12 +1,14 @@
 package register;
 
 
-import base.ArcInterFace;
+import base.ArcBaseClass;
 import config.ret;
-import decorator.ProxyInterFace;
+import decorator.ArcInterFace;
+import decorator.ArcMethod;
 
-@ProxyInterFace(interFace = "TestInterFace")
-public class Test extends ArcInterFace {
+@ArcInterFace(interFace = "TestInterFace")
+public class Test extends ArcBaseClass {
+    @ArcMethod
     public ret run(String[] args){
         return ret.success("测试111");
     }
