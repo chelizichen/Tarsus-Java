@@ -1,7 +1,7 @@
 package service;
 
 import decorator.ioc.Collect;
-import dto.Job;
+import params.Job;
 
 @Collect
 public class HelloService {

@@ -45,10 +45,10 @@ public class ArcBaseClass {
     }
 
     /**
-     *  use ioc to split code
-     *  use single
      * @author chelizichen
      * @since 2023.2.16
+     *  use ioc to split code
+     *  use single
      */
     private void SetIocService() {
         final Field[] declaredFields = this.getClass().getDeclaredFields();
@@ -87,9 +87,12 @@ public class ArcBaseClass {
     }
 
     /**
-     * @description 用来设置公共参数类型
-     * @step1 加载阶段，将参数的类和类型别名加载到 ArcInterFace.ParamsMap 中
-     * @step2 运行阶段 通过注解中的 ApcParams.value 来获取对应类型 并加载
+     * @author leemulus
+     * @since 2023.2.16
+     * 用来设置公共参数类型
+     * 加载阶段，将参数的类和类型别名加载到 ArcInterFace.ParamsMap 中
+     * 运行阶段 通过注解中的 ApcParams.value 来获取对应类型 并加载
+     *
      */
     private void SetParams() {
         Method[] methods = this.getClass().getMethods();
@@ -108,7 +111,14 @@ public class ArcBaseClass {
                     if (annotationPresent) {
                         final ArcParams annotation = parameterType.getAnnotation(ArcParams.class);
                         final String value = annotation.value();
-                        ArcBaseClass.ParamsMap.put(value, parameterType);
+
+                        // 当没有设置参数时
+                        if(value.equals("")){
+                            final String simpleName = parameterType.getSimpleName();
+                            ArcBaseClass.ParamsMap.put(simpleName, parameterType);
+                        }else {
+                            ArcBaseClass.ParamsMap.put(value,parameterType);
+                        }
                     }
                 }
             }
@@ -116,8 +126,8 @@ public class ArcBaseClass {
     }
 
     /**
-     * @description 传过来的一个args 参数
-     * @setp1 遍历 args 将每个 args 进行类型转换 作为新的类型参数传递给 已存储的方法中实现调用
+     * 传过来的一个args 参数
+     * 遍历 args 将每个 args 进行类型转换 作为新的类型参数传递给 已存储的方法中实现调用
      */
     public ret invokeMethod(String interFace, String method, List<Object> args) {
         final Method getMethod = ArcBaseClass.MethodsMap.get(interFace + method);
@@ -131,13 +141,22 @@ public class ArcBaseClass {
             if (annotationPresent) {
                 final List<String> list = (List) args.get(index);
                 final ArcParams annotation = parameterType.getAnnotation(ArcParams.class);
-                final Class<?> aclass = ArcBaseClass.ParamsMap.get(annotation.value());
+
+                final String value = annotation.value();
+                Class<?> cacheClass = null;
+                if(value.equals("")){
+                    final String simpleName = parameterType.getSimpleName();
+                    cacheClass = ArcBaseClass.ParamsMap.get(simpleName);
+                }else {
+                    cacheClass = ArcBaseClass.ParamsMap.get(value);
+                }
+
                 try {
-                    final Class<?> aClass = Class.forName(aclass.getName());
+                    final Class<?> aClass = Class.forName(cacheClass.getName());
                     try {
                         final Constructor<?> constructor = aClass.getDeclaredConstructor(List.class);
                         try {
-                            System.out.println("List is ->" + list);
+//                            System.out.println("List is ->" + list);
                             final Object o = constructor.newInstance(list);
                             truthParams.add(index, o);
                         } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {

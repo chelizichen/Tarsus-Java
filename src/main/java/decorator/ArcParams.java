@@ -8,5 +8,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE,ElementType.PARAMETER,ElementType.CONSTRUCTOR})
 public @interface ArcParams {
-    String value();
+    String value() default "";
 }

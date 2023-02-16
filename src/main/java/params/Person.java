@@ -1,4 +1,4 @@
-package dto;
+package params;
 
 import base.ArcBaseParams;
 import decorator.ArcSort;
@@ -6,7 +6,7 @@ import decorator.ArcParams;
 
 import java.util.List;
 
-@ArcParams("Person")
+@ArcParams
 public class Person extends ArcBaseParams {
 
     @ArcSort("0")
