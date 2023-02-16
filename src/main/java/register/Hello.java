@@ -5,17 +5,23 @@ import config.ret;
 import decorator.ArcMethod;
 import decorator.ArcParams;
 import decorator.ArcInterFace;
+import decorator.ioc.Inject;
 import dto.Job;
 import dto.Person;
+import service.HelloService;
 
 import java.util.HashMap;
 
 @ArcInterFace(interFace = "HelloInterFace")
 public class Hello extends ArcBaseClass {
 
+    @Inject
+    HelloService helloService;
+
+
     @ArcMethod
     public ret TestRet(@ArcParams("Person") Person p1, @ArcParams("Job")Job j1){
-        System.out.println("Job Name is ->"+j1.JobName);
+        helloService.sayHello(j1);
         return ret.success(p1);
     }
 

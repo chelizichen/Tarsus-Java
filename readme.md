@@ -112,6 +112,42 @@ public class Person extends ArcBaseParams {
 }
 
 ````
+- 依赖注入模块(IOC)
+- @Decorator @Collect
+- @Decorator @Inject
+````java
+// usage >>
+// 注册服务
+
+@Collect
+public class HelloService {
+    public void sayHello(Job j1){
+        System.out.println("cout this jobName >> "+j1.JobName);
+    }
+}
+
+// usage >>
+// 注入服务
+@ArcInterFace(interFace = "HelloInterFace")
+public class Hello extends ArcBaseClass {
+
+    @Inject
+    HelloService helloService;
+
+    @ArcMethod
+    public ret TestRet(@ArcParams("Person") Person p1, @ArcParams("Job") Job j1) {
+        helloService.sayHello(j1);
+        return ret.success(p1);
+    }
+}
+
+````
+
+````cmd
+>>> cout this jobName >> 测试
+````
+
+
 - nodejs 调用
 - run command ->> node index.js
 ````js

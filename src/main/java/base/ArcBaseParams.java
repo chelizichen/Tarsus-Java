@@ -15,12 +15,12 @@ public class ArcBaseParams {
         // 拿到所有字段
         final Field[] declaredFields = this.getClass().getDeclaredFields();
 
-        for (int i = 0; i < declaredFields.length; i++) {
-            final boolean annotationPresent = declaredFields[i].isAnnotationPresent(ArcSort.class);
-            if(annotationPresent){
-                final ArcSort annotation = declaredFields[i].getAnnotation(ArcSort.class);
+        for (Field declaredField : declaredFields) {
+            final boolean annotationPresent = declaredField.isAnnotationPresent(ArcSort.class);
+            if (annotationPresent) {
+                final ArcSort annotation = declaredField.getAnnotation(ArcSort.class);
                 try {
-                    declaredFields[i].set(this,list.get(Integer.parseInt(annotation.value())));
+                    declaredField.set(this, list.get(Integer.parseInt(annotation.value())));
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }

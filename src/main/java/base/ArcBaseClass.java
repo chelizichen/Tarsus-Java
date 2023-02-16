@@ -4,8 +4,11 @@ import config.ret;
 import decorator.ArcInterFace;
 import decorator.ArcMethod;
 import decorator.ArcParams;
+import decorator.ioc.Collect;
+import decorator.ioc.Inject;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -18,9 +21,9 @@ import java.util.Map;
  */
 public class ArcBaseClass {
     protected static Map<String, ArcBaseClass> ClazzMap = new HashMap();
-    protected static Map<String, Class<?>> ParamsMap = new HashMap<String, Class<?>>();
-    protected static Map<String, Method> MethodsMap = new HashMap<String, Method>();
-
+    protected static Map<String, Class<?>> ParamsMap = new HashMap<>();
+    protected static Map<String, Method> MethodsMap = new HashMap<>();
+    protected static Map<String, Object> IocMap = new HashMap<>();
     public String InterFace;
 
     public ArcBaseClass() {
@@ -36,6 +39,51 @@ public class ArcBaseClass {
         this.InterFace = interFaceName_Or_ClazzName;
         // 单独设置参数
         this.SetParams();
+
+        // 单独设置IOC
+        this.SetIocService();
+    }
+
+    /**
+     *  use ioc to split code
+     *  use single
+     * @author chelizichen
+     * @since 2023.2.16
+     */
+    private void SetIocService() {
+        final Field[] declaredFields = this.getClass().getDeclaredFields();
+        for (Field field :
+                declaredFields) {
+            final boolean isInject = field.isAnnotationPresent(Inject.class);
+            final boolean isCollect = field.getType().isAnnotationPresent(Collect.class);
+            if(isInject && isCollect){
+                final String simpleName = field.getType().getSimpleName();
+                final Object instance = ArcBaseClass.IocMap.get(simpleName);
+                if(instance != null){
+                    field.setAccessible(true);
+                    try {
+                        field.set(this,instance);
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }else{
+                    try {
+                        final Constructor<?> constructor = field.getType().getDeclaredConstructor();
+                        try {
+                            final Object ServiceInstance = constructor.newInstance();
+                            field.setAccessible(true);
+                            field.set(this,ServiceInstance);
+                            final String serviceName = ServiceInstance.getClass().getSimpleName();
+                            ArcBaseClass.IocMap.put(serviceName,ServiceInstance);
+                        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                            e.printStackTrace();
+                        }
+                    } catch (NoSuchMethodException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -76,7 +124,7 @@ public class ArcBaseClass {
         final Class<?>[] parameterTypes = getMethod.getParameterTypes();
 
 
-        final ArrayList<Object> truthParams = new ArrayList<>(args.size()-1); // 实参
+        final ArrayList<Object> truthParams = new ArrayList<>(args.size() - 1); // 实参
         int index = 0;
         for (Class<?> parameterType : parameterTypes) {
             final boolean annotationPresent = parameterType.isAnnotationPresent(ArcParams.class);
@@ -89,7 +137,7 @@ public class ArcBaseClass {
                     try {
                         final Constructor<?> constructor = aClass.getDeclaredConstructor(List.class);
                         try {
-                            System.out.println("List is ->"+list);
+                            System.out.println("List is ->" + list);
                             final Object o = constructor.newInstance(list);
                             truthParams.add(index, o);
                         } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
@@ -116,17 +164,17 @@ public class ArcBaseClass {
         ret retVal = null;
         try {
             if (size == 0) {
-                retVal =  (ret)getMethod.invoke(arcBaseClass, truthParams.get(0));
+                retVal = (ret) getMethod.invoke(arcBaseClass, truthParams.get(0));
             } else if (size == 1) {
-                retVal =  (ret)getMethod.invoke(arcBaseClass, truthParams.get(0), truthParams.get(1));
+                retVal = (ret) getMethod.invoke(arcBaseClass, truthParams.get(0), truthParams.get(1));
             } else if (size == 2) {
-                retVal =  (ret)getMethod.invoke(arcBaseClass, truthParams.get(0), truthParams.get(1), truthParams.get(2));
+                retVal = (ret) getMethod.invoke(arcBaseClass, truthParams.get(0), truthParams.get(1), truthParams.get(2));
             } else if (size == 3) {
-                retVal =  (ret)getMethod.invoke(arcBaseClass, truthParams.get(0), truthParams.get(1), truthParams.get(2), truthParams.get(3));
+                retVal = (ret) getMethod.invoke(arcBaseClass, truthParams.get(0), truthParams.get(1), truthParams.get(2), truthParams.get(3));
             } else if (size == 4) {
-                retVal =  (ret)getMethod.invoke(arcBaseClass, truthParams.get(0), truthParams.get(1), truthParams.get(2), truthParams.get(3), truthParams.get(4));
+                retVal = (ret) getMethod.invoke(arcBaseClass, truthParams.get(0), truthParams.get(1), truthParams.get(2), truthParams.get(3), truthParams.get(4));
             } else if (size == 5) {
-                retVal =  (ret)getMethod.invoke(arcBaseClass, truthParams.get(0), truthParams.get(1), truthParams.get(2), truthParams.get(3), truthParams.get(4), truthParams.get(5));
+                retVal = (ret) getMethod.invoke(arcBaseClass, truthParams.get(0), truthParams.get(1), truthParams.get(2), truthParams.get(3), truthParams.get(4), truthParams.get(5));
             }
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
