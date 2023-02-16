@@ -1,26 +1,18 @@
 package dto;
 
+import base.ArcBaseParams;
+import decorator.ArcSort;
 import decorator.ArcParams;
 
 import java.util.List;
-import java.util.Map;
 
 @ArcParams("Job")
-public class Job {
+public class Job extends ArcBaseParams {
 
+    @ArcSort("0")
     public String JobName;
 
-    public Job() {
-
+    public Job(List list) {
+        super(list);
     }
-
-    public Job(String jobName){
-        this.JobName = jobName;
-    }
-
-    public Job(List<String> list){
-        final String jn = list.get(0);
-        this.JobName = jn;
-    }
-
 }

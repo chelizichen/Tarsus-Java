@@ -76,17 +76,7 @@ public class ArcBaseServer {
 
                     // 执行 结束 语句 并且 拆分相关字节流
                     if (str.endsWith("[#ENDL#]")) {
-
-                        String interFace = this.unpkgHead(0, stf);
-                        String method = this.unpkgHead(1, stf);
-                        String timeout = this.unpkgHead(2, stf);
-
-                        ArcBaseClass ArcInstance = ArcBaseClass.ClazzMap.get(interFace);
-                        int index = stf.indexOf("[##]");
-                        String buf = stf.substring(index + 4, stf.length() - 8);
-                        List list = this.unpkgBody(buf);
-
-                        final ret data = ArcInstance.invokeMethod(interFace, method, list);
+                        final ret data = this.beforeInvoke(stf);
                         bw.write(data.toString());
                         bw.flush();
                         stf.delete(0,stf.length());
@@ -101,6 +91,19 @@ public class ArcBaseServer {
         }
     }
 
+    public ret beforeInvoke(StringBuffer stf){
+        String interFace = this.unpkgHead(0, stf);
+        String method = this.unpkgHead(1, stf);
+        String timeout = this.unpkgHead(2, stf);
+
+        ArcBaseClass ArcInstance = ArcBaseClass.ClazzMap.get(interFace);
+        int index = stf.indexOf("[##]");
+        String buf = stf.substring(index + 4, stf.length() - 8);
+        List list = this.unpkgBody(buf);
+        final ret data = ArcInstance.invokeMethod(interFace, method, list);
+
+        return data;
+    }
 
     private String unpkgHead(int start, StringBuffer data) {
         int start_index = data.indexOf(ArcBaseServer.proto[start]);

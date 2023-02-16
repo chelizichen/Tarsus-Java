@@ -4,10 +4,8 @@ import config.ret;
 import decorator.ArcInterFace;
 import decorator.ArcMethod;
 import decorator.ArcParams;
-import utils.TypeUtil;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -58,7 +56,6 @@ public class ArcBaseClass {
                 final Class<?>[] parameterTypes = method.getParameterTypes();
 
                 for (Class<?> parameterType : parameterTypes) {
-                    System.out.println("具体简单类型" + parameterType.getSimpleName());
                     final boolean annotationPresent = parameterType.isAnnotationPresent(ArcParams.class);
                     if (annotationPresent) {
                         final ArcParams annotation = parameterType.getAnnotation(ArcParams.class);
@@ -78,14 +75,13 @@ public class ArcBaseClass {
         final Method getMethod = ArcBaseClass.MethodsMap.get(interFace + method);
         final Class<?>[] parameterTypes = getMethod.getParameterTypes();
 
-        System.out.println("size is " + args.size());
-        // 真实参数
-        final ArrayList<Object> truthParams = new ArrayList<Object>(args.size() - 1);
+
+        final ArrayList<Object> truthParams = new ArrayList<>(args.size()-1); // 实参
         int index = 0;
         for (Class<?> parameterType : parameterTypes) {
             final boolean annotationPresent = parameterType.isAnnotationPresent(ArcParams.class);
             if (annotationPresent) {
-                final List<String> list = (List<String>) args.get(index);
+                final List<String> list = (List) args.get(index);
                 final ArcParams annotation = parameterType.getAnnotation(ArcParams.class);
                 final Class<?> aclass = ArcBaseClass.ParamsMap.get(annotation.value());
                 try {
@@ -93,6 +89,7 @@ public class ArcBaseClass {
                     try {
                         final Constructor<?> constructor = aClass.getDeclaredConstructor(List.class);
                         try {
+                            System.out.println("List is ->"+list);
                             final Object o = constructor.newInstance(list);
                             truthParams.add(index, o);
                         } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
@@ -108,28 +105,32 @@ public class ArcBaseClass {
                 truthParams.add(index, args.get(index));
             }
             index++;
-        }
-        try {
-            final ArcBaseClass arcBaseClass = ArcBaseClass.ClazzMap.get(interFace);
 
-            final int size = truthParams.size() - 1;
+        }
+        final ArcBaseClass arcBaseClass = ArcBaseClass.ClazzMap.get(interFace);
+        final int size = truthParams.size() - 1;
+        return this.__invoke__(size, arcBaseClass, truthParams, getMethod);
+    }
+
+    private ret __invoke__(int size, ArcBaseClass arcBaseClass, List<Object> truthParams, Method getMethod) {
+        ret retVal = null;
+        try {
             if (size == 0) {
-                getMethod.invoke(arcBaseClass, truthParams.get(0));
+                retVal =  (ret)getMethod.invoke(arcBaseClass, truthParams.get(0));
             } else if (size == 1) {
-                getMethod.invoke(arcBaseClass, truthParams.get(0), truthParams.get(1));
+                retVal =  (ret)getMethod.invoke(arcBaseClass, truthParams.get(0), truthParams.get(1));
             } else if (size == 2) {
-                getMethod.invoke(arcBaseClass, truthParams.get(0), truthParams.get(1), truthParams.get(2));
+                retVal =  (ret)getMethod.invoke(arcBaseClass, truthParams.get(0), truthParams.get(1), truthParams.get(2));
             } else if (size == 3) {
-                getMethod.invoke(arcBaseClass, truthParams.get(0), truthParams.get(1), truthParams.get(2), truthParams.get(3));
+                retVal =  (ret)getMethod.invoke(arcBaseClass, truthParams.get(0), truthParams.get(1), truthParams.get(2), truthParams.get(3));
             } else if (size == 4) {
-                getMethod.invoke(arcBaseClass, truthParams.get(0), truthParams.get(1), truthParams.get(2), truthParams.get(3), truthParams.get(4));
+                retVal =  (ret)getMethod.invoke(arcBaseClass, truthParams.get(0), truthParams.get(1), truthParams.get(2), truthParams.get(3), truthParams.get(4));
             } else if (size == 5) {
-                getMethod.invoke(arcBaseClass, truthParams.get(0), truthParams.get(1), truthParams.get(2), truthParams.get(3), truthParams.get(4), truthParams.get(5));
+                retVal =  (ret)getMethod.invoke(arcBaseClass, truthParams.get(0), truthParams.get(1), truthParams.get(2), truthParams.get(3), truthParams.get(4), truthParams.get(5));
             }
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
-
-        return ret.success("111");
+        return retVal;
     }
 }

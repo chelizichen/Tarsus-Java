@@ -14,32 +14,16 @@ import java.util.HashMap;
 public class Hello extends ArcBaseClass {
 
     @ArcMethod
-    public ret hello(String[] args){
-        System.out.println(args);
-        for (String s:args){
-            System.out.println(s);
-        }
-        ret success = ret.success(args);
-        return success;
-    }
-
-    @ArcMethod
     public ret TestRet(@ArcParams("Person") Person p1, @ArcParams("Job")Job j1){
-        System.out.println("函数内打印"+p1.sex);
-        System.out.println("函数内打印"+p1.name);
-        System.out.println("函数内打印"+p1.address);
-        System.out.println("函数内打印"+p1.age);
-        System.out.println("函数内打印"+j1.JobName);
-        return ret.success("1111");
+        System.out.println("Job Name is ->"+j1.JobName);
+        return ret.success(p1);
     }
 
     @ArcMethod
-    public ret say(String[] args){
-
+    public ret say(String args1,String args2){
         HashMap<String, String> hmp = new HashMap();
-        hmp.put("a","1");
-        hmp.put("b","2");
-        hmp.put("c","3");
+        hmp.put("d",args1);
+        hmp.put("f",args2);
         ret success = ret.success(hmp);
         return success;
     }
