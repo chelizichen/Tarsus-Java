@@ -10,6 +10,7 @@ import java.util.List;
  */
 public class ArcBaseParams {
 
+//    public AdoBaseOrm adoBaseOrm =  new AdoBaseOrm(this.getClass());
 
     public ArcBaseParams(List list){
         // 拿到所有字段

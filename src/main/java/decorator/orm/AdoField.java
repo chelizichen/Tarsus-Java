@@ -6,6 +6,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE,ElementType.FIELD})
-public @interface ArcField {
+public @interface AdoField {
     String value() default "";
 }

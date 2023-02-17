@@ -7,6 +7,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE,ElementType.CONSTRUCTOR})
-public @interface ArcEntity {
+public @interface AdoEntity {
 
 }
