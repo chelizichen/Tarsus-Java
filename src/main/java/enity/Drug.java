@@ -1,32 +1,41 @@
 package enity;
 
 import base.AdoBaseOrm;
-import decorator.ioc.Collect;
-import decorator.orm.AdoEntity;
-import decorator.orm.AdoField;
+import decorator.ArcParams;
+import decorator.orm.Entity;
+import decorator.orm.Column;
 import decorator.orm.Key;
-
+import lombok.NoArgsConstructor;
 import java.util.List;
 
-@AdoEntity
-@Collect
+@Entity
+@ArcParams
+@NoArgsConstructor
 public class Drug extends AdoBaseOrm {
 
-    @AdoField
+    public Drug(List<String> list) {
+        this.id = list.get(0);
+        this.DrName = list.get(1);
+        this.DrPrice = list.get(2);
+        this.DrRemark = list.get(3);
+        this.DrCode = list.get(4);
+    }
+
+    @Column
     @Key
-    String id;
+    public String id;
 
-    @AdoField("dr_name")
-    String DrName;
+    @Column("dr_name")
+    public String DrName;
 
-    @AdoField("dr_price")
-    String DrPrice;
+    @Column("dr_price")
+    public String DrPrice;
 
-    @AdoField("dr_remark")
-    String DrRemark;
+    @Column("dr_remark")
+    public String DrRemark;
 
-    @AdoField("dr_code")
-    String DrCode;
+    @Column("dr_code")
+    public String DrCode;
 
     @Override
     public String toString() {
@@ -40,28 +49,5 @@ public class Drug extends AdoBaseOrm {
     }
 }
 
-class TestClass{
 
-    public static void main(String[] args) {
-        TestGetOneBy();
-//        TestQuery();
-    }
-
-    static void TestQuery(){
-        List<Drug> query = AdoBaseOrm.query("select * from drug", Drug.class);
-        final List<Drug> query1 = AdoBaseOrm.query("select * from drug where id = ?", new String[]{"1"}, Drug.class);
-
-        for (Drug drug : query) {
-            System.out.println(drug.toString());
-        }
-        for (Drug drug : query1) {
-            System.out.println(drug.toString());
-        }
-    }
-
-    static void TestGetOneBy(){
-        final Drug oneBy = new Drug().getOneBy("1");
-        System.out.println(oneBy);
-    }
-}
 

@@ -6,8 +6,8 @@ import decorator.ArcMethod;
 import decorator.ArcParams;
 import decorator.ArcInterFace;
 import decorator.ioc.Inject;
-import params.Job;
-import params.Person;
+import enity.Drug;
+import enity.Job;
 import service.HelloService;
 
 import java.util.HashMap;
@@ -20,9 +20,9 @@ public class Hello extends ArcBaseClass {
 
 
     @ArcMethod
-    public ret TestRet(@ArcParams Person p1, @ArcParams Job j1){
+    public ret TestRet(@ArcParams Drug d1, @ArcParams Job j1){
         helloService.sayHello(j1);
-        return ret.success(p1);
+        return ret.success(d1);
     }
 
     @ArcMethod

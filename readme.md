@@ -10,6 +10,7 @@
 
 ## Doc
 
+### BaseClass
 - Class ArcBaseServer
 - @Decorator ArcServerApplication (port:int)
 - 启动Java服务所需的基类和注解
@@ -66,8 +67,6 @@ public @interface ArcMethod {
 
 - @Decorator @ArcParams ( ParamsName:String )
 - 将特殊的类型注册，在序列化的时候可以自动创建类
-- @Decorator @ArcSort (String:sortVal)
-- 必须设置为Integer.parseInt后为 int 类型的参数
 - 在反序列化创建类的时候自动为成员变量赋值
 
 ````java
@@ -90,28 +89,24 @@ public class Hello extends ArcBaseClass {
     }
 }
 
-// Person.java
-// 在反序列化时，根据 @ArcSort 给定的参数依次为各个成员变量赋值
-// 比如 ["aaa","bbb","ccc","ddd"]
-// 则反序列化生成类之后 name = aaa , age = bbb , address = ccc,sex =ddd
-@ArcParams("Person")
-public class Person extends ArcBaseParams {
-
-    @ArcSort("0")
-    public String name;
-    @ArcSort("1")
-    public String age;
-    @ArcSort("2")
-    public String address;
-    @ArcSort("3")
-    public String sex;
-
-    public Person(List list) {
-        super(list);
+/**
+ * @since 2023.2.17
+ * 废弃 ArcSort 注解
+ * 需要手动调用 构造函数(List<String> list) 来为成员变量赋值
+ */
+@ArcParams
+public class Job {
+    public String JobName;
+    public String JobCompany;
+    public Job(List<String> list) {
+        this.JobName = list.get(0);
+        this.JobCompany = list.get(1);
     }
 }
 
+
 ````
+### IOC
 - 依赖注入模块(IOC)
 - @Decorator @Collect
 - @Decorator @Inject
@@ -147,6 +142,56 @@ public class Hello extends ArcBaseClass {
 >>> cout this jobName >> 测试
 ````
 
+
+### ORM
+- @Decorator @Column(String db_field_name)
+- @Decorator @Entity(String TableName)
+- @Decorator @Key
+- @Decorator @Keyword
+- BaseClass AdoBaseOrm 
+
+**必须使用手动声明无参构造，可用 Lombok 的 @NoArgsConstructor**
+ 
+**使用 @Entity 注解的类也会被收集依赖，可使用 @Inject 实现依赖注入**
+
+目前已支持的方法
+- getList(String page, String size)
+- getList(String Keyword, String page, String size)
+- getOneBy(String value)
+
+````java
+@Entity
+@NoArgsConstructor
+public class Drug extends AdoBaseOrm {
+    @Column
+    @Key
+    public String id;
+
+    @Column("dr_name")
+    public String DrName;
+
+    @Column("dr_price")
+    public String DrPrice;
+
+    @Column("dr_remark")
+    public String DrRemark;
+
+    @Column("dr_code")
+    public String DrCode;
+
+    @Override
+    public String toString() {
+        return "Drug{" +
+                "id='" + id + '\'' +
+                ", dr_name='" + DrName + '\'' +
+                ", dr_price='" + DrPrice + '\'' +
+                ", dr_remark='" + DrRemark + '\'' +
+                ", dr_code='" + DrCode + '\'' +
+                '}';
+    }
+}
+
+````
 
 - nodejs 调用
 - run command ->> node index.js

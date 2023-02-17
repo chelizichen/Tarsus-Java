@@ -6,6 +6,7 @@ import decorator.ArcMethod;
 import decorator.ArcParams;
 import decorator.ioc.Collect;
 import decorator.ioc.Inject;
+import decorator.orm.Entity;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -17,13 +18,16 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @description 所有Rpc控制类基于此类
+ * @author leemulus
+ * @since 2023.2.16
+ * 所有Rpc控制类基于此类
  */
 public class ArcBaseClass {
     protected static Map<String, ArcBaseClass> ClazzMap = new HashMap();
     protected static Map<String, Class<?>> ParamsMap = new HashMap<>();
     protected static Map<String, Method> MethodsMap = new HashMap<>();
     protected static Map<String, Object> IocMap = new HashMap<>();
+
     public String InterFace;
 
     public ArcBaseClass() {
@@ -47,8 +51,8 @@ public class ArcBaseClass {
     /**
      * @author chelizichen
      * @since 2023.2.16
-     *  use ioc to split code
-     *  use single
+     * use ioc to split code
+     * use single
      */
     private void SetIocService() {
         final Field[] declaredFields = this.getClass().getDeclaredFields();
@@ -56,25 +60,26 @@ public class ArcBaseClass {
                 declaredFields) {
             final boolean isInject = field.isAnnotationPresent(Inject.class);
             final boolean isCollect = field.getType().isAnnotationPresent(Collect.class);
-            if(isInject && isCollect){
+            final boolean isAdoEntity = field.getType().isAnnotationPresent(Entity.class);
+            if (isInject && (isCollect || isAdoEntity)) {
                 final String simpleName = field.getType().getSimpleName();
                 final Object instance = ArcBaseClass.IocMap.get(simpleName);
-                if(instance != null){
+                if (instance != null) {
                     field.setAccessible(true);
                     try {
-                        field.set(this,instance);
+                        field.set(this, instance);
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     }
-                }else{
+                } else {
                     try {
                         final Constructor<?> constructor = field.getType().getDeclaredConstructor();
                         try {
                             final Object ServiceInstance = constructor.newInstance();
                             field.setAccessible(true);
-                            field.set(this,ServiceInstance);
+                            field.set(this, ServiceInstance);
                             final String serviceName = ServiceInstance.getClass().getSimpleName();
-                            ArcBaseClass.IocMap.put(serviceName,ServiceInstance);
+                            ArcBaseClass.IocMap.put(serviceName, ServiceInstance);
                         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                             e.printStackTrace();
                         }
@@ -92,7 +97,6 @@ public class ArcBaseClass {
      * 用来设置公共参数类型
      * 加载阶段，将参数的类和类型别名加载到 ArcInterFace.ParamsMap 中
      * 运行阶段 通过注解中的 ApcParams.value 来获取对应类型 并加载
-     *
      */
     private void SetParams() {
         Method[] methods = this.getClass().getMethods();
@@ -113,11 +117,11 @@ public class ArcBaseClass {
                         final String value = annotation.value();
 
                         // 当没有设置参数时
-                        if(value.equals("")){
+                        if (value.equals("")) {
                             final String simpleName = parameterType.getSimpleName();
                             ArcBaseClass.ParamsMap.put(simpleName, parameterType);
-                        }else {
-                            ArcBaseClass.ParamsMap.put(value,parameterType);
+                        } else {
+                            ArcBaseClass.ParamsMap.put(value, parameterType);
                         }
                     }
                 }
@@ -144,10 +148,10 @@ public class ArcBaseClass {
 
                 final String value = annotation.value();
                 Class<?> cacheClass = null;
-                if(value.equals("")){
+                if (value.equals("")) {
                     final String simpleName = parameterType.getSimpleName();
                     cacheClass = ArcBaseClass.ParamsMap.get(simpleName);
-                }else {
+                } else {
                     cacheClass = ArcBaseClass.ParamsMap.get(value);
                 }
 
