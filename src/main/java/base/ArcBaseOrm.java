@@ -1,5 +1,6 @@
 package base;
 
+import com.alibaba.druid.sql.SQLUtils;
 import decorator.orm.Entity;
 import decorator.orm.Column;
 import decorator.orm.Key;
@@ -20,7 +21,7 @@ import java.util.*;
  * @since 2023.2.17
  * ORM父类 所有 Entity 实体类基于此父类
  */
-public class AdoBaseOrm {
+public class ArcBaseOrm {
 
     protected static HashMap<String, HashMap<String, String>> DBFieldsMap = new HashMap<>();
 
@@ -28,7 +29,7 @@ public class AdoBaseOrm {
     public String KeyName;
     public String KeywordName;
 
-    public AdoBaseOrm() {
+    public ArcBaseOrm() {
         this.EntityName = this.getClass().getSimpleName();
         final Field[] declaredFields = this.getClass().getDeclaredFields();
         for (Field declaredField : declaredFields) {
@@ -36,12 +37,21 @@ public class AdoBaseOrm {
             final boolean isKeyword = declaredField.isAnnotationPresent(Keyword.class);
             // 找到 实体类的Key
             if (isKey) {
-                this.KeyName = declaredField.getName();
+                String value = declaredField.getAnnotation(Column.class).value();
+                if(value.equals("")){
+                    this.KeyName = declaredField.getName();
+                }else {
+                    this.KeyName = value;
+                }
             }
-
             // 找到 实体类的Value
             if (isKeyword) {
-                this.KeywordName = declaredField.getName();
+                String value = declaredField.getAnnotation(Column.class).value();
+                if(value.equals("")){
+                    this.KeywordName = declaredField.getName();
+                }else {
+                    this.KeywordName = value;
+                }
             }
         }
     }
@@ -51,11 +61,11 @@ public class AdoBaseOrm {
      * 需要在定义数据库实体类时使用 @Key 注解代表是唯一id
      *
      * @param val
-     * @return null || Entity extends AdoBaseOrm
+     * @return null || Entity extends ArcBaseOrm
      */
-    public <T extends AdoBaseOrm> T getOneBy(String val) {
+    public <T extends ArcBaseOrm> T getOneBy(String val) {
         final String[] strings = new String[]{val};
-        final List<? extends AdoBaseOrm> query = AdoBaseOrm.query(
+        final List<? extends ArcBaseOrm> query = ArcBaseOrm.query(
                 "select * from " + this.EntityName + " where " + this.KeyName + " = ? ",
                 strings,
                 this.getClass()
@@ -67,24 +77,44 @@ public class AdoBaseOrm {
         }
     }
 
-    public  <T extends AdoBaseOrm>List<T> getList(String page, String size) {
+    public  <T extends ArcBaseOrm>List<T> getList(String page, String size) {
         String paginationSql = SqlUtil.getPagination(page,size);
-        final List<? extends AdoBaseOrm> query = AdoBaseOrm.query(
+        final List<? extends ArcBaseOrm> query = ArcBaseOrm.query(
                 "select * from " + this.EntityName + paginationSql,
                 this.getClass()
         );
         return (List<T>) query;
     }
 
+    public Integer getCountBy(String keyword){
+        int total= 0;
+        String newkeyword = SqlUtil.getMatchKeyword(keyword);
+        String[] args = new String[]{newkeyword};
+        ResultSet query = ArcBaseOrm.query(
+                "select COUNT(*) as total from " + this.EntityName
+                        + " where " + this.KeywordName
+                        + " like  ? ",
+                args
+        );
+        try {
+            while (query.next()){
+                total = Integer.parseInt(query.getString("total"));
+            }
+        }
+        catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return total;
+    }
 
-    public <T extends AdoBaseOrm> List<T> getList(String keyword, String page, String size) {
+
+    public <T extends ArcBaseOrm> List<T> getList(String keyword, String page, String size) {
 
         String paginationSql = SqlUtil.getPagination(page,size);
-
         // 默认全匹配
         keyword = "%" + keyword + "%";
-        final String[] strings = new String[]{keyword,};
-        final List<? extends AdoBaseOrm> query = AdoBaseOrm.query(
+        final String[] strings = new String[]{keyword};
+        final List<? extends ArcBaseOrm> query = ArcBaseOrm.query(
                 "select * from " + this.EntityName +
                         " where " + this.KeywordName +
                         " like ? " + paginationSql,
@@ -92,6 +122,40 @@ public class AdoBaseOrm {
                 this.getClass()
         );
         return (List<T>) query;
+    }
+
+
+    public static<T> ResultSet query(String sql){
+        Connection connect = null;
+        ResultSet resultSet = null;
+
+        try {
+            connect = DBUtil.getConnect();
+            PreparedStatement preparedStatement = connect.prepareStatement(sql);
+            System.out.println(preparedStatement);
+            resultSet = preparedStatement.executeQuery();
+            return resultSet;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultSet;
+    }
+
+    public static<T> ResultSet query(String sql,String[] args){
+        ResultSet resultSet = null;
+        try {
+            Connection connect = DBUtil.getConnect();
+            PreparedStatement preparedStatement = connect.prepareStatement(sql);
+            for (int i = 0; i < args.length; i++) {
+                preparedStatement.setString(i+1,args[i]);
+            }
+            System.out.println(preparedStatement);
+            resultSet = preparedStatement.executeQuery();
+            return resultSet;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resultSet;
     }
 
     public static <T> List<T> query(String sql, Class<T> EntityParams) {
@@ -109,6 +173,7 @@ public class AdoBaseOrm {
         try {
             Connection connect = DBUtil.getConnect();
             PreparedStatement preparedStatement = connect.prepareStatement(sql);
+            System.out.println(preparedStatement);
             for (int i = 0; i < args.length; i++) {
                 preparedStatement.setString(i + 1, args[i]);
             }
@@ -143,9 +208,9 @@ public class AdoBaseOrm {
 
         // 实体 - 数据库 映射Map
         HashMap<String, String> ArcFieldMap = new HashMap<>();
-        final boolean hasDbFieldsMap = AdoBaseOrm.DBFieldsMap.containsKey(EntityParams.getSimpleName());
+        final boolean hasDbFieldsMap = ArcBaseOrm.DBFieldsMap.containsKey(EntityParams.getSimpleName());
         if (hasDbFieldsMap) {
-            ArcFieldMap = AdoBaseOrm.DBFieldsMap.get(EntityParams.getSimpleName());
+            ArcFieldMap = ArcBaseOrm.DBFieldsMap.get(EntityParams.getSimpleName());
         } else {
             boolean isEntity = EntityParams.isAnnotationPresent(Entity.class);
             if (isEntity) {
@@ -172,10 +237,10 @@ public class AdoBaseOrm {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            T t = null;
+            T OrmMapperClass = null;
             try {
                 // 创建新的实例
-                t = EntityParams.getConstructor().newInstance();
+                OrmMapperClass = EntityParams.getConstructor().newInstance();
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                 e.printStackTrace();
             }
@@ -192,12 +257,12 @@ public class AdoBaseOrm {
                 try {
                     declaredField = EntityParams.getDeclaredField(fieldStr.getName());
                     declaredField.setAccessible(true);
-                    declaredField.set(t, val);
+                    declaredField.set(OrmMapperClass, val);
                 } catch (NoSuchFieldException | IllegalAccessException e) {
                     e.printStackTrace();
                 }
             }
-            T_List.add(t);
+            T_List.add(OrmMapperClass);
         }
         return T_List;
     }

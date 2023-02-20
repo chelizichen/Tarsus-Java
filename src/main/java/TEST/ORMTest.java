@@ -1,6 +1,6 @@
 package TEST;
 
-import base.AdoBaseOrm;
+import base.ArcBaseOrm;
 import enity.Drug;
 import utils.SqlUtil;
 
@@ -11,13 +11,14 @@ public class ORMTest {
     public static void main(String[] args) {
 //        TestGetOneBy();
 //        TestQuery();
-        TestGetList();
+//        TestGetList();
 //        TestSqlGetBody();
+        TestCount();
     }
 
     static void TestQuery() {
-        List<Drug> query = AdoBaseOrm.query("select * from drug", Drug.class);
-        final List<Drug> query1 = AdoBaseOrm.query("select * from drug where id = ?", new String[]{"1"}, Drug.class);
+        List<Drug> query = ArcBaseOrm.query("select * from drug", Drug.class);
+        final List<Drug> query1 = ArcBaseOrm.query("select * from drug where id = ?", new String[]{"1"}, Drug.class);
 
         for (Drug drug : query) {
             System.out.println(drug.toString());
@@ -44,4 +45,10 @@ public class ORMTest {
         final String testTable = SqlUtil.getBody("TestTable",strings);
         System.out.println(testTable);
     }
+
+    static void TestCount(){
+        Integer a = new Drug().getCountBy( "1");
+        System.out.println(a);
+    }
+
 }

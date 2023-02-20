@@ -1,17 +1,16 @@
 package enity;
 
-import base.AdoBaseOrm;
-import decorator.ArcParams;
+import base.ArcBaseOrm;
 import decorator.orm.Entity;
 import decorator.orm.Column;
 import decorator.orm.Key;
+import decorator.orm.Keyword;
 import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Entity
-@ArcParams
 @NoArgsConstructor
-public class Drug extends AdoBaseOrm {
+public class Drug extends ArcBaseOrm {
 
     public Drug(List<String> list) {
         this.id = list.get(0);
@@ -25,6 +24,7 @@ public class Drug extends AdoBaseOrm {
     @Key
     public String id;
 
+    @Keyword
     @Column("dr_name")
     public String DrName;
 

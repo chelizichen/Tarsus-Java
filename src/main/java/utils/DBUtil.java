@@ -1,6 +1,6 @@
 package utils;
 
-import base.AdoBaseOrm;
+import base.ArcBaseOrm;
 import com.alibaba.druid.pool.DruidDataSource;
 import enity.Drug;
 

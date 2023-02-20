@@ -15,7 +15,7 @@ public class SqlUtil {
     }
 
     public static String getMatchKeyword(String keyword){
-        return " %"+keyword+"% ";
+        return "%"+keyword+"%";
     }
 
     public static String getBody(String TableName){
