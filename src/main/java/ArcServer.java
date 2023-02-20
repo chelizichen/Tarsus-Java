@@ -1,3 +1,4 @@
+import base.ArcBaseClass;
 import base.ArcBaseServer;
 import config.ret;
 import decorator.ArcServerApplication;
@@ -8,8 +9,7 @@ import register.Test;
 public class ArcServer extends ArcBaseServer {
     public static void main(String[] args) {
         ArcServer c = new ArcServer();
-        final Hello hello = new Hello();
-        final Test test = new Test();
+        c.loadInterFace(new Class[]{Hello.class,Test.class});
         c.boost(ArcServer.class);
 
     }

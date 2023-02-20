@@ -59,8 +59,10 @@ public class ArcBaseClass {
         for (Field field :
                 declaredFields) {
             final boolean isInject = field.isAnnotationPresent(Inject.class);
+            // 判断是否为 Dependency
             final boolean isCollect = field.getType().isAnnotationPresent(Collect.class);
             final boolean isAdoEntity = field.getType().isAnnotationPresent(Entity.class);
+
             if (isInject && (isCollect || isAdoEntity)) {
                 final String simpleName = field.getType().getSimpleName();
                 final Object instance = ArcBaseClass.IocMap.get(simpleName);

@@ -48,7 +48,6 @@ public class ArcBaseServer {
             ArcServerApplication testAnnotation =  SonClass.getAnnotation(ArcServerApplication.class);
             // 拿到 Port
             Integer PORT = testAnnotation.port();
-            this.setContainers();
             try {
                 this.createServer(PORT);
             } catch (IllegalAccessException | InvocationTargetException e) {
@@ -57,7 +56,15 @@ public class ArcBaseServer {
         }
     }
 
-    private void setContainers(){
+    protected void loadInterFace(Class<ArcBaseClass>[] classes){
+        System.out.println(classes.length);
+        for (Class<ArcBaseClass> aClass : classes) {
+            try {
+                aClass.getConstructor().newInstance();
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+        }
         final int size = ArcBaseClass.ClazzMap.size();
         System.out.println("总共有"+size+"个代理类");
     }

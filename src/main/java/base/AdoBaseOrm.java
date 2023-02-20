@@ -168,12 +168,13 @@ public class AdoBaseOrm {
 
         while (true) {
             try {
-                if (!resultSet.next()) break;
+                if (!Objects.requireNonNull(resultSet).next()) break;
             } catch (SQLException e) {
                 e.printStackTrace();
             }
             T t = null;
             try {
+                // 创建新的实例
                 t = EntityParams.getConstructor().newInstance();
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                 e.printStackTrace();
