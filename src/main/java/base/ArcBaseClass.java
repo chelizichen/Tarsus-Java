@@ -6,6 +6,8 @@ import decorator.ArcMethod;
 import decorator.ArcParams;
 import decorator.ioc.Collect;
 import decorator.ioc.Inject;
+import decorator.ioc.Mapper;
+import decorator.ioc.Service;
 import decorator.orm.Entity;
 
 import java.lang.reflect.Constructor;
@@ -62,8 +64,10 @@ public class ArcBaseClass {
             // 判断是否为 Dependency
             final boolean isCollect = field.getType().isAnnotationPresent(Collect.class);
             final boolean isAdoEntity = field.getType().isAnnotationPresent(Entity.class);
+            final boolean isMapper = field.getType().isAnnotationPresent(Mapper.class);
+            final boolean isService = field.getType().isAnnotationPresent(Service.class);
 
-            if (isInject && (isCollect || isAdoEntity)) {
+            if (isInject && (isCollect || isAdoEntity ||isMapper || isService)) {
                 final String simpleName = field.getType().getSimpleName();
                 final Object instance = ArcBaseClass.IocMap.get(simpleName);
                 if (instance != null) {

@@ -1,12 +1,13 @@
 package service;
 
-import decorator.ioc.Collect;
 import decorator.ioc.Inject;
+import decorator.ioc.Service;
 import enity.Drug;
 import enity.Job;
 
-@Collect
+@Service
 public class HelloService {
+
     @Inject
     Drug drug;
 

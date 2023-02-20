@@ -1,12 +1,12 @@
 package mapper;
 
 import base.AdoBaseOrm;
-import decorator.ioc.Collect;
+import decorator.ioc.Mapper;
 import enity.Drug;
 
 import java.util.List;
 
-@Collect
+@Mapper
 public class DrugMapper {
 
     public List<Drug> getList(String[] args){
