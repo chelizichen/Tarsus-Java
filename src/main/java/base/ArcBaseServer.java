@@ -3,13 +3,16 @@ package base;
 
 import config.ret;
 import decorator.ArcServerApplication;
+import decorator.async.Async;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * 启动类的父类
@@ -37,6 +40,7 @@ public class ArcBaseServer {
             "#t#", "#u#", "#v#", "#w#", "#x#", "#y#",
             "#z#",
     };
+
 
     /**
      * @param SonClass 子类
@@ -67,6 +71,34 @@ public class ArcBaseServer {
         }
         final int size = ArcBaseClass.ClazzMap.size();
         System.out.println("总共有"+size+"个代理类");
+    }
+
+    public void loadEvents(Class<?>[] classes){
+        // 加载异步任务
+        for (Class<?> aClass : classes) {
+            try {
+                final Object instance = aClass.getConstructor().newInstance();
+                final Method[] declaredMethods = aClass.getDeclaredMethods();
+                for (Method declaredMethod : declaredMethods) {
+                    final boolean annotationPresent = declaredMethod.isAnnotationPresent(Async.class);
+                    if(annotationPresent){
+                        final String value = declaredMethod.getAnnotation(Async.class).value();
+                        EventEmitter.signalEvent.on(value, o -> {
+                            Object data = null;
+                            try {
+                                data =  declaredMethod.invoke(instance,o);
+                            } catch (IllegalAccessException | InvocationTargetException e) {
+                                e.printStackTrace();
+                            }
+                            return data;
+                        });
+                    }
+                }
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     private void createServer(Integer port) throws IllegalAccessException, InvocationTargetException {

@@ -30,6 +30,7 @@ public class ArcBaseClass {
     protected static Map<String, Method> MethodsMap = new HashMap<>();
     protected static Map<String, Object> IocMap = new HashMap<>();
 
+
     public String InterFace;
 
     public ArcBaseClass() {
