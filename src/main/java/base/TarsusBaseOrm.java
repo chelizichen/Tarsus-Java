@@ -21,7 +21,7 @@ import java.util.*;
  * @since 2023.2.17
  * ORM父类 所有 Entity 实体类基于此父类
  */
-public class ArcBaseOrm {
+public class TarsusBaseOrm {
 
     protected static HashMap<String, HashMap<String, String>> DBFieldsMap = new HashMap<>();
 
@@ -29,7 +29,7 @@ public class ArcBaseOrm {
     public String KeyName;
     public String KeywordName;
 
-    public ArcBaseOrm() {
+    public TarsusBaseOrm() {
         this.EntityName = this.getClass().getSimpleName();
         final Field[] declaredFields = this.getClass().getDeclaredFields();
         for (Field declaredField : declaredFields) {
@@ -63,9 +63,9 @@ public class ArcBaseOrm {
      * @param val
      * @return null || Entity extends ArcBaseOrm
      */
-    public <T extends ArcBaseOrm> T getOneBy(String val) {
+    public <T extends TarsusBaseOrm> T getOneBy(String val) {
         final String[] strings = new String[]{val};
-        final List<? extends ArcBaseOrm> query = ArcBaseOrm.query(
+        final List<? extends TarsusBaseOrm> query = TarsusBaseOrm.query(
                 "select * from " + this.EntityName + " where " + this.KeyName + " = ? ",
                 strings,
                 this.getClass()
@@ -77,9 +77,9 @@ public class ArcBaseOrm {
         }
     }
 
-    public  <T extends ArcBaseOrm>List<T> getList(String page, String size) {
+    public  <T extends TarsusBaseOrm>List<T> getList(String page, String size) {
         String paginationSql = SqlUtil.getPagination(page,size);
-        final List<? extends ArcBaseOrm> query = ArcBaseOrm.query(
+        final List<? extends TarsusBaseOrm> query = TarsusBaseOrm.query(
                 "select * from " + this.EntityName + paginationSql,
                 this.getClass()
         );
@@ -90,7 +90,7 @@ public class ArcBaseOrm {
         int total= 0;
         String newkeyword = SqlUtil.getMatchKeyword(keyword);
         String[] args = new String[]{newkeyword};
-        ResultSet query = ArcBaseOrm.query(
+        ResultSet query = TarsusBaseOrm.query(
                 "select COUNT(*) as total from " + this.EntityName
                         + " where " + this.KeywordName
                         + " like  ? ",
@@ -108,13 +108,13 @@ public class ArcBaseOrm {
     }
 
 
-    public <T extends ArcBaseOrm> List<T> getList(String keyword, String page, String size) {
+    public <T extends TarsusBaseOrm> List<T> getList(String keyword, String page, String size) {
 
         String paginationSql = SqlUtil.getPagination(page,size);
         // 默认全匹配
         keyword = "%" + keyword + "%";
         final String[] strings = new String[]{keyword};
-        final List<? extends ArcBaseOrm> query = ArcBaseOrm.query(
+        final List<? extends TarsusBaseOrm> query = TarsusBaseOrm.query(
                 "select * from " + this.EntityName +
                         " where " + this.KeywordName +
                         " like ? " + paginationSql,
@@ -208,9 +208,9 @@ public class ArcBaseOrm {
 
         // 实体 - 数据库 映射Map
         HashMap<String, String> ArcFieldMap = new HashMap<>();
-        final boolean hasDbFieldsMap = ArcBaseOrm.DBFieldsMap.containsKey(EntityParams.getSimpleName());
+        final boolean hasDbFieldsMap = TarsusBaseOrm.DBFieldsMap.containsKey(EntityParams.getSimpleName());
         if (hasDbFieldsMap) {
-            ArcFieldMap = ArcBaseOrm.DBFieldsMap.get(EntityParams.getSimpleName());
+            ArcFieldMap = TarsusBaseOrm.DBFieldsMap.get(EntityParams.getSimpleName());
         } else {
             boolean isEntity = EntityParams.isAnnotationPresent(Entity.class);
             if (isEntity) {

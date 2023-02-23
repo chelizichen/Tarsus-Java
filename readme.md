@@ -13,12 +13,12 @@
 - 启动Java服务所需的基类和注解
 ````Java
 @ArcServerApplication(port = 9811)
-public class ArcServer extends ArcBaseServer {
+public class TarsusServer extends ArcBaseServer {
     public static void main(String[] args) {
-        ArcServer c = new ArcServer();
+        TarsusServer c = new TarsusServer();
         final Hello hello = new Hello();
         final Test test = new Test();
-        c.boost(ArcServer.class);
+        c.boost(TarsusServer.class);
     }
 }
 

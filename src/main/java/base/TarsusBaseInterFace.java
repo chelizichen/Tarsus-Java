@@ -1,9 +1,9 @@
 package base;
 
 import config.ret;
-import decorator.ArcInterFace;
-import decorator.ArcMethod;
-import decorator.ArcParams;
+import decorator.TarsusInterFace;
+import decorator.TarsusMethod;
+import decorator.TarsusParam;
 import decorator.ioc.Collect;
 import decorator.ioc.Inject;
 import decorator.ioc.Mapper;
@@ -24,8 +24,8 @@ import java.util.Map;
  * @since 2023.2.16
  * 所有Rpc控制类基于此类
  */
-public class ArcBaseClass {
-    protected static Map<String, ArcBaseClass> ClazzMap = new HashMap();
+public class TarsusBaseInterFace {
+    protected static Map<String, TarsusBaseInterFace> ClazzMap = new HashMap();
     protected static Map<String, Class<?>> ParamsMap = new HashMap<>();
     protected static Map<String, Method> MethodsMap = new HashMap<>();
     protected static Map<String, Object> IocMap = new HashMap<>();
@@ -33,16 +33,16 @@ public class ArcBaseClass {
 
     public String InterFace;
 
-    public ArcBaseClass() {
-        boolean hasAnnotation = this.getClass().isAnnotationPresent(ArcInterFace.class);
+    public TarsusBaseInterFace() {
+        boolean hasAnnotation = this.getClass().isAnnotationPresent(TarsusInterFace.class);
         String interFaceName_Or_ClazzName = "";
         if (hasAnnotation) {
-            ArcInterFace testAnnotation = this.getClass().getAnnotation(ArcInterFace.class);
+            TarsusInterFace testAnnotation = this.getClass().getAnnotation(TarsusInterFace.class);
             interFaceName_Or_ClazzName = testAnnotation.interFace();
         } else {
             interFaceName_Or_ClazzName = this.getClass().getSimpleName();
         }
-        ArcBaseClass.ClazzMap.put(interFaceName_Or_ClazzName, this);
+        TarsusBaseInterFace.ClazzMap.put(interFaceName_Or_ClazzName, this);
         this.InterFace = interFaceName_Or_ClazzName;
         // 单独设置参数
         this.SetParams();
@@ -70,7 +70,7 @@ public class ArcBaseClass {
 
             if (isInject && (isCollect || isAdoEntity ||isMapper || isService)) {
                 final String simpleName = field.getType().getSimpleName();
-                final Object instance = ArcBaseClass.IocMap.get(simpleName);
+                final Object instance = TarsusBaseInterFace.IocMap.get(simpleName);
                 if (instance != null) {
                     field.setAccessible(true);
                     try {
@@ -86,7 +86,7 @@ public class ArcBaseClass {
                             field.setAccessible(true);
                             field.set(this, ServiceInstance);
                             final String serviceName = ServiceInstance.getClass().getSimpleName();
-                            ArcBaseClass.IocMap.put(serviceName, ServiceInstance);
+                            TarsusBaseInterFace.IocMap.put(serviceName, ServiceInstance);
                         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                             e.printStackTrace();
                         }
@@ -110,25 +110,25 @@ public class ArcBaseClass {
         for (Method method : methods) {
 
             // 需要是 @ArcMethod 注解
-            if (method.isAnnotationPresent(ArcMethod.class)) {
+            if (method.isAnnotationPresent(TarsusMethod.class)) {
 
                 // 创建 ObServer，将 Name + 方法名称带入;
-                ArcBaseClass.MethodsMap.put(this.InterFace + method.getName(), method);
+                TarsusBaseInterFace.MethodsMap.put(this.InterFace + method.getName(), method);
 
                 final Class<?>[] parameterTypes = method.getParameterTypes();
 
                 for (Class<?> parameterType : parameterTypes) {
-                    final boolean annotationPresent = parameterType.isAnnotationPresent(ArcParams.class);
+                    final boolean annotationPresent = parameterType.isAnnotationPresent(TarsusParam.class);
                     if (annotationPresent) {
-                        final ArcParams annotation = parameterType.getAnnotation(ArcParams.class);
+                        final TarsusParam annotation = parameterType.getAnnotation(TarsusParam.class);
                         final String value = annotation.value();
 
                         // 当没有设置参数时
                         if (value.equals("")) {
                             final String simpleName = parameterType.getSimpleName();
-                            ArcBaseClass.ParamsMap.put(simpleName, parameterType);
+                            TarsusBaseInterFace.ParamsMap.put(simpleName, parameterType);
                         } else {
-                            ArcBaseClass.ParamsMap.put(value, parameterType);
+                            TarsusBaseInterFace.ParamsMap.put(value, parameterType);
                         }
                     }
                 }
@@ -141,25 +141,25 @@ public class ArcBaseClass {
      * 遍历 args 将每个 args 进行类型转换 作为新的类型参数传递给 已存储的方法中实现调用
      */
     public ret invokeMethod(String interFace, String method, List<Object> args) {
-        final Method getMethod = ArcBaseClass.MethodsMap.get(interFace + method);
+        final Method getMethod = TarsusBaseInterFace.MethodsMap.get(interFace + method);
         final Class<?>[] parameterTypes = getMethod.getParameterTypes();
 
 
         final ArrayList<Object> truthParams = new ArrayList<>(args.size() - 1); // 实参
         int index = 0;
         for (Class<?> parameterType : parameterTypes) {
-            final boolean annotationPresent = parameterType.isAnnotationPresent(ArcParams.class);
+            final boolean annotationPresent = parameterType.isAnnotationPresent(TarsusParam.class);
             if (annotationPresent) {
                 final List<String> list = (List) args.get(index);
-                final ArcParams annotation = parameterType.getAnnotation(ArcParams.class);
+                final TarsusParam annotation = parameterType.getAnnotation(TarsusParam.class);
 
                 final String value = annotation.value();
                 Class<?> cacheClass = null;
                 if (value.equals("")) {
                     final String simpleName = parameterType.getSimpleName();
-                    cacheClass = ArcBaseClass.ParamsMap.get(simpleName);
+                    cacheClass = TarsusBaseInterFace.ParamsMap.get(simpleName);
                 } else {
-                    cacheClass = ArcBaseClass.ParamsMap.get(value);
+                    cacheClass = TarsusBaseInterFace.ParamsMap.get(value);
                 }
 
                 try {
@@ -185,12 +185,12 @@ public class ArcBaseClass {
             index++;
 
         }
-        final ArcBaseClass arcBaseClass = ArcBaseClass.ClazzMap.get(interFace);
+        final TarsusBaseInterFace arcBaseClass = TarsusBaseInterFace.ClazzMap.get(interFace);
         final int size = truthParams.size() - 1;
         return this.__invoke__(size, arcBaseClass, truthParams, getMethod);
     }
 
-    private ret __invoke__(int size, ArcBaseClass arcBaseClass, List<Object> truthParams, Method getMethod) {
+    private ret __invoke__(int size, TarsusBaseInterFace arcBaseClass, List<Object> truthParams, Method getMethod) {
         ret retVal = null;
         try {
             if (size == 0) {

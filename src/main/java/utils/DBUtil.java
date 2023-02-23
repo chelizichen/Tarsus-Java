@@ -1,6 +1,6 @@
 package utils;
 
-import base.ArcBaseOrm;
+import base.TarsusBaseOrm;
 import com.alibaba.druid.pool.DruidDataSource;
 import enity.Drug;
 

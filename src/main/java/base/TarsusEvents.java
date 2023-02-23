@@ -6,17 +6,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-public class EventEmitter {
+public class TarsusEvents {
 
     // 单例
-    public static EventEmitter signalEvent = new EventEmitter();
+    public static TarsusEvents signalEvent = new TarsusEvents();
 
     public static Promise<Object> emit(String eventName,Object args){
-        return EventEmitter.signalEvent._emit(eventName,args);
+        return TarsusEvents.signalEvent._emit(eventName,args);
     }
 
 
-    public ArcThread arcThread = new ArcThread();
+    public TarsusThread arcThread = new TarsusThread();
     // 事件容器，key为事件名称，value 为事件的监听
     public static Map<String, Function> events = new HashMap<>();
 

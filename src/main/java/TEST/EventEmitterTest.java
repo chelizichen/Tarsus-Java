@@ -1,6 +1,6 @@
 package TEST;
 
-import base.EventEmitter;
+import base.TarsusEvents;
 import com.darylteo.rx.promises.java.Promise;
 
 import java.util.HashMap;
@@ -13,7 +13,7 @@ public class EventEmitterTest {
 
     }
     public static void test_emit(){
-        final EventEmitter eventEmitter = new EventEmitter();
+        final TarsusEvents eventEmitter = new TarsusEvents();
 
         eventEmitter.on("Thread1", new Function() {
             @Override

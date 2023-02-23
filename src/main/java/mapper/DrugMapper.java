@@ -1,6 +1,6 @@
 package mapper;
 
-import base.ArcBaseOrm;
+import base.TarsusBaseOrm;
 import decorator.ioc.Mapper;
 import enity.Drug;
 
@@ -10,7 +10,7 @@ import java.util.List;
 public class DrugMapper {
 
     public List<Drug> getList(String[] args){
-        final List<Drug> query = ArcBaseOrm.query("select * from drug", args, Drug.class);
+        final List<Drug> query = TarsusBaseOrm.query("select * from drug", args, Drug.class);
         return query;
     }
 

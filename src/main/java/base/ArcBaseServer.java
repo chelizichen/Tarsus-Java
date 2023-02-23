@@ -2,7 +2,7 @@ package base;
 
 
 import config.ret;
-import decorator.ArcServerApplication;
+import decorator.TarsusServerApplication;
 import decorator.async.Async;
 
 import java.io.*;
@@ -12,7 +12,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 /**
  * 启动类的父类
@@ -47,9 +46,9 @@ public class ArcBaseServer {
      * 创建 Arc 微服务
      */
     public <T extends ArcBaseServer> void boost(Class<T> SonClass) {
-        boolean hasAnnotation = SonClass.isAnnotationPresent(ArcServerApplication.class);
+        boolean hasAnnotation = SonClass.isAnnotationPresent(TarsusServerApplication.class);
         if (hasAnnotation) {
-            ArcServerApplication testAnnotation =  SonClass.getAnnotation(ArcServerApplication.class);
+            TarsusServerApplication testAnnotation =  SonClass.getAnnotation(TarsusServerApplication.class);
             // 拿到 Port
             Integer PORT = testAnnotation.port();
             try {
@@ -60,16 +59,16 @@ public class ArcBaseServer {
         }
     }
 
-    protected void loadInterFace(Class<ArcBaseClass>[] classes){
+    protected void loadInterFace(Class<TarsusBaseInterFace>[] classes){
         System.out.println(classes.length);
-        for (Class<ArcBaseClass> aClass : classes) {
+        for (Class<TarsusBaseInterFace> aClass : classes) {
             try {
                 aClass.getConstructor().newInstance();
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                 e.printStackTrace();
             }
         }
-        final int size = ArcBaseClass.ClazzMap.size();
+        final int size = TarsusBaseInterFace.ClazzMap.size();
         System.out.println("总共有"+size+"个代理类");
     }
 
@@ -84,7 +83,7 @@ public class ArcBaseServer {
                     final boolean annotationPresent = declaredMethod.isAnnotationPresent(Async.class);
                     if(annotationPresent){
                         final String value = declaredMethod.getAnnotation(Async.class).value();
-                        EventEmitter.signalEvent.on(value, o -> {
+                        TarsusEvents.signalEvent.on(value, o -> {
                             Object data = null;
                             try {
                                 data =  declaredMethod.invoke(instance,o);
@@ -146,7 +145,7 @@ public class ArcBaseServer {
         String method = this.unpkgHead(1, stf);
         String timeout = this.unpkgHead(2, stf);
 
-        ArcBaseClass ArcInstance = ArcBaseClass.ClazzMap.get(interFace);
+        TarsusBaseInterFace ArcInstance = TarsusBaseInterFace.ClazzMap.get(interFace);
         int index = stf.indexOf("[##]");
         String buf = stf.substring(index + 4, stf.length() - 8);
         List list = this.unpkgBody(buf);

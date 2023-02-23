@@ -1,13 +1,10 @@
 package enity;
 
-import base.ArcBaseParams;
-import decorator.ArcSort;
-import decorator.ArcParams;
-import lombok.NoArgsConstructor;
+import decorator.TarsusParam;
 
 import java.util.List;
 
-@ArcParams
+@TarsusParam
 public class Job {
     public String JobName;
 

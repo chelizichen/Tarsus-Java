@@ -6,16 +6,16 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Collect
-public class ArcThread implements ThreadFactory {
+public class TarsusThread implements ThreadFactory {
     private final int MAX_THREAD;
 
-    public ArcThread(){
+    public TarsusThread(){
         MAX_THREAD = 100;
     }
 
     private final AtomicInteger count = new AtomicInteger(0);
 
-    public ArcThread(int maxThread) {
+    public TarsusThread(int maxThread) {
         MAX_THREAD = maxThread;
     }
 

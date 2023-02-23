@@ -1,11 +1,11 @@
 package register;
 
-import base.ArcBaseClass;
-import base.EventEmitter;
+import base.TarsusBaseInterFace;
+import base.TarsusEvents;
 import config.ret;
-import decorator.ArcMethod;
-import decorator.ArcParams;
-import decorator.ArcInterFace;
+import decorator.TarsusMethod;
+import decorator.TarsusParam;
+import decorator.TarsusInterFace;
 import decorator.ioc.Inject;
 import enity.Drug;
 import enity.Job;
@@ -13,20 +13,20 @@ import service.HelloService;
 
 import java.util.HashMap;
 
-@ArcInterFace(interFace = "HelloInterFace")
-public class Hello extends ArcBaseClass {
+@TarsusInterFace(interFace = "HelloInterFace")
+public class Hello extends TarsusBaseInterFace {
 
     @Inject
     HelloService helloService;
 
 
-    @ArcMethod
-    public ret TestRet(@ArcParams Drug d1, @ArcParams Job j1){
+    @TarsusMethod
+    public ret TestRet(@TarsusParam Drug d1, @TarsusParam Job j1){
         helloService.sayHello(j1);
         return ret.success(d1);
     }
 
-    @ArcMethod
+    @TarsusMethod
     public ret say(String args1,String args2){
         HashMap<String, String> hmp = new HashMap();
         hmp.put("d",args1);
@@ -35,12 +35,12 @@ public class Hello extends ArcBaseClass {
         return success;
     }
 
-    @ArcMethod
+    @TarsusMethod
     public ret TestAsync(String args1,String args2){
         HashMap<String, String> hmp = new HashMap();
         hmp.put("d",args1);
         hmp.put("f",args2);
-        EventEmitter.emit("hello","111");
+        TarsusEvents.emit("hello","111");
         System.out.println("被执行");
         ret success = ret.success(hmp);
         return success;

@@ -1,6 +1,6 @@
 package enity;
 
-import base.ArcBaseOrm;
+import base.TarsusBaseOrm;
 import decorator.orm.Entity;
 import decorator.orm.Column;
 import decorator.orm.Key;
@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 @NoArgsConstructor
-public class Drug extends ArcBaseOrm {
+public class Drug extends TarsusBaseOrm {
 
     public Drug(List<String> list) {
         this.id = list.get(0);

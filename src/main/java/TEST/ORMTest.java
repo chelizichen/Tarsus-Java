@@ -1,6 +1,6 @@
 package TEST;
 
-import base.ArcBaseOrm;
+import base.TarsusBaseOrm;
 import enity.Drug;
 import utils.SqlUtil;
 
@@ -17,8 +17,8 @@ public class ORMTest {
     }
 
     static void TestQuery() {
-        List<Drug> query = ArcBaseOrm.query("select * from drug", Drug.class);
-        final List<Drug> query1 = ArcBaseOrm.query("select * from drug where id = ?", new String[]{"1"}, Drug.class);
+        List<Drug> query = TarsusBaseOrm.query("select * from drug", Drug.class);
+        final List<Drug> query1 = TarsusBaseOrm.query("select * from drug where id = ?", new String[]{"1"}, Drug.class);
 
         for (Drug drug : query) {
             System.out.println(drug.toString());

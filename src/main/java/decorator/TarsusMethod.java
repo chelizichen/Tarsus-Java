@@ -6,7 +6,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE,ElementType.CONSTRUCTOR})
-public @interface ArcServerApplication {
-    public int port() default  10024;
+@Target({ElementType.METHOD})
+public @interface TarsusMethod {
 }
