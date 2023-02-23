@@ -1,6 +1,7 @@
 package register;
 
 import base.ArcBaseClass;
+import base.EventEmitter;
 import config.ret;
 import decorator.ArcMethod;
 import decorator.ArcParams;
@@ -30,6 +31,17 @@ public class Hello extends ArcBaseClass {
         HashMap<String, String> hmp = new HashMap();
         hmp.put("d",args1);
         hmp.put("f",args2);
+        ret success = ret.success(hmp);
+        return success;
+    }
+
+    @ArcMethod
+    public ret TestAsync(String args1,String args2){
+        HashMap<String, String> hmp = new HashMap();
+        hmp.put("d",args1);
+        hmp.put("f",args2);
+        EventEmitter.emit("hello","111");
+        System.out.println("被执行");
         ret success = ret.success(hmp);
         return success;
     }

@@ -77,6 +77,7 @@ public class ArcBaseServer {
         // 加载异步任务
         for (Class<?> aClass : classes) {
             try {
+                // 加载无参构造
                 final Object instance = aClass.getConstructor().newInstance();
                 final Method[] declaredMethods = aClass.getDeclaredMethods();
                 for (Method declaredMethod : declaredMethods) {

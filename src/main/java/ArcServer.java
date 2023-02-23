@@ -1,7 +1,5 @@
 import async.TestAsync;
 import base.ArcBaseServer;
-import base.EventEmitter;
-import com.darylteo.rx.promises.java.Promise;
 import decorator.ArcServerApplication;
 import register.Hello;
 import register.Test;
