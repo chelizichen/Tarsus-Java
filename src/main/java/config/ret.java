@@ -14,12 +14,10 @@ public class ret<T> {
 
     @Override
     public String toString() {
-        Object data = JSONObject.toJSON(this.data);
-        return "{" +
-                "code:" + code +
-                ", msg:'" + msg + '\'' +
-                ", data:" + data +
-                '}';
+//        Object data = JSONObject.toJSON(this.data);
+        Object o = JSONObject.toJSON(this);
+        System.out.println(o.toString());
+        return o.toString();
     }
     public static <T>ret success(T data){
         return new ret(data,0,"ok");
