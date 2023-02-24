@@ -124,8 +124,6 @@ public class TarsusBaseServer {
                 StringBuffer stf = new StringBuffer();
                 String str = "";
                 while ((str = br.readLine()) != null) {
-                    System.out.println("str is ++"+str);
-                    System.out.println("str is ++"+str);
                     stf.append(str);
                     // 执行 结束 语句 并且 拆分相关字节流
                     if (str.endsWith("[#ENDL#]")) {
@@ -142,10 +140,9 @@ public class TarsusBaseServer {
     }
 
     public StringBuffer beforeInvoke(StringBuffer stf){
-        String s = stf.toString();
-        ByteBuffer wrap = ByteBuffer.wrap(s.getBytes());
-        int int1 = wrap.getInt(0);
 
+        final String getId = stf.substring(0, 4);
+        System.out.println("getId"+getId);
         String interFace = this.unpkgHead(0, stf);
         String method = this.unpkgHead(1, stf);
         String timeout = this.unpkgHead(2, stf);
@@ -155,14 +152,10 @@ public class TarsusBaseServer {
         String buf = stf.substring(index + 4, stf.length() - 8);
         List list = this.unpkgBody(buf);
         final ret data = ArcInstance.invokeMethod(interFace, method, list);
-        String format = String.format("%04d", int1);
         StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(format);
+
+        stringBuffer.append(getId);
         stringBuffer.append(data.toString());
-//        System.out.println("format is "+ format);
-//        stringBuffer.insert(0,format);
-//        stringBuffer.insert(0,i);
-//        stringBuffer.append(s1.toCharArray());
         return stringBuffer;
     }
 
