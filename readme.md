@@ -29,12 +29,12 @@ graph TD
 ## Doc
 
 ### BaseClass
-- Class ArcBaseServer
-- @Decorator ArcServerApplication (port:int)
+- Class TarsusBaseServer
+- @Decorator TarsusServerApplication (port:int)
 - 启动Java服务所需的基类和注解
 ````Java
-@ArcServerApplication(port = 9811)
-public class TarsusServer extends ArcBaseServer {
+@TarsusServerApplication(port = 9811)
+public class TarsusServer extends TarsusBaseServer {
     public static void main(String[] args) {
         TarsusServer c = new TarsusServer();
         final Hello hello = new Hello();
@@ -45,19 +45,19 @@ public class TarsusServer extends ArcBaseServer {
 
 ````
 
-- @Decorator @ArcInterFace(interFace:String) 提供远程调用的接口名
-- ArcBaseClass 每个远程调用的接口类需要继承的父类
+- @Decorator @TrasusInterFace(interFace:String) 提供远程调用的接口名
+- TrasusBaseInterFace 每个远程调用的接口类需要继承的父类
 ````Java
-@ArcInterFace(interFace = "HelloInterFace")
-public class Hello extends ArcBaseClass {
+@TrasusInterFace(interFace = "HelloInterFace")
+public class Hello extends TrasusBaseInterFace {
 
-    @ArcMethod
-    public ret TestRet(@ArcParams("Person") Person p1, @ArcParams("Job")Job j1){
+    @TarsusMethod
+    public ret TestRet(@TarsusParam("Person") Person p1, @TarsusParam("Job")Job j1){
         System.out.println("Job Name is ->"+j1.JobName);
         return ret.success(p1);
     }
 
-    @ArcMethod
+    @TarsusMethod
     public ret say(String args1,String args2){
         HashMap<String, String> hmp = new HashMap();
         hmp.put("d",args1);
@@ -70,7 +70,7 @@ public class Hello extends ArcBaseClass {
 ````
 
 
-- @Decorator @ArcMethod
+- @Decorator @TarsusMethod
 - 定义改方法为 RPC—Method
 
 ````java
@@ -78,12 +78,12 @@ public class Hello extends ArcBaseClass {
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
-public @interface ArcMethod {
+public @interface TarsusMethod {
 }
 
 ````
 
-- @Decorator @ArcParams ( ParamsName:String )
+- @Decorator @TarsusParam ( ParamsName:String )
 - 将特殊的类型注册，在序列化的时候可以自动创建类
 - 在反序列化创建类的时候自动为成员变量赋值
 
@@ -91,14 +91,14 @@ public @interface ArcMethod {
 // define
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE,ElementType.PARAMETER,ElementType.CONSTRUCTOR})
-public @interface ArcParams {
+public @interface TarsusParam {
     String value();
 }
 
 // Hello.java 
 // 在定义RPC方法的时候注册相关参数
-@ArcInterFace(interFace = "HelloInterFace")
-public class Hello extends ArcBaseClass {
+@TarsusInterFace(interFace = "HelloInterFace")
+public class Hello extends TarsusBaseInterFace {
 
     @ArcMethod
     public ret TestRet(@ArcParams("Person") Person p1, @ArcParams("Job")Job j1){
@@ -112,7 +112,7 @@ public class Hello extends ArcBaseClass {
  * 废弃 ArcSort 注解
  * 需要手动调用 构造函数(List<String> list) 来为成员变量赋值
  */
-@ArcParams
+@TarsusParam
 public class Job {
     public String JobName;
     public String JobCompany;
@@ -141,8 +141,8 @@ public class HelloService {
 
 // usage >>
 // 注入服务
-@ArcInterFace(interFace = "HelloInterFace")
-public class Hello extends ArcBaseClass {
+@TarsusInterFace(interFace = "HelloInterFace")
+public class Hello extends TarsusBaseInterFace {
 
     @Inject
     HelloService helloService;
@@ -180,7 +180,7 @@ public class Hello extends ArcBaseClass {
 ````java
 @Entity
 @NoArgsConstructor
-public class Drug extends AdoBaseOrm {
+public class Drug extends TarsusBaseOrm {
     @Column
     @Key
     public String id;
