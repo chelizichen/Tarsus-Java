@@ -1,4 +1,10 @@
 server:
-  port: 10011
-  register: src.main.java.register
-  events: src.main.java.async
+  port: 10012
+
+  # 设置公共路劲
+  aliases:
+    publicPath: src.main.java
+    events: async
+    register: register
+
+
