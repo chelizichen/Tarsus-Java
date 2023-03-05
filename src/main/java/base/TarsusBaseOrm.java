@@ -1,11 +1,10 @@
 package base;
 
-import com.alibaba.druid.sql.SQLUtils;
 import decorator.orm.Entity;
 import decorator.orm.Column;
 import decorator.orm.Key;
 import decorator.orm.Keyword;
-import utils.DBUtil;
+import config.DBConfig;
 import utils.SqlUtil;
 
 import java.lang.reflect.Field;
@@ -130,7 +129,7 @@ public class TarsusBaseOrm {
         ResultSet resultSet = null;
 
         try {
-            connect = DBUtil.getConnect();
+            connect = DBConfig.getConnect();
             PreparedStatement preparedStatement = connect.prepareStatement(sql);
             System.out.println(preparedStatement);
             resultSet = preparedStatement.executeQuery();
@@ -144,7 +143,7 @@ public class TarsusBaseOrm {
     public static<T> ResultSet query(String sql,String[] args){
         ResultSet resultSet = null;
         try {
-            Connection connect = DBUtil.getConnect();
+            Connection connect = DBConfig.getConnect();
             PreparedStatement preparedStatement = connect.prepareStatement(sql);
             for (int i = 0; i < args.length; i++) {
                 preparedStatement.setString(i+1,args[i]);
@@ -160,7 +159,7 @@ public class TarsusBaseOrm {
 
     public static <T> List<T> query(String sql, Class<T> EntityParams) {
         try {
-            Connection connect = DBUtil.getConnect();
+            Connection connect = DBConfig.getConnect();
             PreparedStatement preparedStatement = connect.prepareStatement(sql);
             return getData(preparedStatement, EntityParams);
         } catch (Exception e) {
@@ -171,7 +170,7 @@ public class TarsusBaseOrm {
 
     public static <T> List<T> query(String sql, String[] args, Class<T> EntityParams) {
         try {
-            Connection connect = DBUtil.getConnect();
+            Connection connect = DBConfig.getConnect();
             PreparedStatement preparedStatement = connect.prepareStatement(sql);
             System.out.println(preparedStatement);
             for (int i = 0; i < args.length; i++) {

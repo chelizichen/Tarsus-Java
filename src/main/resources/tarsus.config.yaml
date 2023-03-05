@@ -1,0 +1,4 @@
+server:
+  port: 10011
+  register: src.main.java.register
+  events: src.main.java.async

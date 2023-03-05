@@ -2,7 +2,7 @@ package base;
 
 
 import config.ret;
-import decorator.TarsusServerApplication;
+import decorator.TarsusMsApplication;
 import decorator.async.Async;
 
 import java.io.*;
@@ -10,18 +10,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 启动类的父类
  */
-public class TarsusBaseServer {
+public  class Tarsus {
 
+    TarsusYaml tarsusYaml = new TarsusYaml();
     /**
      * 协议头  { interFace Method timeout bodyLen }
      */
@@ -44,17 +42,33 @@ public class TarsusBaseServer {
             "#z#",
     };
 
+    public static void run(Class<?> clazz,String[] args){
+        Tarsus tarsus = new Tarsus();
+        boolean hasAnnotation = clazz.isAnnotationPresent(TarsusMsApplication.class);
+        if (hasAnnotation) {
+            TarsusMsApplication testAnnotation = clazz.getAnnotation(TarsusMsApplication.class);
+            Integer PORT = tarsus.tarsusYaml.port | testAnnotation.port();
+            try {
+                tarsus.createServer(PORT);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     /**
      * @param SonClass 子类
      * 创建 Arc 微服务
+     * @deprecated
      */
-    public <T extends TarsusBaseServer> void boost(Class<T> SonClass) {
-        boolean hasAnnotation = SonClass.isAnnotationPresent(TarsusServerApplication.class);
+    public <T extends Tarsus> void boost(Class<T> SonClass) {
+
+        boolean hasAnnotation = SonClass.isAnnotationPresent(TarsusMsApplication.class);
+        System.out.println("111"+tarsusYaml.port);
         if (hasAnnotation) {
-            TarsusServerApplication testAnnotation =  SonClass.getAnnotation(TarsusServerApplication.class);
+            TarsusMsApplication testAnnotation =  SonClass.getAnnotation(TarsusMsApplication.class);
             // 拿到 Port
-            Integer PORT = testAnnotation.port();
+            Integer PORT = tarsusYaml.port | testAnnotation.port();
             try {
                 this.createServer(PORT);
             } catch (IllegalAccessException | InvocationTargetException e) {
@@ -160,20 +174,20 @@ public class TarsusBaseServer {
     }
 
     private String unpkgHead(int start, StringBuffer data) {
-        int start_index = data.indexOf(TarsusBaseServer.proto[start]);
-        int start_next = data.indexOf(TarsusBaseServer.proto[start + 1]);
+        int start_index = data.indexOf(Tarsus.proto[start]);
+        int start_next = data.indexOf(Tarsus.proto[start + 1]);
         String head = data.substring(start_index + proto[start].length(), start_next);
         return head;
     }
 
 
     private String unpkgHead(int start, StringBuffer data, boolean isEnd) {
-        int start_index = data.indexOf(TarsusBaseServer.proto[start]);
+        int start_index = data.indexOf(Tarsus.proto[start]);
         int start_next;
         if (isEnd) {
-            start_next = data.indexOf(TarsusBaseServer.proto[proto.length - 1]);
+            start_next = data.indexOf(Tarsus.proto[proto.length - 1]);
         } else {
-            start_next = data.indexOf(TarsusBaseServer.proto[start + 1]);
+            start_next = data.indexOf(Tarsus.proto[start + 1]);
         }
         String head = data.substring(start_index + proto[start].length(), start_next);
         return head;

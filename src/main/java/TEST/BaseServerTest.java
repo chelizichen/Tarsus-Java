@@ -1,6 +1,6 @@
 package TEST;
 
-import base.TarsusBaseServer;
+import base.Tarsus;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public class BaseServerTest {
                 "#c#12#d#[1,2,3,4,5]#e##a#tom#b#jump#c#12#d#[1,2,3,4,5]#e##a" +
                 "#tom#b#jump#c#12#d#[1,2,3,4,5]#z##z##z##z##z#";
 
-        final TarsusBaseServer arcBaseServer = new TarsusBaseServer();
+        final Tarsus arcBaseServer = new Tarsus();
 //        final List list = arcBaseServer.unpkgBody(c);
 //        final List list1 = arcBaseServer.unpkgBody(a);
         final List list2 = arcBaseServer.unpkgBody(b);
