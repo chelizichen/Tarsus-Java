@@ -68,7 +68,12 @@ public  class Tarsus {
         boolean hasAnnotation = clazz.isAnnotationPresent(TarsusMsApplication.class);
         if (hasAnnotation) {
             TarsusMsApplication testAnnotation = clazz.getAnnotation(TarsusMsApplication.class);
-            Integer PORT = tarsus.tarsusYaml.port | testAnnotation.port();
+            Integer PORT = 0;
+            if(tarsus.tarsusYaml.port >= 0){
+                PORT = tarsus.tarsusYaml.port;
+            }else {
+                PORT = testAnnotation.port();
+            }
             try {
                 tarsus.createServer(PORT);
             } catch (IllegalAccessException | InvocationTargetException e) {
@@ -142,7 +147,7 @@ public  class Tarsus {
     private void createServer(Integer port) throws IllegalAccessException, InvocationTargetException {
         try {
             ServerSocket serverSocket = new ServerSocket(port, 20);
-
+            System.out.println("Tarsus Server started at localhost:"+port);
             InputStreamReader inSR = null;
             OutputStreamWriter outSW = null;
 
