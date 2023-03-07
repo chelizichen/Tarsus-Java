@@ -1,10 +1,27 @@
-server:
-  port: 10012
-
-  # 设置公共路劲
+servant:
+  # 本地起的服务端口
+  port: 7099
+  # 上传之后的服务包地址线上地址
+  # 根据包名自动解析端口号，协议地址，并自动连接
+  name: TarsusTestJavaService -l java -t @tarsus/ms -h 127.0.0.1 -p 7099
+  # 代理地址
+  proxy: TarsusProxyServant
+  # 设置包解析路劲
   aliases:
     publicPath: src.main.java
     events: async
     register: register
-
+  # 缓存地址
+  cache:
+    url: 127.0.0.1
+  # 数据库地址
+  db:
+    url: jdbc:mysql://127.0.0.1:3306/lmr_medical?useSSL=false&serverTimezone=UTC
+    username: root
+    password: 123456
+    initSize: 1
+    minIdle: 1
+    maxActive: 10
+    maxAwait: 20000
+    TimeBetweenConnectErrorMillis: 2000
 

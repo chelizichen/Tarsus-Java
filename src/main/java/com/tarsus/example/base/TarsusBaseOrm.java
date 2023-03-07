@@ -1,7 +1,6 @@
 package com.tarsus.example.base;
 
 
-import com.tarsus.example.config.DBConfig;
 import com.tarsus.example.decorator.orm.Column;
 import com.tarsus.example.decorator.orm.Entity;
 import com.tarsus.example.decorator.orm.Key;
@@ -133,7 +132,7 @@ public class TarsusBaseOrm {
         ResultSet resultSet = null;
 
         try {
-            connect = DBConfig.getConnect();
+            connect = TarsusDataBase.getConnect();
             PreparedStatement preparedStatement = connect.prepareStatement(sql);
             System.out.println(preparedStatement);
             resultSet = preparedStatement.executeQuery();
@@ -147,7 +146,7 @@ public class TarsusBaseOrm {
     public static<T> ResultSet query(String sql,String[] args){
         ResultSet resultSet = null;
         try {
-            Connection connect = DBConfig.getConnect();
+            Connection connect = TarsusDataBase.getConnect();
             PreparedStatement preparedStatement = connect.prepareStatement(sql);
             for (int i = 0; i < args.length; i++) {
                 preparedStatement.setString(i+1,args[i]);
@@ -163,7 +162,7 @@ public class TarsusBaseOrm {
 
     public static <T> List<T> query(String sql, Class<T> EntityParams) {
         try {
-            Connection connect = DBConfig.getConnect();
+            Connection connect = TarsusDataBase.getConnect();
             PreparedStatement preparedStatement = connect.prepareStatement(sql);
             return getData(preparedStatement, EntityParams);
         } catch (Exception e) {
@@ -174,7 +173,7 @@ public class TarsusBaseOrm {
 
     public static <T> List<T> query(String sql, String[] args, Class<T> EntityParams) {
         try {
-            Connection connect = DBConfig.getConnect();
+            Connection connect = TarsusDataBase.getConnect();
             PreparedStatement preparedStatement = connect.prepareStatement(sql);
             System.out.println(preparedStatement);
             for (int i = 0; i < args.length; i++) {

@@ -1,5 +1,6 @@
 package com.tarsus.example.base;
 
+import com.tarsus.example.decorator.ioc.Service;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
@@ -10,28 +11,24 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+@Service
 public class TarsusYaml {
+
     // 开启的TCP端口号
     public Integer port;
-
     // 异步事件目录
     public static String events_path;
-
     // 注册事件目录
     public static String register_path;
-
-    public Map<String, Object> server = new HashMap<>();
-
-
+    public Map<String, Object> servant = new HashMap<>();
 
     public static String pkg_name;
     public TarsusYaml(){
         Yaml yaml = new Yaml();
         InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream("tarsus.config.yaml");
         Map<String,Object> load = yaml.load(resourceAsStream);
-        this.server = (Map<String, Object>) load.get("server");
-        System.out.println(load);
-        Object port = this.server.get("port");
+        this.servant = (Map<String, Object>) load.get("servant");
+        Object port = this.servant.get("port");
 
         if(port == null){
             this.port = 8080;
@@ -41,7 +38,7 @@ public class TarsusYaml {
     }
 
     public void read_config(){
-        Map<String,String> aliases = (Map<String, String>) this.server.get("aliases");
+        Map<String,String> aliases = (Map<String, String>) this.servant.get("aliases");
         String publicPath = aliases.get("publicPath");
 
         TarsusYaml.events_path = pkg_name + "." + aliases.get("events");

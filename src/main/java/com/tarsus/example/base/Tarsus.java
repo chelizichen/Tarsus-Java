@@ -3,6 +3,7 @@ package com.tarsus.example.base;
 import com.tarsus.example.config.ret;
 import com.tarsus.example.decorator.TarsusMsApplication;
 import com.tarsus.example.decorator.async.Async;
+import com.tarsus.example.decorator.ioc.Inject;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -18,7 +19,16 @@ import java.util.List;
  */
 public  class Tarsus {
 
-    TarsusYaml tarsusYaml = new TarsusYaml();
+    public TarsusYaml tarsusYaml = new TarsusYaml();
+
+    public TarsusCache tarsusCache = new TarsusCache();
+
+    public Tarsus() {
+        // 再设置IocMap
+        TarsusBaseInterFace.IocMap.put(tarsusYaml.getClass().getSimpleName(),tarsusYaml);
+        TarsusBaseInterFace.IocMap.put(tarsusCache.getClass().getSimpleName(),tarsusCache);
+    }
+
     /**
      * 协议头  { interFace Method timeout bodyLen }
      */
@@ -256,10 +266,4 @@ public  class Tarsus {
 
 
     }
-
-    private void __read_rpc__() {
-
-    }
-
-
 }
