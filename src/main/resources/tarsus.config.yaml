@@ -3,9 +3,8 @@ servant:
   port: 7099
   # 上传之后的服务包地址线上地址
   # 根据包名自动解析端口号，协议地址，并自动连接
-  name: TarsusTestJavaService -l java -t @tarsus/ms -h 127.0.0.1 -p 7099
+  name: '@TarsusDemoProject/JavaDemo -l java -t @tarsus/ms -h 127.0.0.1 -p 7099'
   # 代理地址
-  proxy: TarsusProxyServant
   # 设置包解析路劲
   aliases:
     publicPath: src.main.java

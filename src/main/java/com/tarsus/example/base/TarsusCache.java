@@ -25,8 +25,9 @@ public class TarsusCache {
 
     public void setServant(){
         final String name = (String) tarsusYaml.servant.get("name");
-        final String proxy = (String) tarsusYaml.servant.get("proxy");
-        System.out.println(name + "  --  " +proxy);
-        this.RedisTemplate.sadd(proxy,name);
+        String group = name.substring(name.indexOf("@")+1, name.indexOf("/"));
+        System.out.println(name + "  --  " +group);
+        this.RedisTemplate.sadd(group,name);
     }
+
 }
