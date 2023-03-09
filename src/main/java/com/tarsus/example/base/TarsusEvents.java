@@ -16,7 +16,7 @@ public class TarsusEvents {
     }
 
 
-    public TarsusThread arcThread = new TarsusThread();
+    public TarsusThread tarsusThread = new TarsusThread();
     // 事件容器，key为事件名称，value 为事件的监听
     public static Map<String, Function> events = new HashMap<>();
 
@@ -29,7 +29,7 @@ public class TarsusEvents {
     public Promise<Object> _emit(String eventName, Object args) {
         final Function function = events.get(eventName);
         final Promise promise = new Promise<>();
-        arcThread.newThread(new Thread(() -> {
+        tarsusThread.newThread(new Thread(() -> {
             try {
                 Thread.sleep(1);
             } catch (InterruptedException e) {
