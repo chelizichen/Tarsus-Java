@@ -11,6 +11,7 @@ import com.tarsus.example.decorator.TarsusInterFace;
 import com.tarsus.example.decorator.ioc.Inject;
 import com.tarsus.example.enity.Drug;
 import com.tarsus.example.enity.Job;
+import com.tarsus.example.enity.TestList;
 import com.tarsus.example.service.HelloService;
 
 import java.util.HashMap;
@@ -40,6 +41,16 @@ public class Hello extends TarsusBaseInterFace {
         ret success = ret.success(hmp);
         return success;
     }
+
+    @TarsusMethod
+    public ret testList(String name, String age, @TarsusParam TestList testList){
+        System.out.println(name);
+        System.out.println(age);
+        System.out.println(testList.name);
+        System.out.println(testList.job.JobName);
+        return ret.success("0");
+    }
+
 
     @TarsusMethod
     public ret TestAsync(String args1,String args2){

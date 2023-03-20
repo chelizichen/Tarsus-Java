@@ -1,6 +1,8 @@
 package com.tarsus.example.enity;
 
 import com.tarsus.example.decorator.TarsusParam;
+import com.tarsus.example.decorator.orm.Entity;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -8,7 +10,7 @@ import java.util.List;
 public class Job {
     public String JobName;
 
-    public Job(List<String> list) {
-        this.JobName = list.get(0);
+    public Job(List<Object> list) {
+        this.JobName = (String) list.get(0);
     }
 }

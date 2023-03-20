@@ -48,7 +48,7 @@ public  class Tarsus {
             "#j#", "#k#", "#l#", "#m#",
             "#n#", "#o#", "#p#", "#q#", "#r#", "#s#",
             "#t#", "#u#", "#v#", "#w#", "#x#", "#y#",
-            "#z#",
+            "#z#","#-#","#=#","#/#","#.#","#,#"
     };
 
     public static void run(Class<?> clazz,String[] args){
@@ -179,6 +179,7 @@ public  class Tarsus {
     }
 
     public StringBuffer beforeInvoke(StringBuffer stf){
+        System.out.println(stf);
 
         final String getId = stf.substring(0, 4);
         System.out.println("getId"+getId);
@@ -219,6 +220,7 @@ public  class Tarsus {
     }
 
     public List unpkgBody(String buf) {
+        System.out.println("body -- "+buf);
         List args = new ArrayList();
         int init = 0;
         int start = buf.indexOf(size[init]);

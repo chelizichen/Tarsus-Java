@@ -1,6 +1,7 @@
 package com.tarsus.example.enity;
 
 import com.tarsus.example.base.TarsusBaseOrm;
+import com.tarsus.example.decorator.TarsusParam;
 import com.tarsus.example.decorator.orm.Entity;
 import com.tarsus.example.decorator.orm.Column;
 import com.tarsus.example.decorator.orm.Key;
@@ -10,6 +11,7 @@ import java.util.List;
 
 @Entity
 @NoArgsConstructor
+@TarsusParam
 public class Drug extends TarsusBaseOrm {
 
     public Drug(List<String> list) {

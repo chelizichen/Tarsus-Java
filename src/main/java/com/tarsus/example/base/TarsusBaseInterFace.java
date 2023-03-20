@@ -142,12 +142,14 @@ public class TarsusBaseInterFace {
      * 遍历 args 将每个 args 进行类型转换 作为新的类型参数传递给 已存储的方法中实现调用
      */
     public ret invokeMethod(String interFace, String method, List<Object> args) {
+        System.out.println("List<Object>"+args);
         final Method getMethod = TarsusBaseInterFace.MethodsMap.get(interFace + method);
         final Class<?>[] parameterTypes = getMethod.getParameterTypes();
 
 
         final ArrayList<Object> truthParams = new ArrayList<>(args.size() - 1); // 实参
         int index = 0;
+
         for (Class<?> parameterType : parameterTypes) {
             final boolean annotationPresent = parameterType.isAnnotationPresent(TarsusParam.class);
             if (annotationPresent) {
@@ -155,20 +157,18 @@ public class TarsusBaseInterFace {
                 final TarsusParam annotation = parameterType.getAnnotation(TarsusParam.class);
 
                 final String value = annotation.value();
-                Class<?> cacheClass = null;
+                Class<?> cacheClass;
                 if (value.equals("")) {
                     final String simpleName = parameterType.getSimpleName();
                     cacheClass = TarsusBaseInterFace.ParamsMap.get(simpleName);
                 } else {
                     cacheClass = TarsusBaseInterFace.ParamsMap.get(value);
                 }
-
                 try {
                     final Class<?> aClass = Class.forName(cacheClass.getName());
                     try {
                         final Constructor<?> constructor = aClass.getDeclaredConstructor(List.class);
                         try {
-//                            System.out.println("List is ->" + list);
                             final Object o = constructor.newInstance(list);
                             truthParams.add(index, o);
                         } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
@@ -193,6 +193,12 @@ public class TarsusBaseInterFace {
 
     private ret __invoke__(int size, TarsusBaseInterFace arcBaseClass, List<Object> truthParams, Method getMethod) {
         ret retVal = null;
+        System.out.println(size);
+        System.out.println(truthParams);
+
+        Class<?>[] parameterTypes = getMethod.getParameterTypes();
+
+
         try {
             if (size == 0) {
                 retVal = (ret) getMethod.invoke(arcBaseClass, truthParams.get(0));
@@ -213,3 +219,14 @@ public class TarsusBaseInterFace {
         return retVal;
     }
 }
+
+// class Test{
+//     public static void main(String[] args) {
+//         ArrayList<String> strings = new ArrayList<String>();
+//         strings.add("1");
+//         strings.add("2");
+//
+//         String s = strings.get(0);
+//         System.out.println(s);
+//     }
+// }
