@@ -191,6 +191,7 @@ public  class Tarsus {
         int index = stf.indexOf("[##]");
         String buf = stf.substring(index + 4, stf.length() - 8);
         List list = this.unpkgBody(buf);
+        System.out.println(list);
         final ret data =(ret) ArcInstance.invokeMethod(interFace, method, list);
         StringBuffer stringBuffer = new StringBuffer();
 
@@ -220,7 +221,6 @@ public  class Tarsus {
     }
 
     public List unpkgBody(String buf) {
-        System.out.println("body -- "+buf);
         List args = new ArrayList();
         int init = 0;
         int start = buf.indexOf(size[init]);
@@ -274,3 +274,67 @@ public  class Tarsus {
 
     }
 }
+
+
+//class Test{
+//    String[] size = new String[]{
+//            "#a#",
+//            "#b#", "#c#", "#d#",
+//            "#e#", "#f#", "#g#", "#h#", "#i#",
+//            "#j#", "#k#", "#l#", "#m#",
+//            "#n#", "#o#", "#p#", "#q#", "#r#", "#s#",
+//            "#t#", "#u#", "#v#", "#w#", "#x#", "#y#",
+//            "#z#","#-#","#=#","#/#","#.#","#,#"
+//    };
+//
+//    public List<Object> splitString(String input, String[] size) {
+//        List<Object> result = new ArrayList<>();
+//        int startIndex = 0;
+//        for (int i = 0; i < size.length; i++) {
+//            int endIndex = input.indexOf(size[i], startIndex);
+//            if (endIndex == -1) {
+//                break;
+//            }
+//            String substring = input.substring(startIndex, endIndex);
+//            if (!substring.isEmpty()) {
+//                if (i == size.length - 1) {
+//                    result.add(substring);
+//                } else {
+//                    result.add(Integer.parseInt(substring));
+//                }
+//            }
+//            startIndex = endIndex + size[i].length();
+//            if (i < size.length - 1 && size[i + 1].equals(size[i])) {
+//                List<Object> sublist = splitString(input.substring(startIndex), size);
+//                result.add(sublist);
+//                startIndex += getLength(sublist, size);
+//            }
+//        }
+//        return result;
+//    }
+//
+//    private int getLength(List<Object> list, String[] size) {
+//        int length = 0;
+//        for (Object obj : list) {
+//            if (obj instanceof Integer) {
+//                length += size[(Integer) obj].length();
+//            } else if (obj instanceof String) {
+//                length += ((String) obj).length();
+//            } else if (obj instanceof List) {
+//                length += getLength((List<Object>) obj, size);
+//            }
+//        }
+//        return length;
+//    }
+//
+//    public static void main(String[] args) {
+////        Test test = new Test();
+//
+//        String str = "#a#1#b##a#GetUserByIdReq---1#b##a#ASDASDASDSADSA#,##,##c##a#1#b##a#1#b#name#c#1#d#CES #e#测试地址#,##c#ok#,##d#End#,#";
+//        Tarsus tarsus = new Tarsus();
+//        List list = tarsus.unpkgBody(str);
+//        System.out.println(list);
+//        //        List<Object> list = test.splitString(str, test.size);
+////        System.out.println(list);
+//    }
+//}

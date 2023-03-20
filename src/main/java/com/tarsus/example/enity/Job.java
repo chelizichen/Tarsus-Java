@@ -1,12 +1,12 @@
 package com.tarsus.example.enity;
 
-import com.tarsus.example.decorator.TarsusParam;
-import com.tarsus.example.decorator.orm.Entity;
+import com.tarsus.example.decorator.TaroStruct;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@TarsusParam
+@TaroStruct
+@NoArgsConstructor
 public class Job {
     public String JobName;
 

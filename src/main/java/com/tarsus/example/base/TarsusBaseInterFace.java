@@ -3,7 +3,7 @@ package com.tarsus.example.base;
 
 import com.tarsus.example.config.ret;
 import com.tarsus.example.decorator.TarsusMethod;
-import com.tarsus.example.decorator.TarsusParam;
+import com.tarsus.example.decorator.TaroStruct;
 import com.tarsus.example.decorator.ioc.Collect;
 import com.tarsus.example.decorator.ioc.Inject;
 import com.tarsus.example.decorator.ioc.Mapper;
@@ -119,9 +119,9 @@ public class TarsusBaseInterFace {
                 final Class<?>[] parameterTypes = method.getParameterTypes();
 
                 for (Class<?> parameterType : parameterTypes) {
-                    final boolean annotationPresent = parameterType.isAnnotationPresent(TarsusParam.class);
+                    final boolean annotationPresent = parameterType.isAnnotationPresent(TaroStruct.class);
                     if (annotationPresent) {
-                        final TarsusParam annotation = parameterType.getAnnotation(TarsusParam.class);
+                        final TaroStruct annotation = parameterType.getAnnotation(TaroStruct.class);
                         final String value = annotation.value();
 
                         // 当没有设置参数时
@@ -151,10 +151,12 @@ public class TarsusBaseInterFace {
         int index = 0;
 
         for (Class<?> parameterType : parameterTypes) {
-            final boolean annotationPresent = parameterType.isAnnotationPresent(TarsusParam.class);
+            final boolean annotationPresent = parameterType.isAnnotationPresent(TaroStruct.class);
             if (annotationPresent) {
-                final List<String> list = (List) args.get(index);
-                final TarsusParam annotation = parameterType.getAnnotation(TarsusParam.class);
+                final List<Object> list = (List<Object>) args.get(index);
+                System.out.println("list |"+list);
+
+                final TaroStruct annotation = parameterType.getAnnotation(TaroStruct.class);
 
                 final String value = annotation.value();
                 Class<?> cacheClass;
@@ -181,6 +183,7 @@ public class TarsusBaseInterFace {
                     e.printStackTrace();
                 }
             } else {
+                System.out.println("走一步");
                 truthParams.add(index, args.get(index));
             }
             index++;

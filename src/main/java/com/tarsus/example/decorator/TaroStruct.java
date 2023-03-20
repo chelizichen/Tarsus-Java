@@ -12,6 +12,6 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE,ElementType.PARAMETER,ElementType.CONSTRUCTOR})
-public @interface TarsusParam {
+public @interface TaroStruct {
     String value() default "";
 }

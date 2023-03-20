@@ -1,29 +1,29 @@
 package com.tarsus.example.enity;
 
 import com.alibaba.fastjson.JSON;
-import com.tarsus.example.decorator.TarsusParam;
+import com.tarsus.example.decorator.TaroStruct;
 
-import java.sql.SQLOutput;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-@TarsusParam
+@TaroStruct
 public class TestList {
     public String name;
-//    public List<Job> jobList;
     public Job job;
+    public List<Job> jobList;
     public TestList(List<Object> list) {
 
         this.name = (String) list.get(0);
-        System.out.println("原参数"+list + "    " + list.size());
+        this.job = new Job((List<Object>) list.get(1));
 
-        try {
-            System.out.println("走到这里来了 需要解析的参数");
-            System.out.println(list.get(1));
-            this.job = new Job((List<Object>) list.get(1));
-        }catch (Exception exception){
-            System.out.println("错误！！！");
-            throw exception;
-        };
+        List<HashMap> maps = JSON.parseArray((String) list.get(2), HashMap.class);
+        this.jobList = new ArrayList<>();
+        for (HashMap map : maps) {
+            Job job = new Job();
+            job.JobName = (String) map.get("jobName");
+            this.jobList.add(job);
+        }
 
     }
 }

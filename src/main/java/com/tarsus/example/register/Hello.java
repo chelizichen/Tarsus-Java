@@ -1,12 +1,11 @@
 package com.tarsus.example.register;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson2.JSONObject;
 import com.tarsus.example.base.TarsusBaseInterFace;
 import com.tarsus.example.base.TarsusEvents;
 import com.tarsus.example.config.ret;
 import com.tarsus.example.decorator.TarsusMethod;
-import com.tarsus.example.decorator.TarsusParam;
+import com.tarsus.example.decorator.TaroStruct;
 import com.tarsus.example.decorator.TarsusInterFace;
 import com.tarsus.example.decorator.ioc.Inject;
 import com.tarsus.example.enity.Drug;
@@ -25,7 +24,7 @@ public class Hello extends TarsusBaseInterFace {
 
 
     @TarsusMethod
-    public ret TestRet(@TarsusParam Drug d1, @TarsusParam Job j1){
+    public ret TestRet(@TaroStruct Drug d1, @TaroStruct Job j1){
         helloService.sayHello(j1);
         return ret.success(d1);
     }
@@ -43,7 +42,7 @@ public class Hello extends TarsusBaseInterFace {
     }
 
     @TarsusMethod
-    public ret testList(String name, String age, @TarsusParam TestList testList){
+    public ret testList(String name, String age, @TaroStruct TestList testList){
         System.out.println(name);
         System.out.println(age);
         System.out.println(testList.name);

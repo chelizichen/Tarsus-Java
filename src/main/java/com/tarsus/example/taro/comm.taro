@@ -20,8 +20,9 @@ struct CommParams  {
 
     GetUserByIdRes     :   {
         1   code        :   int;
-        2   message     :   string;
-        3   data        :   User
+        2   data        :   User;
+        3   message     :   string;
+
     };
 
     GetUserListReq      :   {
