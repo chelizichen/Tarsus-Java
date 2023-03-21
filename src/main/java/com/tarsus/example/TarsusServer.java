@@ -1,11 +1,8 @@
 package com.tarsus.example;
 
 
-import com.tarsus.example.async.TestAsync;
 import com.tarsus.example.base.Tarsus;
 import com.tarsus.example.decorator.TarsusMsApplication;
-import com.tarsus.example.register.Hello;
-import com.tarsus.example.register.Test;
 
 //
 //@TarsusMsApplication

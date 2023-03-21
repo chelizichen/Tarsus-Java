@@ -33,11 +33,12 @@ public class TarsusBaseInterFace {
     protected static Map<String, Object> IocMap = new HashMap<>();
 
     public String currentData = "";
-    public Boolean lock = false;
+    public Boolean lock = true;
 
     public String InterFace;
 
     public TarsusBaseInterFace() {
+        System.out.println("this" + this.getClass().getSimpleName());
         boolean hasAnnotation = this.getClass().isAnnotationPresent(TarsusInterFace.class);
         String interFaceName_Or_ClazzName = "";
         if (hasAnnotation) {
@@ -72,7 +73,7 @@ public class TarsusBaseInterFace {
             final boolean isMapper = field.getType().isAnnotationPresent(Mapper.class);
             final boolean isService = field.getType().isAnnotationPresent(Service.class);
 
-            if (isInject && (isCollect || isAdoEntity ||isMapper || isService)) {
+            if (isInject && (isCollect || isAdoEntity || isMapper || isService)) {
                 final String simpleName = field.getType().getSimpleName();
                 final Object instance = TarsusBaseInterFace.IocMap.get(simpleName);
                 if (instance != null) {
@@ -144,8 +145,8 @@ public class TarsusBaseInterFace {
      * 传过来的一个args 参数
      * 遍历 args 将每个 args 进行类型转换 作为新的类型参数传递给 已存储的方法中实现调用
      */
-    public String invokeMethod(String interFace, String method, List<Object> args) {
-
+    public String invokeMethod(String interFace, String method, List<Object> args) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        System.out.println("List|args" + args);
         // 拿到对应方法
         final Method getMethod = TarsusBaseInterFace.MethodsMap.get(interFace + method);
         // 拿到对应多少个参数
@@ -153,72 +154,44 @@ public class TarsusBaseInterFace {
         final Class<?>[] parameterTypes = getMethod.getParameterTypes();
         // 由于默认两个，但是因为某些bug，会传入三个过来，所以 List 设置的 长度为 size - 1
         final ArrayList<Object> truthParams = new ArrayList<>(args.size() - 1); // 实参
-        int index = 0;
+        List<Object> argList = (List<Object>) args.get(0);
 
-        // 分割参数 拿到两个参数列表
-        for (Class<?> parameterType : parameterTypes) {
-            final boolean annotationPresent = parameterType.isAnnotationPresent(TaroStruct.class);
-            if (annotationPresent) {
-                final List<Object> list = (List<Object>) args.get(index);
-                System.out.println("list |"+list);
 
-                final TaroStruct annotation = parameterType.getAnnotation(TaroStruct.class);
-                final String value = annotation.value();
-                Class<?> cacheClass;
+        Class<?> request = TarsusBaseInterFace.ParamsMap.get(parameterTypes[0].getSimpleName());
+        Constructor<?> declaredConstructor = request.getConstructor(List.class);
+        Object args1 = declaredConstructor.newInstance(argList);
+        truthParams.add(args1);
 
-                if (value.equals("")) {
-                    final String simpleName = parameterType.getSimpleName();
-                    cacheClass = TarsusBaseInterFace.ParamsMap.get(simpleName);
-                } else {
-                    cacheClass = TarsusBaseInterFace.ParamsMap.get(value);
-                }
-
-                try {
-                    final Class<?> aClass = Class.forName(cacheClass.getName());
-                        final Constructor<?> constructor = aClass.getDeclaredConstructor(List.class);
-                        final Object o = constructor.newInstance(list);
-                        truthParams.add(index, o);
-                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                truthParams.add(index, args.get(index));
-            }
-            index++;
+        String response = (String) args.get(1);
+        String simpleName = parameterTypes[1].getSimpleName();
+        if(response.equals(simpleName)){
+            Class<?> responseClass = TarsusBaseInterFace.ParamsMap.get(parameterTypes[1].getSimpleName());
+            Constructor<?> noArgsConst = responseClass.getConstructor();
+            Object args2 = noArgsConst.newInstance();
+            truthParams.add(args2);
         }
+
+
+
 
         final TarsusBaseInterFace tarsusBaseInterFace = TarsusBaseInterFace.ClazzMap.get(interFace);
-        final int size = truthParams.size() - 1;
-        return this.__invoke__(size, tarsusBaseInterFace, truthParams, getMethod);
+        return this.__invoke__( tarsusBaseInterFace, truthParams, getMethod);
     }
 
-    private String __invoke__(int size, TarsusBaseInterFace tarsusBaseInterFace, List<Object> truthParams, Method getMethod) {
+    private String __invoke__(TarsusBaseInterFace tarsusBaseInterFace, List<Object> truthParams, Method getMethod) throws InvocationTargetException, IllegalAccessException {
         String retVal = "";
-        try {
-            getMethod.invoke(tarsusBaseInterFace, truthParams.get(0), truthParams.get(1));
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-        }
+        getMethod.invoke(tarsusBaseInterFace, truthParams.get(0), truthParams.get(1));
+
         while (!lock) {
             retVal = this.currentData;
             this.currentData = "";
+            this.lock = true;
         }
         return retVal;
     }
 
-    public void TaroRet(Object data){
-        this.currentData = data.toString();
-        this.lock = true;
+    public void TaroRet(String data) {
+        this.currentData = data;
+        this.lock = false;
     }
 }
-
-// class Test{
-//     public static void main(String[] args) {
-//         ArrayList<String> strings = new ArrayList<String>();
-//         strings.add("1");
-//         strings.add("2");
-//
-//         String s = strings.get(0);
-//         System.out.println(s);
-//     }
-// }

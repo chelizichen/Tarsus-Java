@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import java.util.HashMap;
 
+import com.alibaba.fastjson.JSONObject;
 
 
 @TaroStruct
@@ -25,6 +26,11 @@ public class Basic{
   // NoArgsConstructor
   public Basic(){
 
+  }
+  // toJson
+  public String json(){
+    Object o = JSONObject.toJSON(this);
+    return o.toString();
   }
 }
   

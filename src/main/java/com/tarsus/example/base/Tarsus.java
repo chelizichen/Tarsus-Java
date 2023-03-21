@@ -167,36 +167,37 @@ public  class Tarsus {
                     // 执行 结束 语句 并且 拆分相关字节流
                     if (str.endsWith("[#ENDL#]")) {
                         final StringBuffer data = this.beforeInvoke(stf);
+                        System.out.println("结束的代码"+data);
                         bw.write(data.toString());
                         bw.flush();
                         stf.delete(0,stf.length());
                     }
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | NoSuchMethodException | InstantiationException e) {
             e.printStackTrace();
         }
     }
 
-    public StringBuffer beforeInvoke(StringBuffer stf){
+    public StringBuffer beforeInvoke(StringBuffer stf) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
         final String getId = stf.substring(0, 4);
 
         String interFace = this.unpkgHead(0, stf);
         String method = this.unpkgHead(1, stf);
         String timeout = this.unpkgHead(2, stf);
-
+        System.out.println("interFace ||"+ interFace);
         TarsusBaseInterFace TarsusInstance = TarsusBaseInterFace.ClazzMap.get(interFace);
         int index = stf.indexOf("[##]");
         String buf = stf.substring(index + 4, stf.length() - 8);
         List list = this.unpkgBody(buf);
-
+        System.out.println("args : " + list);
+        System.out.println("TarsusInstance"+TarsusInstance.getClass().getSimpleName());
         // 从这里拿到List 参数后进行 invoke 方法调用
         // 此时已经拿到了 对应的数据 getId
         // 可以通过 唯一Id 进行观察者模式来操作
         final String data = TarsusInstance.invokeMethod(interFace, method, list);
         StringBuffer stringBuffer = new StringBuffer();
-
 
         stringBuffer.append(getId);
         stringBuffer.append(data);

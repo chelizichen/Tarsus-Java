@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import java.util.HashMap;
 
+import com.alibaba.fastjson.JSONObject;
  import com.tarsus.example.taro.Basic;
 
 
@@ -28,6 +29,11 @@ public class GetUserListReq{
   // NoArgsConstructor
   public GetUserListReq(){
 
+  }
+  // toJson
+  public String json(){
+    Object o = JSONObject.toJSON(this);
+    return o.toString();
   }
 }
   
