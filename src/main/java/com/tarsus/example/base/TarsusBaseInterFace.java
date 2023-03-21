@@ -15,6 +15,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +32,8 @@ public class TarsusBaseInterFace {
     protected static Map<String, Method> MethodsMap = new HashMap<>();
     protected static Map<String, Object> IocMap = new HashMap<>();
 
+    public String currentData = "";
+    public Boolean lock = false;
 
     public String InterFace;
 
@@ -141,15 +144,18 @@ public class TarsusBaseInterFace {
      * 传过来的一个args 参数
      * 遍历 args 将每个 args 进行类型转换 作为新的类型参数传递给 已存储的方法中实现调用
      */
-    public ret invokeMethod(String interFace, String method, List<Object> args) {
-        System.out.println("List<Object>"+args);
+    public String invokeMethod(String interFace, String method, List<Object> args) {
+
+        // 拿到对应方法
         final Method getMethod = TarsusBaseInterFace.MethodsMap.get(interFace + method);
+        // 拿到对应多少个参数
+        // 在TarsusStream 与 Taro 完善的情况下将只使用两个参数
         final Class<?>[] parameterTypes = getMethod.getParameterTypes();
-
-
+        // 由于默认两个，但是因为某些bug，会传入三个过来，所以 List 设置的 长度为 size - 1
         final ArrayList<Object> truthParams = new ArrayList<>(args.size() - 1); // 实参
         int index = 0;
 
+        // 分割参数 拿到两个参数列表
         for (Class<?> parameterType : parameterTypes) {
             final boolean annotationPresent = parameterType.isAnnotationPresent(TaroStruct.class);
             if (annotationPresent) {
@@ -157,69 +163,52 @@ public class TarsusBaseInterFace {
                 System.out.println("list |"+list);
 
                 final TaroStruct annotation = parameterType.getAnnotation(TaroStruct.class);
-
                 final String value = annotation.value();
                 Class<?> cacheClass;
+
                 if (value.equals("")) {
                     final String simpleName = parameterType.getSimpleName();
                     cacheClass = TarsusBaseInterFace.ParamsMap.get(simpleName);
                 } else {
                     cacheClass = TarsusBaseInterFace.ParamsMap.get(value);
                 }
+
                 try {
                     final Class<?> aClass = Class.forName(cacheClass.getName());
-                    try {
                         final Constructor<?> constructor = aClass.getDeclaredConstructor(List.class);
-                        try {
-                            final Object o = constructor.newInstance(list);
-                            truthParams.add(index, o);
-                        } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
-                            e.printStackTrace();
-                        }
-                    } catch (NoSuchMethodException e) {
-                        e.printStackTrace();
-                    }
-                } catch (ClassNotFoundException e) {
+                        final Object o = constructor.newInstance(list);
+                        truthParams.add(index, o);
+                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                     e.printStackTrace();
                 }
             } else {
-                System.out.println("走一步");
                 truthParams.add(index, args.get(index));
             }
             index++;
-
         }
-        final TarsusBaseInterFace arcBaseClass = TarsusBaseInterFace.ClazzMap.get(interFace);
+
+        final TarsusBaseInterFace tarsusBaseInterFace = TarsusBaseInterFace.ClazzMap.get(interFace);
         final int size = truthParams.size() - 1;
-        return this.__invoke__(size, arcBaseClass, truthParams, getMethod);
+        return this.__invoke__(size, tarsusBaseInterFace, truthParams, getMethod);
     }
 
-    private ret __invoke__(int size, TarsusBaseInterFace arcBaseClass, List<Object> truthParams, Method getMethod) {
-        ret retVal = null;
-        System.out.println(size);
-        System.out.println(truthParams);
-
-        Class<?>[] parameterTypes = getMethod.getParameterTypes();
-
-
+    private String __invoke__(int size, TarsusBaseInterFace tarsusBaseInterFace, List<Object> truthParams, Method getMethod) {
+        String retVal = "";
         try {
-            if (size == 0) {
-                retVal = (ret) getMethod.invoke(arcBaseClass, truthParams.get(0));
-            } else if (size == 1) {
-                retVal = (ret) getMethod.invoke(arcBaseClass, truthParams.get(0), truthParams.get(1));
-            } else if (size == 2) {
-                retVal = (ret) getMethod.invoke(arcBaseClass, truthParams.get(0), truthParams.get(1), truthParams.get(2));
-            } else if (size == 3) {
-                retVal = (ret) getMethod.invoke(arcBaseClass, truthParams.get(0), truthParams.get(1), truthParams.get(2), truthParams.get(3));
-            } else if (size == 4) {
-                retVal = (ret) getMethod.invoke(arcBaseClass, truthParams.get(0), truthParams.get(1), truthParams.get(2), truthParams.get(3), truthParams.get(4));
-            } else if (size == 5) {
-                retVal = (ret) getMethod.invoke(arcBaseClass, truthParams.get(0), truthParams.get(1), truthParams.get(2), truthParams.get(3), truthParams.get(4), truthParams.get(5));
-            }
+            getMethod.invoke(tarsusBaseInterFace, truthParams.get(0), truthParams.get(1));
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
+        while (!lock) {
+            retVal = this.currentData;
+            this.currentData = "";
+        }
         return retVal;
+    }
+
+    public void TaroRet(Object data){
+        this.currentData = data.toString();
+        this.lock = true;
     }
 }
 

@@ -15,7 +15,6 @@ public class ret<T> {
 
     @Override
     public String toString() {
-//        Object data = JSONObject.toJSON(this.data);
         Object o = JSONObject.toJSON(this);
         System.out.println(o.toString());
         return o.toString();

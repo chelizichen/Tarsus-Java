@@ -179,24 +179,27 @@ public  class Tarsus {
     }
 
     public StringBuffer beforeInvoke(StringBuffer stf){
-        System.out.println(stf);
 
         final String getId = stf.substring(0, 4);
-        System.out.println("getId"+getId);
+
         String interFace = this.unpkgHead(0, stf);
         String method = this.unpkgHead(1, stf);
         String timeout = this.unpkgHead(2, stf);
 
-        TarsusBaseInterFace ArcInstance = TarsusBaseInterFace.ClazzMap.get(interFace);
+        TarsusBaseInterFace TarsusInstance = TarsusBaseInterFace.ClazzMap.get(interFace);
         int index = stf.indexOf("[##]");
         String buf = stf.substring(index + 4, stf.length() - 8);
         List list = this.unpkgBody(buf);
-        System.out.println(list);
-        final ret data =(ret) ArcInstance.invokeMethod(interFace, method, list);
+
+        // 从这里拿到List 参数后进行 invoke 方法调用
+        // 此时已经拿到了 对应的数据 getId
+        // 可以通过 唯一Id 进行观察者模式来操作
+        final String data = TarsusInstance.invokeMethod(interFace, method, list);
         StringBuffer stringBuffer = new StringBuffer();
 
+
         stringBuffer.append(getId);
-        stringBuffer.append(data.toString());
+        stringBuffer.append(data);
         return stringBuffer;
     }
 

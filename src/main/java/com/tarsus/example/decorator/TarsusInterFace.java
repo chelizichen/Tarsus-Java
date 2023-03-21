@@ -1,9 +1,6 @@
 package com.tarsus.example.decorator;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * 用于定义微服务接口的注解
@@ -13,6 +10,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE,ElementType.CONSTRUCTOR})
+@Inherited
 public @interface TarsusInterFace {
     public String interFace();
 }
