@@ -15,15 +15,18 @@ import com.alibaba.fastjson.JSONObject;
 
 @TaroStruct
 public class GetUserListReq{
+  public String sa;
   public Basic basic;
   public List<Integer> ids;
-  
+
 
   // ListConstructor
   public GetUserListReq(List<Object> list){
-    this.basic = new Basic((List<Object>)list.get(0));
-  this.ids = JSON.parseArray((String) list.get(1),Integer.class);
-    
+    this.sa = (String) list.get(0);
+    System.out.println("走到这一步1");
+    this.basic = new Basic((List<Object>)list.get(1));
+    System.out.println("走到这一步2");
+    this.ids = JSON.parseArray((String) list.get(2),Integer.class);
   }
 
   // NoArgsConstructor
@@ -36,4 +39,3 @@ public class GetUserListReq{
     return o.toString();
   }
 }
-  

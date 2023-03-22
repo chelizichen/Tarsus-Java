@@ -28,8 +28,9 @@ struct CommParams  {
     };
 
     GetUserListReq      :   {
-        1   basic       :   Basic;
-        2   ids         :   List<int>;
+        1   text        :   string;
+        2   basic       :   Basic;
+        3   ids         :   List<int>;
     };
 
     GetUserListRes      :   {

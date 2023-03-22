@@ -7,7 +7,7 @@ import com.tarsus.example.taro.*;
 
 @TarsusInterFace(interFace = "TaroInterFaceTest")
 public class TaroInterFaceImpl extends TarsusBaseInterFace implements TaroInterFace {
-    
+
     @Override
     @TarsusMethod
     public int getUserById( GetUserByIdReq req, GetUserByIdRes res) {
@@ -24,7 +24,10 @@ public class TaroInterFaceImpl extends TarsusBaseInterFace implements TaroInterF
     }
 
     @Override
+    @TarsusMethod
     public int getUserList(GetUserListReq req, GetUserListRes res) {
+        System.out.println(req.basic);
+        System.out.println(req.ids);
         return 0;
     }
 }
