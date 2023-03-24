@@ -52,6 +52,15 @@ public class TarsusBaseInterFace {
 
         // 单独设置IOC
         this.SetIocService();
+
+        Method[] methods = this.getClass().getMethods();
+        for (Method method : methods) {
+            // 需要是 @TarsusMethod 注解
+            if (method.isAnnotationPresent(TarsusMethod.class)) {
+                // 创建 ObServer，将 Name + 方法名称带入;
+                TarsusBaseInterFace.MethodsMap.put(this.InterFace + method.getName(), method);
+            }
+        }
     }
 
     /**
