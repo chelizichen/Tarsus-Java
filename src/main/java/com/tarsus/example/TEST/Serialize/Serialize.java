@@ -58,7 +58,10 @@ public class Serialize {
     }
 
     public static void main(String[] args) {
-        JSONArray jsonArray = JSON.parseArray("[\"GetUserByIdReq---1\",\"\",[\"ASDASDASDSADSA\",[\"12412312\"],[\"asda1\",\"11\"],[1,2,3,4,5],[[\"1\",\"2\"],[\"1\",\"2\"],[\"1\",\"2\"]]]]\n");
+        List jsonArray = JSON.parseArray("[\"GetUserByIdReq---1\",\"\",[\"ASDASDASDSADSA\",[\"12412312\"],[\"asda1\",\"11\"],[1,2,3,4,5],[[\"1\",\"2\"],[\"1\",\"2\"],[\"1\",\"2\"]]]]\n");
+        System.out.println(jsonArray.get(2) instanceof List);
+        List a = (List)jsonArray.get(2);
+        System.out.println(a.size());
         System.out.println(jsonArray);
 //        HashMap<String, Object> hmp = new HashMap<>();
 //        HashMap<Object, Object> asdasd = new HashMap<>();

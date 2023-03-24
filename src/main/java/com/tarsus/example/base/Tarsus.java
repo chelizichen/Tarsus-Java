@@ -1,5 +1,6 @@
 package com.tarsus.example.base;
 
+import com.alibaba.fastjson.JSON;
 import com.tarsus.example.config.ret;
 import com.tarsus.example.decorator.TarsusMsApplication;
 import com.tarsus.example.decorator.async.Async;
@@ -38,18 +39,7 @@ public  class Tarsus {
             "[##]"
     };
 
-    /**
-     * 数据体
-     */
-    static String[] size = new String[]{
-            "#a#",
-            "#b#", "#c#", "#d#",
-            "#e#", "#f#", "#g#", "#h#", "#i#",
-            "#j#", "#k#", "#l#", "#m#",
-            "#n#", "#o#", "#p#", "#q#", "#r#", "#s#",
-            "#t#", "#u#", "#v#", "#w#", "#x#", "#y#",
-            "#z#","#-#","#=#","#/#","#.#","#,#"
-    };
+
 
     public static void run(Class<?> clazz,String[] args){
 
@@ -186,16 +176,11 @@ public  class Tarsus {
         String interFace = this.unpkgHead(0, stf);
         String method = this.unpkgHead(1, stf);
         String timeout = this.unpkgHead(2, stf);
-        System.out.println("interFace ||"+ interFace);
         TarsusBaseInterFace TarsusInstance = TarsusBaseInterFace.ClazzMap.get(interFace);
-        int index = stf.indexOf("[##]");
-        String buf = stf.substring(index + 4, stf.length() - 8);
-        List list = this.unpkgBody(buf);
-        System.out.println("args : " + list);
-        System.out.println("TarsusInstance"+TarsusInstance.getClass().getSimpleName());
-        // 从这里拿到List 参数后进行 invoke 方法调用
-        // 此时已经拿到了 对应的数据 getId
-        // 可以通过 唯一Id 进行观察者模式来操作
+        int body_index = stf.indexOf("[##]")+4;
+        String buf = stf.substring(body_index, stf.length() - 8);
+        List list = this.unPackageBody(buf);
+
         final String data = TarsusInstance.invokeMethod(interFace, method, list);
         StringBuffer stringBuffer = new StringBuffer();
 
@@ -211,6 +196,10 @@ public  class Tarsus {
         return head;
     }
 
+    private List<?> unPackageBody(String stf){
+        return JSON.parseArray(stf);
+    }
+
 
     private String unpkgHead(int start, StringBuffer data, boolean isEnd) {
         int start_index = data.indexOf(Tarsus.proto[start]);
@@ -224,121 +213,4 @@ public  class Tarsus {
         return head;
     }
 
-    public List unpkgBody(String buf) {
-        List args = new ArrayList();
-        int init = 0;
-        int start = buf.indexOf(size[init]);
-        while (true) {
-            String end_str = buf.substring(start, start + 3);
-            boolean isEnd = end_str.equals(size[size.length - 1]);
-            if (isEnd) {
-                break;
-            }
-            int next = buf.indexOf(size[init + 1], start);
-
-            if (next == -1) {
-                if (start + size[init].length() == buf.length()) {
-                    break;
-                }
-                String sub_pkg = buf.substring(start, start + 6);
-                boolean is_un_pkg = sub_pkg.equals(size[init] + size[0]);
-                // 判断是否为未分割的参数
-                if (is_un_pkg) {
-                    String un_pkg = buf.substring(start + 3, buf.length() - 3);
-                    List list = this.unpkgBody(un_pkg);
-                    args.add(init, list);
-                } else {
-                    String substring = buf.substring(start + 3, buf.length() - 3);
-                    args.add(init, substring);
-                }
-                break;
-            } else {
-                boolean isObject = buf.substring(start, start + 6).equals(size[init] + size[0]);
-                if (isObject) {
-
-                    final String currEndStr = size[size.length - 1] + size[init + 1];
-                    final String breakEndStr = size[size.length - 1] + size[size.length - 1];
-                    int end = buf.indexOf(currEndStr);
-
-
-                    String un_pkg = buf.substring(start + 3, end + 3);
-                    List getargs = this.unpkgBody(un_pkg);
-                    args.add(init, getargs);
-                    start = end + 3;
-                } else {
-                    String getargs = buf.substring(start + 3, next);
-                    args.add(init, getargs);
-                    start = next;
-                }
-            }
-            init++;
-        }
-        return args;
-
-
-    }
 }
-
-
-//class Test{
-//    String[] size = new String[]{
-//            "#a#",
-//            "#b#", "#c#", "#d#",
-//            "#e#", "#f#", "#g#", "#h#", "#i#",
-//            "#j#", "#k#", "#l#", "#m#",
-//            "#n#", "#o#", "#p#", "#q#", "#r#", "#s#",
-//            "#t#", "#u#", "#v#", "#w#", "#x#", "#y#",
-//            "#z#","#-#","#=#","#/#","#.#","#,#"
-//    };
-//
-//    public List<Object> splitString(String input, String[] size) {
-//        List<Object> result = new ArrayList<>();
-//        int startIndex = 0;
-//        for (int i = 0; i < size.length; i++) {
-//            int endIndex = input.indexOf(size[i], startIndex);
-//            if (endIndex == -1) {
-//                break;
-//            }
-//            String substring = input.substring(startIndex, endIndex);
-//            if (!substring.isEmpty()) {
-//                if (i == size.length - 1) {
-//                    result.add(substring);
-//                } else {
-//                    result.add(Integer.parseInt(substring));
-//                }
-//            }
-//            startIndex = endIndex + size[i].length();
-//            if (i < size.length - 1 && size[i + 1].equals(size[i])) {
-//                List<Object> sublist = splitString(input.substring(startIndex), size);
-//                result.add(sublist);
-//                startIndex += getLength(sublist, size);
-//            }
-//        }
-//        return result;
-//    }
-//
-//    private int getLength(List<Object> list, String[] size) {
-//        int length = 0;
-//        for (Object obj : list) {
-//            if (obj instanceof Integer) {
-//                length += size[(Integer) obj].length();
-//            } else if (obj instanceof String) {
-//                length += ((String) obj).length();
-//            } else if (obj instanceof List) {
-//                length += getLength((List<Object>) obj, size);
-//            }
-//        }
-//        return length;
-//    }
-//
-//    public static void main(String[] args) {
-////        Test test = new Test();
-//
-//        String str = "#a#1#b##a#GetUserByIdReq---1#b##a#ASDASDASDSADSA#,##,##c##a#1#b##a#1#b#name#c#1#d#CES #e#测试地址#,##c#ok#,##d#End#,#";
-//        Tarsus tarsus = new Tarsus();
-//        List list = tarsus.unpkgBody(str);
-//        System.out.println(list);
-//        //        List<Object> list = test.splitString(str, test.size);
-////        System.out.println(list);
-//    }
-//}

@@ -20,10 +20,10 @@ public class BaseServerTest {
         final Tarsus arcBaseServer = new Tarsus();
 //        final List list = arcBaseServer.unpkgBody(c);
 //        final List list1 = arcBaseServer.unpkgBody(a);
-        final List list2 = arcBaseServer.unpkgBody(b);
+//        final List list2 = arcBaseServer.unpkgBody(b);
 //        System.out.println(list);
 //        System.out.println(list1);
-        System.out.println(list2);
+//        System.out.println(list2);
 
     }
 }

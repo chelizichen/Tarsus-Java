@@ -10,17 +10,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Entity
-@NoArgsConstructor
-@TaroStruct
 public class Drug extends TarsusBaseOrm {
-
-    public Drug(List<String> list) {
-        this.id = list.get(0);
-        this.DrName = list.get(1);
-        this.DrPrice = list.get(2);
-        this.DrRemark = list.get(3);
-        this.DrCode = list.get(4);
-    }
 
     @Column
     @Key

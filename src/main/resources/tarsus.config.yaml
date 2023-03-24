@@ -10,6 +10,7 @@ servant:
     publicPath: src.main.java
     events: async
     register: register
+    struct: struct
   # 缓存地址
   cache:
     url: 127.0.0.1
