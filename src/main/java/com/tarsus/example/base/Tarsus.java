@@ -176,12 +176,15 @@ public  class Tarsus {
         String interFace = this.unpkgHead(0, stf);
         String method = this.unpkgHead(1, stf);
         String timeout = this.unpkgHead(2, stf);
+//        Integer body_len = Integer.valueOf(this.unpkgHead(3, stf));
+        String _request = this.unpkgHead(4, stf, true);
+
         TarsusBaseInterFace TarsusInstance = TarsusBaseInterFace.ClazzMap.get(interFace);
         int body_index = stf.indexOf("[##]")+4;
         String buf = stf.substring(body_index, stf.length() - 8);
         List list = this.unPackageBody(buf);
 
-        final String data = TarsusInstance.invokeMethod(interFace, method, list);
+        final String data = TarsusInstance.invokeMethod(interFace, method, list,_request);
         StringBuffer stringBuffer = new StringBuffer();
 
         stringBuffer.append(getId);

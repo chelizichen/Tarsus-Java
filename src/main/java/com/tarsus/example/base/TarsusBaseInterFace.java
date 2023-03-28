@@ -1,6 +1,8 @@
 package com.tarsus.example.base;
 
 
+import com.alibaba.fastjson2.JSON;
+import com.tarsus.example.base.err.TarsusErr;
 import com.tarsus.example.base.inf.TarsusJson;
 import com.tarsus.example.decorator.TarsusMethod;
 import com.tarsus.example.decorator.TaroStruct;
@@ -115,10 +117,17 @@ public class TarsusBaseInterFace {
      * 传过来的一个args 参数
      * 遍历 args 将每个 args 进行类型转换 作为新的类型参数传递给 已存储的方法中实现调用
      */
-    public String invokeMethod(String interFace, String method, List<Object> args) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+    public String invokeMethod(String interFace, String method, List<Object> args,String _request) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         final Method getMethod = TarsusBaseInterFace.MethodsMap.get(interFace + method);
         final Class<?>[] parameterTypes = getMethod.getParameterTypes();
         final ArrayList<Object> truthParams = new ArrayList<>(); // 实参
+
+        final String request_clazz_name = parameterTypes[0].getSimpleName();
+
+        // 判断请求参数是否一致
+        if(!request_clazz_name.equals(_request)){
+            return TarsusErr.Request(request_clazz_name,_request);
+        }
 
         Class<?> request = TarsusStream.StreamMap.get(parameterTypes[0].getSimpleName());
         Constructor<?> declaredConstructor = request.getConstructor(List.class);
