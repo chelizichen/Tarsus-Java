@@ -23,7 +23,7 @@ public class TaroInterFaceImpl extends TarsusBaseInterFace implements TaroInterF
         res.data.fullName ="1";
         res.data.id =req.basic.token;
         res.data.name ="1";
-        res.code = 1121;
+        res.code = req.id;
         res.message = req.basic.token;
         this.json(res);
         return 0;

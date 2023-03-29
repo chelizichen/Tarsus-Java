@@ -45,6 +45,10 @@ public class TarsusStream implements TarsusStreamInf {
     @Override
     public Integer read_int(Integer index) {
         index = index -1;
+        final Object o = this.arguments.get(index);
+        if (o instanceof Integer){
+            return (Integer) o;
+        }
         final Integer integer = Integer.valueOf((String) this.arguments.get(index));
         return integer;
     }
