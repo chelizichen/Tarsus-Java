@@ -21,8 +21,8 @@ public class GetUserListRes implements TarsusJson {
     public GetUserListRes(List<?> list) {
         TarsusStream _tarsusStream = new TarsusStream(list, "GetUserListRes");
         this.code = _tarsusStream.read_int(1);
-        this.message = _tarsusStream.read_string(2);
-        this.data = _tarsusStream.read_struct(3, "List<User>");
+        this.data = _tarsusStream.read_struct(2, "List<User>");
+        this.message = _tarsusStream.read_string(3);
 
     }
 

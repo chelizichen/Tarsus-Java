@@ -11,6 +11,9 @@ import com.tarsus.example.struct.GetUserListRes;
 import com.tarsus.example.struct.GetUserListReq;
 import com.tarsus.example.struct.User;
 
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 @TarsusInterFace(interFace = "TaroInterFaceTest")
 public class TaroInterFaceImpl extends TarsusBaseInterFace implements TaroInterFace {
 
@@ -32,8 +35,22 @@ public class TaroInterFaceImpl extends TarsusBaseInterFace implements TaroInterF
     @Override
     @TarsusMethod
     public int getUserList(GetUserListReq req, GetUserListRes res) {
-        System.out.println(req.basic);
-        System.out.println(req.ids);
+
+        final Stream<User> userStream = req.ids.stream().map(integer -> {
+            final User user = new User();
+            user.id = integer.toString();
+            user.name = "name" + integer.toString();
+            user.address = "address" + integer.toString();
+            user.age = "age" + integer.toString();
+            user.fullName = "fullName" + integer.toString();
+            return user;
+        });
+        res.data = userStream.collect(Collectors.toList());
+        res.code=0;
+        res.message="111";
+
+        this.json(res);
+
         return 0;
     }
 }

@@ -35,7 +35,6 @@ public class User implements TarsusJson {
 
     // NoArgsConstructor
     public User() {
-
     }
 
     // toJson

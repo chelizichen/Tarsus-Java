@@ -57,13 +57,27 @@ public class TarsusStream implements TarsusStreamInf {
     public <T>List<T> read_list(Integer index, String className) {
         index = index -1;
         String getType = GetType(className);
+        System.out.println("getType || "+getType);
         List<T> args = new ArrayList<>();
         if(this.arguments.get(index) instanceof List){
             List<?> list_args = (List<?>) this.arguments.get(index);
             // 基础类型
             if(base_type.contains(getType)){
                 for (int i = 0; i < list_args.size(); i++) {
-                    args.add(this.read((String) list_args.get(i),getType));
+                    final Object o = list_args.get(i);
+                    if(getType.equals("int")){
+                        System.out.println(o);
+                        if(o instanceof Integer){
+                            args.add((T) o);
+                        }
+                        if(o instanceof String){
+                            final Object i1 = Integer.parseInt((String) o);
+                            args.add((T) i1);
+                        }
+                    }
+                    if(getType.equals("string")){
+                        args.add((T) o);
+                    }
                 }
             }else {
                 for (int i = 0; i < list_args.size(); i++) {
@@ -102,7 +116,7 @@ public class TarsusStream implements TarsusStreamInf {
     }
 
     @Override
-    public <T> T read(String value, String type) {
+    public <T> T read(Object value, String type) {
         if(type.equals("string")){
             return (T) value;
         }

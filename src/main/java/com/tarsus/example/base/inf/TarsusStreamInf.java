@@ -8,5 +8,5 @@ public interface TarsusStreamInf {
     public Integer read_int(Integer index);
     public <T>List<T> read_list(Integer index,String className) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException;
     public <T>T read_struct(Integer index,String className);
-    public <T>T read(String value,String type);
+    public <T>T read(Object value,String type);
 }

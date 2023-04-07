@@ -20,9 +20,8 @@ public class GetUserListReq implements TarsusJson {
     // ListConstructor
     public GetUserListReq(List<?> list) {
         TarsusStream _tarsusStream = new TarsusStream(list, "GetUserListReq");
-        this.text = _tarsusStream.read_string(1);
-        this.basic = _tarsusStream.read_struct(2, "Basic");
-        this.ids = _tarsusStream.read_list(3, "List<int>");
+        this.basic = _tarsusStream.read_struct(1, "Basic");
+        this.ids = _tarsusStream.read_list(2, "List<int>");
 
     }
 
