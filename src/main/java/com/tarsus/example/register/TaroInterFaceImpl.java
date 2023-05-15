@@ -14,7 +14,7 @@ import com.tarsus.example.struct.User;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@TarsusInterFace(interFace = "TaroInterFaceTest")
+@TarsusInterFace("TaroInterFaceTest")
 public class TaroInterFaceImpl extends TarsusBaseInterFace implements TaroInterFace {
 
     @Override

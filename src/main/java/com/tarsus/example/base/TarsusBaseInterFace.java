@@ -44,7 +44,7 @@ public class TarsusBaseInterFace {
         String interFaceName_Or_ClazzName = "";
         if (hasAnnotation) {
             TarsusInterFace testAnnotation = this.getClass().getAnnotation(TarsusInterFace.class);
-            interFaceName_Or_ClazzName = testAnnotation.interFace();
+            interFaceName_Or_ClazzName = testAnnotation.value();
         } else {
             interFaceName_Or_ClazzName = this.getClass().getSimpleName();
         }

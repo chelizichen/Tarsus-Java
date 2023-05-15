@@ -12,5 +12,5 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE,ElementType.CONSTRUCTOR})
 @Inherited
 public @interface TarsusInterFace {
-    public String interFace();
+    String value() default "" ;
 }
