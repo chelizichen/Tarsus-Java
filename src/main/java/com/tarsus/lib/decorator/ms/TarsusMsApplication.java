@@ -1,4 +1,4 @@
-package com.tarsus.lib.decorator;
+package com.tarsus.lib.decorator.ms;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,12 +1,11 @@
-package com.tarsus.example.base.err;
+package com.tarsus.lib.main_control.load_server.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.tarsus.example.base.inf.TarsusJson;
+import com.tarsus.lib.main_control.load_server.TarsusJsonInf;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
-public class TarsusErr<T> implements TarsusJson {
+public class TarsusErr<T> implements TarsusJsonInf {
     public String message;
     public Integer code;
     public T data;

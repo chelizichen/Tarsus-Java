@@ -1,20 +1,16 @@
 
-package com.tarsus.example.struct;
-
-import com.tarsus.example.decorator.TaroStruct;
-import com.tarsus.example.base.inf.TarsusJson;
-import com.tarsus.example.base.TarsusStream;
-import com.alibaba.fastjson.JSON;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
+package com.tarsus.lib.__test__.src.struct;
 
 import com.alibaba.fastjson.JSONObject;
+import com.tarsus.lib.decorator.struct.TaroStruct;
+import com.tarsus.lib.main_control.load_server.TarsusJsonInf;
+import com.tarsus.lib.main_control.load_server.impl.TarsusStream;
+
+import java.util.List;
 
 
 @TaroStruct
-public class User implements TarsusJson {
+public class User implements TarsusJsonInf {
     public String id;
     public String name;
     public String age;

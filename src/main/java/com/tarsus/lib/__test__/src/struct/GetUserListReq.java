@@ -1,13 +1,14 @@
 
-package com.tarsus.example.struct;
-
-import com.tarsus.example.decorator.TaroStruct;
-import com.tarsus.example.base.inf.TarsusJson;
-import com.tarsus.example.base.TarsusStream;
-
-import java.util.List;
+package com.tarsus.lib.__test__.src.struct;
 
 import com.alibaba.fastjson.JSONObject;
+import com.tarsus.example.base.inf.TarsusJson;
+import com.tarsus.lib.decorator.struct.TaroStruct;
+import com.tarsus.lib.main_control.load_server.TarsusJsonInf;
+import com.tarsus.lib.main_control.load_server.impl.TarsusStream;
+
+
+import java.util.List;
 
 
 @TaroStruct

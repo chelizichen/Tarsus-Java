@@ -1,9 +1,7 @@
-package com.tarsus.example.taro;
+package com.tarsus.lib.__test__.src.taro;
 
-import com.tarsus.example.struct.GetUserByIdReq;
-import com.tarsus.example.struct.GetUserByIdRes;
-import com.tarsus.example.struct.GetUserListReq;
-import com.tarsus.example.struct.GetUserListRes;
+
+import com.tarsus.lib.__test__.src.struct.*;
 
 public interface TaroInterFace {
     public int getUserById(GetUserByIdReq req, GetUserByIdRes res);

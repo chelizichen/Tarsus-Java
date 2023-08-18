@@ -1,4 +1,4 @@
-package com.tarsus.example.decorator.ioc;
+package com.tarsus.lib.decorator.ioc;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
