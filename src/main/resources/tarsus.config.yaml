@@ -1,5 +1,5 @@
 server:
-  project: '@TarsusDemoProject/JavaDemo -l java -t @tarsus/ms -h 127.0.0.1 -p 12010'
+  project: '@TarsusDemoProject/JavaDemo -l java -t @tarsus/ms -h 127.0.0.1 -p 12013 -w 10'
   database:
     url: jdbc:mysql://127.0.0.1:3306/lmr_medical?useSSL=false&serverTimezone=UTC
     username: root
@@ -9,4 +9,7 @@ server:
     maxActive: 10
     maxAwait: 20000
     TimeBetweenConnectErrorMillis: 2000
+  aliases:
+    publicPath: src.main.java
+    struct: src.struct
 

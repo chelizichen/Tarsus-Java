@@ -27,6 +27,7 @@ public class TarsusConfig {
     public static class Server {
         public String project;
         public Map<String, Object> database;
+        public Map<String,String> aliases;
     }
 
     public Server server;

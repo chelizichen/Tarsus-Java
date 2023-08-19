@@ -9,8 +9,10 @@ import java.lang.reflect.InvocationTargetException;
 @TarsusMsApplication
 public class TarsusJavaServer {
     public static void main(String[] args) throws InvocationTargetException, IllegalAccessException {
-        Tarsus tarsus = new Tarsus();
+        Tarsus tarsus = new Tarsus(TarsusJavaServer.class);
         tarsus.LoadInterFace(new Class[]{TaroInterFaceImpl.class});
-//        tarsus.LoadServer();
+        // debugger  - load struct
+        tarsus.LoadStruct();
+        tarsus.LoadServer();
     }
 }

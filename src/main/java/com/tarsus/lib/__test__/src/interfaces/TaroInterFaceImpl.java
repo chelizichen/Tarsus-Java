@@ -1,7 +1,7 @@
 package com.tarsus.lib.__test__.src.interfaces;
 
 
-import com.tarsus.example.struct.*;
+import com.tarsus.lib.__test__.src.struct.*;
 import com.tarsus.lib.decorator.ms.TarsusInterFace;
 import com.tarsus.lib.decorator.ms.TarsusMethod;
 import java.util.stream.Collectors;
@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 @TarsusInterFace("TaroInterFaceTest")
 public class TaroInterFaceImpl  {
     @TarsusMethod
-    public int getUserById(GetUserByIdReq req, GetUserByIdRes res) {
+    public GetUserByIdRes getUserById(GetUserByIdReq req, GetUserByIdRes res) {
         res.data = new User();
         res.data.address ="1";
         res.data.age ="1";
@@ -19,7 +19,7 @@ public class TaroInterFaceImpl  {
         res.data.name ="1";
         res.code = req.id;
         res.message = req.basic.token;
-        return 0;
+        return res;
     }
 
     @TarsusMethod

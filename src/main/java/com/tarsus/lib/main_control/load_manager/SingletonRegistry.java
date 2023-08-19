@@ -44,7 +44,7 @@ public class SingletonRegistry {
             Object instance = get$interface.getConstructor().newInstance();
             System.out.println("interface " + instance.getClass().getSimpleName() + " load success");
 
-            SingletonRegistry.Interface$Maps.put(get$interface.getSimpleName(), instance);
+            SingletonRegistry.Interface$Maps.put(interFace, instance);
 
             Method[] declaredMethods = get$interface.getMethods();
             for (Method declaredMethod : declaredMethods) {

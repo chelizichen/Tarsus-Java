@@ -1,6 +1,7 @@
 package com.tarsus.lib.main_control.load_server.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.tarsus.lib.__test__.src.struct.Basic;
 import com.tarsus.lib.main_control.load_config.LoadConfig;
 import com.tarsus.lib.main_control.load_manager.SingletonRegistry;
 import com.tarsus.lib.main_control.load_server.TarsusInf;
@@ -20,9 +21,10 @@ public class Tarsus implements TarsusInf {
 
     protected static LoadConfig config = null;
 
-    public Tarsus() {
+    public Tarsus(Class<?> target$class) {
         LoadConfig config = new LoadConfig();
         Tarsus.config = config;
+        LoadConfig.packageName = target$class.getPackage().getName();
     }
 
     @Override
@@ -33,7 +35,9 @@ public class Tarsus implements TarsusInf {
 
     @Override
     public void LoadStruct() {
-
+        Tarsus.config.LoadStruct();
+//        String name = Basic.class.getName();
+//        System.out.println("name - "+name);
     }
 
     @Override
@@ -59,6 +63,7 @@ public class Tarsus implements TarsusInf {
                     stf.append(str);
                     // 执行 结束 语句 并且 拆分相关字节流
                     if (str.endsWith("[#ENDL#]")) {
+                        System.out.println("recieve data - "+str);
                         final StringBuffer data = this.invoke(stf);
                         System.out.println("结束的代码" + data);
                         bw.write(data.toString());

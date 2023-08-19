@@ -72,7 +72,6 @@ public class TarsusYaml {
             e.printStackTrace();
         }
         return classes;
-
     }
 
     public void SetToInstance(Set<Class<?>> classes) {
