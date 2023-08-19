@@ -2,6 +2,7 @@ package com.tarsus.dev_v2_0.interfaces;
 
 
 import com.tarsus.dev_v2_0.struct.*;
+import com.tarsus.dev_v2_0.taro.TaroInterFace;
 import com.tarsus.lib.lib_decorator.ms.TarsusInterFace;
 import com.tarsus.lib.lib_decorator.ms.TarsusMethod;
 
@@ -9,8 +10,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @TarsusInterFace("TaroInterFaceTest")
-public class TaroInterFaceImpl {
+public class TaroInterFaceImpl implements TaroInterFace {
     @TarsusMethod
+    @Override
     public GetUserByIdRes getUserById(GetUserByIdReq req, GetUserByIdRes res) {
         res.data = new User();
         res.data.address = "1";
@@ -24,6 +26,7 @@ public class TaroInterFaceImpl {
     }
 
     @TarsusMethod
+    @Override
     public GetUserListRes getUserList(GetUserListReq req, GetUserListRes res) {
         final Stream<User> userStream = req.ids.stream().map(integer -> {
             final User user = new User();
