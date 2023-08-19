@@ -1,9 +1,9 @@
 package com.tarsus.lib.main_control.load_manager;
 
-import com.tarsus.lib.decorator.ioc.Collect;
-import com.tarsus.lib.decorator.ioc.Inject;
-import com.tarsus.lib.decorator.ms.TarsusInterFace;
-import com.tarsus.lib.decorator.ms.TarsusMethod;
+import com.tarsus.lib.lib_decorator.ioc.Collect;
+import com.tarsus.lib.lib_decorator.ioc.Inject;
+import com.tarsus.lib.lib_decorator.ms.TarsusInterFace;
+import com.tarsus.lib.lib_decorator.ms.TarsusMethod;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;

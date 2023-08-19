@@ -1,7 +1,7 @@
 package com.tarsus.lib.main_control.load_config;
 
 import com.tarsus.lib.main_control.load_server.impl.TarsusStream;
-import com.tarsus.lib.util.ServantUtil;
+import com.tarsus.lib.lib_util.ServantUtil;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
@@ -30,12 +30,6 @@ public class LoadConfig {
         LoadConfig.publicPath = tarsusConfig.server.aliases.get("publicPath");
         LoadConfig.struct = tarsusConfig.server.aliases.get("struct");
     }
-
-    public static String[] proto = new String[]{"[#1]",
-            "[#2]", "[#3]", "[#4]", "[#5]",
-            "[#6]", "[#7]", "[#8]", "[#9]",
-            "[##]"
-    };
 
 
     public void LoadStruct() {

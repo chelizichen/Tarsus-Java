@@ -34,12 +34,12 @@ graph TD
 - 启动Java服务所需的基类和注解
 ````Java
 @TarsusServerApplication(port = 9811)
-public class com.tarsus.example.TarsusServer extends TarsusBaseServer {
+public class com.tarsus.dev_v2_0.0.TarsusServer extends TarsusBaseServer {
     public static void main(String[] args) {
-        com.tarsus.example.TarsusServer c = new com.tarsus.example.TarsusServer();
+        com.tarsus.dev_v2_0.0.TarsusServer c = new com.tarsus.dev_v2_0.0.TarsusServer();
         final Hello hello = new Hello();
         final Test test = new Test();
-        c.boost(com.tarsus.example.TarsusServer.class);
+        c.boost(com.tarsus.dev_v2_0.0.TarsusServer.class);
     }
 }
 
