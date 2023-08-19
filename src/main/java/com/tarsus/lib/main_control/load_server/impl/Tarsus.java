@@ -57,6 +57,7 @@ public class Tarsus implements TarsusInf {
                     // 执行 结束 语句 并且 拆分相关字节流
                     if (str.endsWith("[#ENDL#]")) {
                         final StringBuffer data = receive$data.invoke(stf);
+                        System.out.println("recieve - data " + data.toString());
                         bw.write(data.toString());
                         bw.flush();
                         stf.delete(0, stf.length());

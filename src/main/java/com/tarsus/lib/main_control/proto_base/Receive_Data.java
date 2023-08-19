@@ -22,7 +22,6 @@ public class Receive_Data {
     public StringBuffer invoke(StringBuffer stf) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
         final String getId = stf.substring(0, 4);
-
         String interFace = this.unpkgHead(0, stf);
         String method = this.unpkgHead(1, stf);
         String timeout = this.unpkgHead(2, stf);
@@ -39,11 +38,12 @@ public class Receive_Data {
         ArrayList<Object> $params = new ArrayList<>(); // 实参
         String $request = parameterTypes[0].getSimpleName();
 
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(getId);
+
+
         if(!$request.equals(request)){
             String $err = TarsusErr.Request($request, request);
-            StringBuffer stringBuffer = new StringBuffer();
-
-            stringBuffer.append(getId);
             stringBuffer.append( $err);
             return stringBuffer;
         }
@@ -61,9 +61,15 @@ public class Receive_Data {
         $params.add(ResponseInstance);
 
         TarsusJsonInf data = (TarsusJsonInf) $method.invoke($interface, $params.get(0), $params.get(1));
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(getId);
+        Class<?> return$class = $method.getReturnType();
+
+        if(return$class != response$class){
+            String $err = TarsusErr.Response(return$class.getSimpleName(), response$class.getSimpleName());
+            stringBuffer.append( $err);
+            return stringBuffer;
+        }
         stringBuffer.append(data.json());
+        System.out.println("return - data " + stringBuffer.toString());
         return stringBuffer;
     }
 
