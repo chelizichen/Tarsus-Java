@@ -21,7 +21,7 @@ public class Receive_Data {
 
     public StringBuffer invoke(StringBuffer stf) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
-        final String getId = stf.substring(0, 4);
+        final String getId = stf.substring(0, 8);
         String interFace = this.unpkgHead(0, stf);
         String method = this.unpkgHead(1, stf);
         String timeout = this.unpkgHead(2, stf);
