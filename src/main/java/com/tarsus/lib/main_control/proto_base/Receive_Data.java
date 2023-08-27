@@ -1,16 +1,21 @@
 package com.tarsus.lib.main_control.proto_base;
 
 import com.alibaba.fastjson.JSON;
+import com.tarsus.dev_v1_0.base.inf.TarsusJson;
 import com.tarsus.lib.main_control.load_manager.SingletonRegistry;
 import com.tarsus.lib.main_control.load_server.TarsusJsonInf;
+import com.tarsus.lib.main_control.load_server.impl.Tarsus;
 import com.tarsus.lib.main_control.load_server.impl.TarsusErr;
 import com.tarsus.lib.main_control.load_server.impl.TarsusStream;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Receive_Data {
     public static String[] proto = new String[]{"[#1]",
@@ -95,5 +100,19 @@ public class Receive_Data {
         }
         String head = data.substring(start_index + Receive_Data.proto[start].length(), start_next);
         return head;
+    }
+
+    // 由网关自行判断是Java还是NodeJS ，NodeJS处已经经过 FAST-JSON序列化加速了，
+    // Java这边暂时没办法去处理，所以先直接先打成JSON，data 再给NodeJS那里去处理
+    public  static<Req extends TarsusJson,Res> Res CrossRequest(Object curr,Req Request, Res Response) throws IOException {
+        String eid = UUID.randomUUID().toString().substring(0,8);
+        String json = Request.json();
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(eid);
+        stringBuffer.append(curr);
+        stringBuffer.append(json);
+        Tarsus.bw.write(stringBuffer.toString());
+        // 这里注册一个 eid 的事件，同步等待回调？或者再优化
+        return Response;
     }
 }

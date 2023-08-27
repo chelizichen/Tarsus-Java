@@ -13,9 +13,10 @@ import java.nio.charset.StandardCharsets;
 
 public class Tarsus implements TarsusInf {
 
-    protected static LoadConfig config = null;
-    protected static Receive_Data receive$data = new Receive_Data();
+    public static LoadConfig config = null;
+    public static Receive_Data receive$data = new Receive_Data();
 
+    public static BufferedWriter bw = null;
     public Tarsus(Class<?> target$class) {
         LoadConfig config = new LoadConfig();
         Tarsus.config = config;
@@ -49,7 +50,7 @@ public class Tarsus implements TarsusInf {
                 BufferedReader br = new BufferedReader(inSR);
                 outSW = new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8);
 
-                BufferedWriter bw = new BufferedWriter(outSW);
+                Tarsus.bw = new BufferedWriter(outSW);
                 StringBuffer stf = new StringBuffer();
                 String str = "";
                 while ((str = br.readLine()) != null) {
@@ -58,8 +59,8 @@ public class Tarsus implements TarsusInf {
                     if (str.endsWith("[#ENDL#]")) {
                         final StringBuffer data = receive$data.invoke(stf);
                         System.out.println("recieve - data " + data.toString());
-                        bw.write(data.toString());
-                        bw.flush();
+                        Tarsus.bw.write(data.toString());
+                        Tarsus.bw.flush();
                         stf.delete(0, stf.length());
                     }
                 }
