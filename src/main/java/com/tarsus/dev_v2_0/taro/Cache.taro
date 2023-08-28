@@ -1,0 +1,60 @@
+/**
+* 缓存相关的结构体
+*/
+
+java_struct_package = com.tarsus.dev_v2_0.struct.*;
+java_inf_package =  com.tarsus.dev_v2_0.taro;
+java_package =
+
+struct CacheParams  {
+
+    SetCacheRes         :   {
+        1   code        :   string;
+        2   message     :   string;
+    };
+
+    // 记录
+    SetCacheReq              :     {
+        1   key         :   string;
+        2   value       :   string;
+        3   keys        :   List<string>;
+        4   values      :   List<string>;
+    };
+
+    GetCacheReq         :     {
+        1   key         :   string;
+        2   keys        :   List<string>;
+    };
+
+    GetCacheRes         :   {
+        1   value       :   string;
+        2   values      :   List<string>;
+    };
+
+    getWordsByIdsReq    :   {
+        1   ids         :   List<int>;  // word_ids
+    };
+
+    cacheWord    :   {
+        1   en_word     :   string;
+        2   user_name   :   string;
+        3   user_id     :   string;
+        4   own_mark    :   string;
+    };
+
+    getWordsByIdsRes    :   {
+        1   code        :   int;
+        2   message     :   string;
+        3   list        :   List<cacheWord>;
+        4   total       :   int;
+    };
+};
+
+
+// 记录接口
+
+interface CacheInf  {
+    int setCache (Request : SetCacheReq, Response : SetCacheRes);
+    int GetCache (Request : GetCacheReq, Response : GetCacheRes);
+    int getCacheWords (Request : getWordsByIdsReq, Response : getWordsByIdsRes);
+};
