@@ -3,7 +3,9 @@ package com.tarsus.lib.main_control.load_server.impl;
 import com.tarsus.lib.main_control.load_config.LoadConfig;
 import com.tarsus.lib.main_control.load_manager.SingletonRegistry;
 import com.tarsus.lib.main_control.load_server.TarsusInf;
+import com.tarsus.lib.main_control.proto_base.AsyncObserver;
 import com.tarsus.lib.main_control.proto_base.Receive_Data;
+import com.tarsus.lib.main_control.proto_base.SyncObserver;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
@@ -15,8 +17,12 @@ public class Tarsus implements TarsusInf {
 
     public static LoadConfig config = null;
     public static Receive_Data receive$data = new Receive_Data();
+    public static AsyncObserver asyncObserver = new AsyncObserver();
+    public static SyncObserver syncObserver = new SyncObserver();
 
     public static BufferedWriter bw = null;
+    public static StringBuffer stf = null;
+    public static String str = "";
     public Tarsus(Class<?> target$class) {
         LoadConfig config = new LoadConfig();
         Tarsus.config = config;
@@ -51,23 +57,29 @@ public class Tarsus implements TarsusInf {
                 outSW = new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8);
 
                 Tarsus.bw = new BufferedWriter(outSW);
-                StringBuffer stf = new StringBuffer();
-                String str = "";
+                Tarsus.stf = new StringBuffer();
+                Tarsus.str = "";
                 while ((str = br.readLine()) != null) {
                     stf.append(str);
                     // 执行 结束 语句 并且 拆分相关字节流
                     if (str.endsWith("[#ENDL#]")) {
-                        final StringBuffer data = receive$data.invoke(stf);
-                        System.out.println("recieve - data " + data.toString());
-                        Tarsus.bw.write(data.toString());
-                        Tarsus.bw.flush();
-                        stf.delete(0, stf.length());
+                        final StringBuffer data = receive$data.invoke(Tarsus.stf);
+                        if(data != null){
+                            System.out.println("recieve - data " + data.toString());
+                            Tarsus.reset(data.toString());
+                        }
                     }
                 }
             }
         } catch (IOException | NoSuchMethodException | InstantiationException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void reset(String data) throws IOException {
+        Tarsus.bw.write(data);
+        Tarsus.bw.flush();
+        Tarsus.stf.delete(0, Tarsus.stf.length());
     }
 
 }

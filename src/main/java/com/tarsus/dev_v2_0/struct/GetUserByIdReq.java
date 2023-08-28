@@ -10,7 +10,7 @@ import java.util.List;
 
 
 @TaroStruct
-public class GetUserByIdReq implements TarsusJsonInf {
+public class GetUserByIdReq extends TarsusJsonInf {
     public Integer id;
     public Basic basic;
 

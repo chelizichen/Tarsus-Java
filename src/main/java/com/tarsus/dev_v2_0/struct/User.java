@@ -10,7 +10,7 @@ import java.util.List;
 
 
 @TaroStruct
-public class User implements TarsusJsonInf {
+public class User extends TarsusJsonInf {
     public String id;
     public String name;
     public String age;

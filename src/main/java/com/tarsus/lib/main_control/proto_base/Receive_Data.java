@@ -1,21 +1,17 @@
 package com.tarsus.lib.main_control.proto_base;
 
 import com.alibaba.fastjson.JSON;
-import com.tarsus.dev_v1_0.base.inf.TarsusJson;
 import com.tarsus.lib.main_control.load_manager.SingletonRegistry;
 import com.tarsus.lib.main_control.load_server.TarsusJsonInf;
 import com.tarsus.lib.main_control.load_server.impl.Tarsus;
 import com.tarsus.lib.main_control.load_server.impl.TarsusErr;
 import com.tarsus.lib.main_control.load_server.impl.TarsusStream;
 
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class Receive_Data {
     public static String[] proto = new String[]{"[#1]",
@@ -24,9 +20,15 @@ public class Receive_Data {
             "[##]"
     };
 
+    // 拆分 EID 时，需要判断他是否在事件中，这样可以判断他是否是跨服务调用的
+    // 当跨服务调用时，会在该系统中生成一个唯一 eid
+    // 由于大部分是同步方法，所以当异步方法时，没办法去做类似同步的return ，否则会发生阻塞
     public StringBuffer invoke(StringBuffer stf) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
         final String getId = stf.substring(0, 8);
+
+        // 如果含有UID ，则代表为跨服务请求的返回
+        // 如果没有，则全局先注册一个
         String interFace = this.unpkgHead(0, stf);
         String method = this.unpkgHead(1, stf);
         String timeout = this.unpkgHead(2, stf);
@@ -47,30 +49,37 @@ public class Receive_Data {
         stringBuffer.append(getId);
 
 
-        if(!$request.equals(request)){
+        if (!$request.equals(request)) {
             String $err = TarsusErr.Request($request, request);
-            stringBuffer.append( $err);
+            stringBuffer.append($err);
             return stringBuffer;
         }
 
-        Class<?> request$class = TarsusStream.StreamMap.get(parameterTypes[0].getSimpleName());
+        Class<TarsusJsonInf> request$class = (Class<TarsusJsonInf>) TarsusStream.StreamMap.get(parameterTypes[0].getSimpleName());
         Constructor<?> declaredConstructor = request$class.getConstructor(List.class);
 
         // 请求Request
-        Object RequestInstance = declaredConstructor.newInstance(args);
+        TarsusJsonInf RequestInstance = (TarsusJsonInf) declaredConstructor.newInstance(args);
+        RequestInstance.__eid__ = getId;
         $params.add(RequestInstance);
+        // 如果注册过了 则代表为跨服务调用的方法，执行callback
+        if(Tarsus.asyncObserver.has(getId)){
+            Tarsus.asyncObserver.emit(getId,RequestInstance);
+            return null;
+        }
 
-        Class<?> response$class = TarsusStream.StreamMap.get(parameterTypes[1].getSimpleName());
+        Class<TarsusJsonInf> response$class = (Class<TarsusJsonInf>) TarsusStream.StreamMap.get(parameterTypes[1].getSimpleName());
         Constructor<?> noArgsConst = response$class.getConstructor();
-        Object ResponseInstance = noArgsConst.newInstance();
+        TarsusJsonInf ResponseInstance =(TarsusJsonInf) noArgsConst.newInstance();
+        ResponseInstance.__eid__ = getId;
         $params.add(ResponseInstance);
 
         TarsusJsonInf data = (TarsusJsonInf) $method.invoke($interface, $params.get(0), $params.get(1));
         Class<?> return$class = $method.getReturnType();
 
-        if(return$class != response$class){
+        if (return$class != response$class) {
             String $err = TarsusErr.Response(return$class.getSimpleName(), response$class.getSimpleName());
-            stringBuffer.append( $err);
+            stringBuffer.append($err);
             return stringBuffer;
         }
         stringBuffer.append(data.json());
@@ -102,17 +111,5 @@ public class Receive_Data {
         return head;
     }
 
-    // 由网关自行判断是Java还是NodeJS ，NodeJS处已经经过 FAST-JSON序列化加速了，
-    // Java这边暂时没办法去处理，所以先直接先打成JSON，data 再给NodeJS那里去处理
-    public  static<Req extends TarsusJson,Res> Res CrossRequest(Object curr,Req Request, Res Response) throws IOException {
-        String eid = UUID.randomUUID().toString().substring(0,8);
-        String json = Request.json();
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(eid);
-        stringBuffer.append(curr);
-        stringBuffer.append(json);
-        Tarsus.bw.write(stringBuffer.toString());
-        // 这里注册一个 eid 的事件，同步等待回调？或者再优化
-        return Response;
-    }
+
 }

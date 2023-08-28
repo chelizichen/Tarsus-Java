@@ -11,7 +11,7 @@ import com.alibaba.fastjson.JSONObject;
 
 
 @TaroStruct
-public class getWordsByIdsRes implements TarsusJsonInf {
+public class getWordsByIdsRes extends TarsusJsonInf {
     public Integer code;
     public String message;
     public List<cacheWord> list;

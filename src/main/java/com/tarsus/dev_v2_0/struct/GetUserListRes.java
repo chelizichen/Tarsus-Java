@@ -10,7 +10,7 @@ import java.util.List;
 
 
 @TaroStruct
-public class GetUserListRes implements TarsusJsonInf {
+public class GetUserListRes extends TarsusJsonInf {
     public Integer code;
     public String message;
     public List<User> data;

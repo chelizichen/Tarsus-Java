@@ -3,9 +3,11 @@ package com.tarsus.dev_v2_0.interfaces;
 import com.tarsus.dev_v2_0.struct.*;
 import com.tarsus.dev_v2_0.taro.CacheInf;
 import com.tarsus.lib.lib_decorator.ms.TarsusInterFace;
+import com.tarsus.lib.lib_decorator.ms.TarsusReflect;
+import com.tarsus.lib.main_control.load_server.impl.TarsusBaseReflect;
 
-@TarsusInterFace("cache")
-public class CacheImpl implements CacheInf {
+@TarsusReflect(proxy = "user", reflect = "cache")
+public class CacheImpl extends TarsusBaseReflect implements CacheInf {
 
     @Override
     public SetCacheRes setCache(SetCacheReq req, SetCacheRes res) {

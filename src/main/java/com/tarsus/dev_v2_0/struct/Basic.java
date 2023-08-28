@@ -10,7 +10,7 @@ import java.util.List;
 
 
 @TaroStruct
-public class Basic implements TarsusJsonInf {
+public class Basic extends TarsusJsonInf {
     public String token;
 
 
@@ -26,10 +26,5 @@ public class Basic implements TarsusJsonInf {
 
     }
 
-    // toJson
-    @Override
-    public String json() {
-        Object o = JSONObject.toJSON(this);
-        return o.toString();
-    }
+
 }

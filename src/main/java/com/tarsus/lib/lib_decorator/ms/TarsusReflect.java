@@ -7,5 +7,5 @@ import java.lang.annotation.*;
 @Inherited
 public @interface TarsusReflect {
     String proxy();
-    String reflect();
+    String interFace();
 }

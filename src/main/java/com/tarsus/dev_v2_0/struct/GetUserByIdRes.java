@@ -11,7 +11,7 @@ import java.util.List;
 
 
 @TaroStruct
-public class GetUserByIdRes implements TarsusJsonInf {
+public class GetUserByIdRes extends TarsusJsonInf {
     public Integer code;
     public User data;
     public String message;

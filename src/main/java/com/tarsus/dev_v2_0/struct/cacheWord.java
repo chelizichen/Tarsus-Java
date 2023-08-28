@@ -14,7 +14,7 @@ import com.alibaba.fastjson.JSONObject;
 
 
 @TaroStruct
-public class cacheWord implements TarsusJsonInf {
+public class cacheWord extends TarsusJsonInf {
     public String en_word;
     public String user_name;
     public String user_id;

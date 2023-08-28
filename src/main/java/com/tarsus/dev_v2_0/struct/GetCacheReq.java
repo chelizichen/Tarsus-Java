@@ -14,7 +14,7 @@ import com.alibaba.fastjson.JSONObject;
 
 
 @TaroStruct
-public class GetCacheReq implements TarsusJsonInf {
+public class GetCacheReq extends TarsusJsonInf {
     public String key;
     public List<String> keys;
 
