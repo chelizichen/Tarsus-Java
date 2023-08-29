@@ -13,7 +13,7 @@ public class TarsusBaseReflect {
     public TarsusBaseReflect() {
         TarsusReflect annotation = this.getClass().getAnnotation(TarsusReflect.class);
         this.proxy = annotation.proxy();
-        this.interFace = annotation.reflect();
+        this.interFace = annotation.interFace();
 
     }
 

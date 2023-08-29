@@ -46,7 +46,9 @@ public class TaroInterFaceImpl implements TaroInterFace {
             data.code = "2";
             data.message = "ok";
             // 由于是异步函数，此时函数已经执行完毕了
-            Tarsus.asyncObserver.emit(req.__eid__,data);
+            Tarsus.asyncObserver.emit(req.__eid__,data).thenAccept(resp->{
+//                Tarsus.reset(res);
+            });
             return data;
         });
         res.data = userStream.collect(Collectors.toList());

@@ -6,7 +6,7 @@ import com.tarsus.lib.lib_decorator.ms.TarsusInterFace;
 import com.tarsus.lib.lib_decorator.ms.TarsusReflect;
 import com.tarsus.lib.main_control.load_server.impl.TarsusBaseReflect;
 
-@TarsusReflect(proxy = "user", reflect = "cache")
+@TarsusReflect(proxy = "user", interFace = "cache")
 public class CacheImpl extends TarsusBaseReflect implements CacheInf {
 
     @Override
