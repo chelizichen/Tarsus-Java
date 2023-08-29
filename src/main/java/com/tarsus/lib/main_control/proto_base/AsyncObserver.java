@@ -1,26 +1,24 @@
 package com.tarsus.lib.main_control.proto_base;
 
-import com.tarsus.lib.main_control.load_server.TarsusJsonInf;
+import com.tarsus.lib.main_control.load_server.TarsusBodyABS;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import java.util.function.Function;
 
 public class AsyncObserver{
-    private final Map<String, Function<TarsusJsonInf, CompletableFuture<TarsusJsonInf>>> listenersMap = new HashMap<>();
+    private final Map<String, Function<TarsusBodyABS, CompletableFuture<TarsusBodyABS>>> listenersMap = new HashMap<>();
 
     // 注册一个监听器
-    public void on(String uid, Function<TarsusJsonInf, CompletableFuture<TarsusJsonInf>> listener) {
+    public void on(String uid, Function<TarsusBodyABS, CompletableFuture<TarsusBodyABS>> listener) {
         listenersMap.put(uid,listener);
     }
 
     // 异步地发出一个事件，并返回每个监听器的返回值的CompletableFuture列表
-    public CompletableFuture<TarsusJsonInf> emit(String eid, TarsusJsonInf data) {
-        Function<TarsusJsonInf, CompletableFuture<TarsusJsonInf>> listeners = listenersMap.get(eid);
+    public CompletableFuture<TarsusBodyABS> emit(String eid, TarsusBodyABS data) {
+        Function<TarsusBodyABS, CompletableFuture<TarsusBodyABS>> listeners = listenersMap.get(eid);
         this.listenersMap.remove(eid);
         if (listeners != null) {
             return listeners.apply(data);

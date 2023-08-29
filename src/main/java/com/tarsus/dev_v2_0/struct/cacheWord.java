@@ -2,19 +2,16 @@
 package com.tarsus.dev_v2_0.struct;
 
 import com.tarsus.lib.lib_decorator.struct.TaroStruct;
-import com.tarsus.lib.main_control.load_server.TarsusJsonInf;
+import com.tarsus.lib.main_control.load_server.TarsusBodyABS;
 import com.tarsus.lib.main_control.load_server.impl.TarsusStream;
-import com.alibaba.fastjson.JSON;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
 
 import com.alibaba.fastjson.JSONObject;
 
 
 @TaroStruct
-public class cacheWord extends TarsusJsonInf {
+public class cacheWord extends TarsusBodyABS {
     public String en_word;
     public String user_name;
     public String user_id;

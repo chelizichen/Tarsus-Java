@@ -2,7 +2,7 @@ package com.tarsus.lib.main_control.proto_base;
 
 import com.alibaba.fastjson.JSON;
 import com.tarsus.lib.main_control.load_manager.SingletonRegistry;
-import com.tarsus.lib.main_control.load_server.TarsusJsonInf;
+import com.tarsus.lib.main_control.load_server.TarsusBodyABS;
 import com.tarsus.lib.main_control.load_server.impl.Tarsus;
 import com.tarsus.lib.main_control.load_server.impl.TarsusErr;
 import com.tarsus.lib.main_control.load_server.impl.TarsusStream;
@@ -57,11 +57,11 @@ public class Receive_Data {
             return stringBuffer;
         }
 
-        Class<TarsusJsonInf> request$class = (Class<TarsusJsonInf>) TarsusStream.StreamMap.get(parameterTypes[0].getSimpleName());
+        Class<TarsusBodyABS> request$class = (Class<TarsusBodyABS>) TarsusStream.StreamMap.get(parameterTypes[0].getSimpleName());
         Constructor<?> declaredConstructor = request$class.getConstructor(List.class);
 
         // 请求Request
-        TarsusJsonInf RequestInstance = (TarsusJsonInf) declaredConstructor.newInstance(args);
+        TarsusBodyABS RequestInstance = (TarsusBodyABS) declaredConstructor.newInstance(args);
         RequestInstance.__eid__ = getId;
         $params.add(RequestInstance);
         // 如果注册过了 则代表为跨服务调用的方法，执行callback
@@ -80,13 +80,13 @@ public class Receive_Data {
             });
         }
 
-        Class<TarsusJsonInf> response$class = (Class<TarsusJsonInf>) TarsusStream.StreamMap.get(parameterTypes[1].getSimpleName());
+        Class<TarsusBodyABS> response$class = (Class<TarsusBodyABS>) TarsusStream.StreamMap.get(parameterTypes[1].getSimpleName());
         Constructor<?> noArgsConst = response$class.getConstructor();
-        TarsusJsonInf ResponseInstance =(TarsusJsonInf) noArgsConst.newInstance();
+        TarsusBodyABS ResponseInstance =(TarsusBodyABS) noArgsConst.newInstance();
         ResponseInstance.__eid__ = getId;
         $params.add(ResponseInstance);
 
-        TarsusJsonInf data = (TarsusJsonInf) $method.invoke($interface, $params.get(0), $params.get(1));
+        TarsusBodyABS data = (TarsusBodyABS) $method.invoke($interface, $params.get(0), $params.get(1));
         Class<?> return$class = $method.getReturnType();
 
         if (return$class != response$class) {
