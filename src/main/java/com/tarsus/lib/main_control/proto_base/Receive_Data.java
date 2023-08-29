@@ -7,6 +7,7 @@ import com.tarsus.lib.main_control.load_server.impl.Tarsus;
 import com.tarsus.lib.main_control.load_server.impl.TarsusErr;
 import com.tarsus.lib.main_control.load_server.impl.TarsusStream;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -26,6 +27,7 @@ public class Receive_Data {
     public StringBuffer invoke(StringBuffer stf) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
         final String getId = stf.substring(0, 8);
+
 
         // 如果含有UID ，则代表为跨服务请求的返回
         // 如果没有，则全局先注册一个
@@ -66,6 +68,16 @@ public class Receive_Data {
         if(Tarsus.asyncObserver.has(getId)){
             Tarsus.asyncObserver.emit(getId,RequestInstance);
             return null;
+        }else {
+            // 添加注册监听事件
+            Tarsus.asyncObserver.on(getId,tarsusJsonInf -> {
+                try {
+                    Tarsus.reset(tarsusJsonInf.json());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                return null;
+            });
         }
 
         Class<TarsusJsonInf> response$class = (Class<TarsusJsonInf>) TarsusStream.StreamMap.get(parameterTypes[1].getSimpleName());
@@ -83,7 +95,7 @@ public class Receive_Data {
             return stringBuffer;
         }
         stringBuffer.append(data.json());
-        System.out.println("return - data " + stringBuffer.toString());
+        System.out.println("return - data " + stringBuffer);
         return stringBuffer;
     }
 
