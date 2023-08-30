@@ -10,9 +10,10 @@ import java.util.function.Function;
 
 public class AsyncObserver<T extends TarsusBodyABS>{
     private final Map<String, Function<T, CompletableFuture<T>>> listenersMap = new HashMap<>();
-
+    private final Map<String,Class<?>> ResponseMap = new HashMap<>();
     // 注册一个监听器
     public void on(String uid, Function<T, CompletableFuture<T>> listener) {
+        System.out.println("监听ID "+ uid);
         listenersMap.put(uid,listener);
     }
 
@@ -20,10 +21,18 @@ public class AsyncObserver<T extends TarsusBodyABS>{
     public CompletableFuture<T> emit(String eid, T data) {
         Function<T, CompletableFuture<T>> listeners = listenersMap.get(eid);
         this.listenersMap.remove(eid);
+        this.ResponseMap.remove(eid);
         if (listeners != null) {
             return listeners.apply(data);
         }
         return null;
+    }
+
+    public void onResponse(String uid,Class<?> clazz){
+        ResponseMap.put(uid,clazz);
+    }
+    public Class<?> getResponse(String uid){
+        return ResponseMap.get(uid);
     }
 
     public void delete(String uid){

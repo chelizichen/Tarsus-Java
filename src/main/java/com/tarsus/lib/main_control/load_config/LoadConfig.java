@@ -5,6 +5,7 @@ import com.tarsus.lib.lib_util.ServantUtil;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.HashSet;
@@ -19,16 +20,24 @@ public class LoadConfig {
     public static String packageName;
 
     public LoadConfig() {
-        InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream("tarsus.config.yaml");
-        Yaml yaml = new Yaml();
-        TarsusConfig tarsusConfig = yaml.loadAs(resourceAsStream, TarsusConfig.class);
-        Parse2Servant parse = ServantUtil.parse(tarsusConfig.server.project);
+        try{
+            InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream("tarsus.config.yaml");
+            if (resourceAsStream == null) {
+                throw new FileNotFoundException("Could not find 'tarsus.config.yaml'");
+            }
+            Yaml yaml = new Yaml();
+            TarsusConfig tarsusConfig = yaml.loadAs(resourceAsStream, TarsusConfig.class);
+            Parse2Servant parse = ServantUtil.parse(tarsusConfig.server.project);
 
-        this.port = parse.port;
-        this.tarsusConfig = tarsusConfig;
+            this.port = parse.port;
+            this.tarsusConfig = tarsusConfig;
 
-        LoadConfig.publicPath = tarsusConfig.server.aliases.get("publicPath");
-        LoadConfig.struct = tarsusConfig.server.aliases.get("struct");
+            LoadConfig.publicPath = tarsusConfig.server.aliases.get("publicPath");
+            LoadConfig.struct = tarsusConfig.server.aliases.get("struct");
+        }catch (FileNotFoundException e){
+            System.out.println(e);
+        }
+
     }
 
 

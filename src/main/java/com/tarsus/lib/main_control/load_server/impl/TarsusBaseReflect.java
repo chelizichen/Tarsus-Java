@@ -18,6 +18,6 @@ public class TarsusBaseReflect {
     }
 
     public <M extends String, T extends TarsusBodyABS, R extends TarsusBodyABS> Transmit_Data ProxySendRequest(M method, T Request, R Response, Function<R, R> callback) {
-        return new Transmit_Data<>(this.interFace, this.proxy, method, Request.getClass().getSimpleName(), Request, Response, callback);
+        return new Transmit_Data<>(this.proxy, this.interFace, method, Request.getClass().getSimpleName(), Request, Response, callback);
     }
 }

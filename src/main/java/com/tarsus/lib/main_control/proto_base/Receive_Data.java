@@ -1,6 +1,7 @@
 package com.tarsus.lib.main_control.proto_base;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.tarsus.lib.main_control.load_manager.SingletonRegistry;
 import com.tarsus.lib.main_control.load_server.TarsusBodyABS;
 import com.tarsus.lib.main_control.load_server.impl.Tarsus;
@@ -25,9 +26,15 @@ public class Receive_Data {
     // 当跨服务调用时，会在该系统中生成一个唯一 eid
     // 由于大部分是同步方法，所以当异步方法时，没办法去做类似同步的return ，否则会发生阻塞
     public StringBuffer invoke(StringBuffer stf) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-
+        System.out.println("recieve-data " + stf);
         final String getId = stf.substring(0, 8);
-
+        if (Tarsus.asyncObserver.has(getId)) {
+            String body = stf.substring(8, stf.length() - 8);
+            Class<?> ResponseClass = Tarsus.asyncObserver.getResponse(getId);
+            Object object = JSONObject.parseObject(body,ResponseClass);
+            Tarsus.asyncObserver.emit(getId, (TarsusBodyABS) object);
+            return null;
+        }
 
         // 如果含有UID ，则代表为跨服务请求的返回
         // 如果没有，则全局先注册一个
@@ -65,29 +72,28 @@ public class Receive_Data {
         RequestInstance.__eid__ = getId;
         $params.add(RequestInstance);
         // 如果注册过了 则代表为跨服务调用的方法，执行callback
-        if(Tarsus.asyncObserver.has(getId)){
-            Tarsus.asyncObserver.emit(getId,RequestInstance);
+        Tarsus.asyncObserver.on(getId, tarsusJsonInf -> {
+            try {
+                TarsusBodyABS parseToBody = (TarsusBodyABS) tarsusJsonInf;
+                String id = getId;
+                String body = id + parseToBody.json();
+                Tarsus.reset(body);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             return null;
-        }else {
-            // 添加注册监听事件
-            Tarsus.asyncObserver.on(getId,tarsusJsonInf -> {
-                try {
-                    TarsusBodyABS parseToBody = (TarsusBodyABS) tarsusJsonInf;
-                    Tarsus.reset(parseToBody.json());
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                return null;
-            });
-        }
-
+        });
         Class<TarsusBodyABS> response$class = (Class<TarsusBodyABS>) TarsusStream.StreamMap.get(parameterTypes[1].getSimpleName());
         Constructor<?> noArgsConst = response$class.getConstructor();
-        TarsusBodyABS ResponseInstance =(TarsusBodyABS) noArgsConst.newInstance();
+        TarsusBodyABS ResponseInstance = (TarsusBodyABS) noArgsConst.newInstance();
         ResponseInstance.__eid__ = getId;
         $params.add(ResponseInstance);
 
-        TarsusBodyABS data = (TarsusBodyABS) $method.invoke($interface, $params.get(0), $params.get(1));
+        Object data = $method.invoke($interface, $params.get(0), $params.get(1));
+        if (data == null) {
+            return null;
+        }
+        TarsusBodyABS body = (TarsusBodyABS) data;
         Class<?> return$class = $method.getReturnType();
 
         if (return$class != response$class) {
@@ -95,8 +101,7 @@ public class Receive_Data {
             stringBuffer.append($err);
             return stringBuffer;
         }
-        stringBuffer.append(data.json());
-        System.out.println("return - data " + stringBuffer);
+        stringBuffer.append(body.json());
         return stringBuffer;
     }
 

@@ -8,5 +8,4 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE,ElementType.CONSTRUCTOR})
 public @interface TarsusMsApplication {
-    public int port() default  10024;
 }

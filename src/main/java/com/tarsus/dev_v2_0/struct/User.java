@@ -47,5 +47,20 @@ public class User extends TarsusBodyABS {
         Object o = JSONObject.toJSON(this);
         return o.toString();
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", role_name='" + role_name + '\'' +
+                ", level='" + level + '\'' +
+                ", create_time='" + create_time + '\'' +
+                ", update_time='" + update_time + '\'' +
+                '}';
+    }
 }
   
