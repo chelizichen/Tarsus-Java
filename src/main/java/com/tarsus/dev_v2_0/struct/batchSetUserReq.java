@@ -1,4 +1,3 @@
-
 package com.tarsus.dev_v2_0.struct;
 
 import com.alibaba.fastjson.JSONObject;
@@ -10,21 +9,21 @@ import java.util.List;
 
 
 @TaroStruct
-public class GetUserByIdReq extends TarsusBodyABS {
-    public Integer id;
-    public Basic basic;
+public class batchSetUserReq extends TarsusBodyABS {
+    public List<Integer> ids;
+    public User info;
 
 
     // ListConstructor
-    public GetUserByIdReq(List<?> list) {
-        TarsusStream _tarsusStream = new TarsusStream(list, "GetUserByIdReq");
-        this.id = _tarsusStream.read_int(1);
-        this.basic = _tarsusStream.read_struct(2, "Basic");
+    public batchSetUserReq(List<?> list) {
+        TarsusStream _tarsusStream = new TarsusStream(list, "batchSetUserReq");
+        this.ids = _tarsusStream.read_list(1, "List<int>");
+        this.info = _tarsusStream.read_struct(2, "User");
 
     }
 
     // NoArgsConstructor
-    public GetUserByIdReq() {
+    public batchSetUserReq() {
 
     }
 
@@ -35,3 +34,4 @@ public class GetUserByIdReq extends TarsusBodyABS {
         return o.toString();
     }
 }
+  

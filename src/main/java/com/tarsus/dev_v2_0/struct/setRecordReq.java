@@ -9,19 +9,21 @@ import java.util.List;
 
 
 @TaroStruct
-public class getWordsByIdsReq extends TarsusBodyABS {
-    public List<Integer> ids;
+public class setRecordReq extends TarsusBodyABS {
+    public Integer user_id;
+    public String record_time;
 
 
     // ListConstructor
-    public getWordsByIdsReq(List<?> list) {
-        TarsusStream _tarsusStream = new TarsusStream(list, "getWordsByIdsReq");
-        this.ids = _tarsusStream.read_list(1, "List<int>");
+    public setRecordReq(List<?> list) {
+        TarsusStream _tarsusStream = new TarsusStream(list, "setRecordReq");
+        this.user_id = _tarsusStream.read_int(1);
+        this.record_time = _tarsusStream.read_string(2);
 
     }
 
     // NoArgsConstructor
-    public getWordsByIdsReq() {
+    public setRecordReq() {
 
     }
 

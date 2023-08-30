@@ -1,0 +1,88 @@
+/**
+* 记录与打卡相关的结构体
+*/
+
+java_struct_package = com.tarsus.dev_v2_0.struct.*;
+java_inf_package =  com.tarsus.dev_v2_0.taro;
+
+struct UserParams  {
+
+    // 记录
+    User              :     {
+        1   id              :     int;
+        2   username        :     string; //
+        3   password        :     string; //
+        4   email           :     string; //
+        5   phone           :     string; //
+        6   role_name       :     string; //
+        7   level           :     string; //
+        8   create_time     :     string; //
+        9   update_time     :     string; //
+    };
+
+    // 根据ID查询
+    queryIdReq         :    {
+        1   id            :     int;    // 查询用户
+    };
+
+    queryIdsReq         :    {
+        1   ids            :     List<int>;    // 查询用户
+    };
+
+    userBaseInfo        :   {
+        1   id          :   int;
+        2   user_name   :   string;
+    };
+
+    queryUsersNameRes   :   {
+        1   users      :   List<userBaseInfo>;
+    };
+
+    batchSetUserReq     :   {
+        1   ids            :     List<int>;    // 查询用户
+        2   info           :   User;
+    };
+
+    // 查询用户记录
+    getUserListReq         :    {
+        1   keyword         :   string; // 单词匹配
+        2   page            :   int;
+        3   size            :   int;
+        4   start_time      :   string;
+        5   end_time        :   string;
+    };
+
+    getUserListRes          :   {
+        1   code            :   int;
+        2   message         :   string;
+        3   list            :   List<User>;
+        4   total           :   int;
+    };
+
+    // 通用参数
+    baseRes                :     {
+        1   code          :    int;
+        2   message       :    string;
+    };
+
+    getUserByIdRes          :   {
+        1   code          :     int;
+        2   message       :     string;
+        3   data          :     User;
+    };
+
+
+};
+
+
+// 记录接口
+
+interface UserInf  {
+    int getBaseUserInfoList (Request :  queryIdsReq, Response : queryUsersNameRes);
+    int getUserList         (Request :  getUserListReq, Response : getUserListRes);
+    int getUserById         (Request  : queryIdReq, Response : getUserByIdRes);
+    int delUserById         (Request  : queryIdReq, Response : baseRes);
+    int saveUser            (Request  : User, Response : baseRes);
+    int batchDelUser        (Request  : queryIdsReq, Response : baseRes);
+    int batchSetUser        (Request  : batchSetUserReq, Response : baseRes);
+};

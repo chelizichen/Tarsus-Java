@@ -1,0 +1,89 @@
+/**
+* 单词服务相关的结构体
+*/
+
+java_struct_package = com.tarsus.dev_v2_0.struct.*;
+java_inf_package =  com.tarsus.dev_v2_0.taro;
+
+struct WordParams  {
+
+    // 保存单词
+    Word              :     {
+        1   id            :     int;
+        2   en_name       :     string; // 英文单词
+        3   create_time   :     string; // 创建时间
+        4   own_mark      :     string; // 备注
+        5   type          :     string; // 类型
+        6   total_trans   :     int;    // 翻译个数
+        7   user_id       :     int;    // 用户ID
+        8   word_translates  :  string; // JSON序列化后的单词翻译
+        9   update_time   :     string; // YYYY-MM-DD HH:mm:ss更新时间
+    };
+
+    // 单词翻译
+    WordTranslate         :    {
+        1   id            :     int;    // 单词的翻译ID key
+        2   cn_name       :     string; // 单词翻译
+        3   en_type       :     string; // 单词种类 adj n v adv
+        4   own_mark      :     string; // 备注
+        5   create_time   :     string; // 创建时间 YYYY-MM-DD hh:mm:ss
+        6   word_id       :     int;    // 单词ID
+        7   user_id       :     int;    // 用户ID
+    };
+
+
+    // 删除     ｜通用参数 
+    DelOrSaveRes                :     {
+        1   code          :     int;
+        2   message       :     string;
+    };
+
+    // 查询单词列表
+    getWordListReq          :   {
+        1   desc            :   string; // 查询时间顺序
+        2   keyword         :   string; // 单词匹配
+        3   page            :   int;
+        4   size            :   int;
+        5   start_time      :   string;
+        6   end_time        :   string;
+        7   user_id         :   int;
+        8   type            :   int;
+    };
+
+    getWordListRes          :   {
+        1   code            :   int;
+        2   list            :   List<Word>;
+        3   total           :   int;
+    };
+
+    getTranslateListReq          :   {
+        1   desc            :   string; // 查询时间顺序
+        2   keyword         :   string; // 单词匹配
+        3   page            :   int;
+        4   size            :   int;
+        5   start_time      :   string;
+        6   end_time        :   string;
+        7   user_id         :   int;
+        8   type            :   int;
+    };
+
+    getTranslateListRes          :   {
+        1   code            :   int;
+        2   list            :   List<WordTranslate>;
+        3   total           :   int;
+    };
+
+};
+
+
+// 测试接口
+
+interface WordServerInf  {
+    int getWordList      (Request : getWordListReq, Response : getWordListRes);
+    int getTranslateList (Request : getTranslateListReq, Response : getTranslateListRes);
+    int getTranslateListById (Request : queryIdReq, Response : getTranslateListRes);
+    int delWordById      (Request : queryIdReq, Response : DelOrSaveRes);
+    int delTranslateByID (Request:  queryIdReq, Response : DelOrSaveRes);
+    int saveWord         (Request : Word,   Response : DelOrSaveRes);   
+    int saveTranslate    (Request : WordTranslate,   Response : DelOrSaveRes);   
+};

@@ -1,0 +1,77 @@
+/**
+* 记录与打卡相关的结构体
+*/
+
+java_struct_package = com.tarsus.dev_v2_0.struct.*;
+java_inf_package =  com.tarsus.dev_v2_0.taro;
+
+struct PlanParams  {
+
+    // 记录
+    PlanDetail              :     {
+        1   id              :       int;    // 计划ID
+        2   user_id         :       string; // 创建时间
+        3   is_mark         :       string; // 是否打卡 0 未打卡 1 打卡
+        4   plan_start_time :       string; // 开始时间
+        5   plan_end_time   :       string; // 结束时间
+        6   create_time     :       string; // 创建时间
+    };
+
+    PlanWords           :   {
+        1   word_ids        :       string; // List<int> JSON 序列化后存入数据库
+        2   mark_date       :       string; // 打卡日期
+        3   is_mark         :       int;    // 是否打卡
+        4   user_id         :       string; // 用户ID
+        5   plan_id         :       string; // 计划ID
+        6   id              :       int;    // id
+    };
+
+    // 查询用户记录
+    getUserPlanByIdRes         :    {
+        1   user            :       User;    // 用户打卡记录
+        2   data            :       List<PlanWords>;
+        3   code            :       int;
+        4   total           :       int;
+        5   message         :       string;
+    };
+
+    getPlanDetailByIdRes    :       {
+        1   data    :   PlanDetail;
+        2   code    :   int;
+        3   message :   string;
+    };
+
+    getUserPlansRes         :       {
+        1   data    :   List<PlanDetail>;
+        2   code    :   int;
+        3   message :   string;
+        4   total   :   int;
+    };
+
+    getPlanWordsByIdRes     :       {
+         1   data    :   PlanWords;
+         2   code    :   int;
+         3   message :   string;
+    };
+};
+
+
+// 记录接口
+
+interface PlanInf  {
+    // 用户最近一次的计划
+    int getLatestPlanByUser     (Request : queryIdReq, Response :  getPlanDetailByIdRes);
+    // 批量获取计划
+    int getPlansByUser          (Request : queryIdReq, Response :  getUserPlansRes);
+    int getPlanById             (Request : queryIdReq, Response :  getPlanDetailByIdRes);
+    int getPlanWordsById        (Request : queryIdReq, Response :  getPlanWordsByIdRes);
+
+    // 签到
+    int markPlanWords   (Request:  queryIdReq, Response :  baseRes);
+    int markPlan        (Request:  queryIdReq, Response :  baseRes);
+    int delPlan         (Request:  queryIdReq, Response :  baseRes);
+    int delPlanWords    (Request:  queryIdReq, Response :  baseRes);
+
+    int savePlan        (Request:  PlanDetail, Response :  baseRes);
+    int savePlanWords   (Request:  PlanWords , Response :  baseRes);
+};

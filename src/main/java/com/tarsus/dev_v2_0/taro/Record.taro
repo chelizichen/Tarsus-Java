@@ -1,0 +1,61 @@
+/**
+* 记录与打卡相关的结构体
+*/
+
+java_struct_package = com.tarsus.dev_v2_0.struct.*;
+java_inf_package =  com.tarsus.dev_v2_0.taro;
+
+struct RecordParams  {
+
+    // 记录
+    Record              :     {
+        1   id            :     int;
+        2   create_time   :     string; // 创建时间
+        3   is_register   :     string; // 是否打卡 0 未打卡 1 打卡
+        4   user_id       :     string; // 用户ID
+    };
+
+    // 根据ID查询
+    queryIdReq         :    {
+        1   id            :     int;    // 用户打卡记录
+    };
+
+    // 查询用户记录
+    getUserRecordRes         :    {
+        1   user_id      :     int;    // 用户打卡记录
+        2   data         :     List<Record>;
+        3   code         :     int;
+        4   total        :     int;
+        5   message      :     string;
+    };
+
+    // 通用参数
+    baseRes                :     {
+        1   code          :    int;
+        2   message       :    string;
+    };
+
+    // 手动补签
+    setRecordReq           :     {
+        1   user_id       :     int;
+        2   record_time     :     string; // YYYY-MM-DD
+    };
+
+    getCurrRecordLenRes         :   {
+        1   record_length   :   int; // 记录，当前时间
+        2   user_name       :   int; // 用户名
+        3   code            :   int;
+        4   message         :   int;
+    };
+};
+
+
+// 记录接口
+
+interface RecordInf  {
+    int getUserRecord      (Request : queryIdReq, Response : getUserRecordRes);
+    int addUserRecord      (Request : queryIdReq, Response : baseRes);
+    int delUserRecord      (Request : queryIdReq, Response : baseRes);
+    int setRecord          (Request : setRecordReq,Response: baseRes);
+    int getCurrRecordLen   (Request : queryIdReq,   Response : getCurrRecordLenRes);
+};

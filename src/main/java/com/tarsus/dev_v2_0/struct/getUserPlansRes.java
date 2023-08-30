@@ -9,25 +9,25 @@ import java.util.List;
 
 
 @TaroStruct
-public class getWordsByIdsRes extends TarsusBodyABS {
+public class getUserPlansRes extends TarsusBodyABS {
+    public List<PlanDetail> data;
     public Integer code;
     public String message;
-    public List<cacheWord> list;
     public Integer total;
 
 
     // ListConstructor
-    public getWordsByIdsRes(List<?> list) {
-        TarsusStream _tarsusStream = new TarsusStream(list, "getWordsByIdsRes");
-        this.code = _tarsusStream.read_int(1);
-        this.message = _tarsusStream.read_string(2);
-        this.list = _tarsusStream.read_struct(3, "List<cacheWord>");
+    public getUserPlansRes(List<?> list) {
+        TarsusStream _tarsusStream = new TarsusStream(list, "getUserPlansRes");
+        this.data = _tarsusStream.read_struct(1, "List<PlanDetail>");
+        this.code = _tarsusStream.read_int(2);
+        this.message = _tarsusStream.read_string(3);
         this.total = _tarsusStream.read_int(4);
 
     }
 
     // NoArgsConstructor
-    public getWordsByIdsRes() {
+    public getUserPlansRes() {
 
     }
 

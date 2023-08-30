@@ -1,4 +1,3 @@
-
 package com.tarsus.dev_v2_0.struct;
 
 import com.alibaba.fastjson.JSONObject;
@@ -10,23 +9,21 @@ import java.util.List;
 
 
 @TaroStruct
-public class GetUserListRes extends TarsusBodyABS {
+public class baseRes extends TarsusBodyABS {
     public Integer code;
     public String message;
-    public List<User> data;
 
 
     // ListConstructor
-    public GetUserListRes(List<?> list) {
-        TarsusStream _tarsusStream = new TarsusStream(list, "GetUserListRes");
+    public baseRes(List<?> list) {
+        TarsusStream _tarsusStream = new TarsusStream(list, "baseRes");
         this.code = _tarsusStream.read_int(1);
-        this.data = _tarsusStream.read_struct(2, "List<User>");
-        this.message = _tarsusStream.read_string(3);
+        this.message = _tarsusStream.read_string(2);
 
     }
 
     // NoArgsConstructor
-    public GetUserListRes() {
+    public baseRes() {
 
     }
 
@@ -37,3 +34,4 @@ public class GetUserListRes extends TarsusBodyABS {
         return o.toString();
     }
 }
+  

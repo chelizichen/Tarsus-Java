@@ -1,4 +1,3 @@
-
 package com.tarsus.dev_v2_0.struct;
 
 import com.alibaba.fastjson.JSONObject;
@@ -11,26 +10,35 @@ import java.util.List;
 
 @TaroStruct
 public class User extends TarsusBodyABS {
-    public String id;
-    public String name;
-    public String age;
-    public String fullName;
-    public String address;
+    public Integer id;
+    public String username;
+    public String password;
+    public String email;
+    public String phone;
+    public String role_name;
+    public String level;
+    public String create_time;
+    public String update_time;
 
 
     // ListConstructor
     public User(List<?> list) {
         TarsusStream _tarsusStream = new TarsusStream(list, "User");
-        this.id = _tarsusStream.read_string(1);
-        this.name = _tarsusStream.read_string(2);
-        this.age = _tarsusStream.read_string(3);
-        this.fullName = _tarsusStream.read_string(4);
-        this.address = _tarsusStream.read_string(5);
+        this.id = _tarsusStream.read_int(1);
+        this.username = _tarsusStream.read_string(2);
+        this.password = _tarsusStream.read_string(3);
+        this.email = _tarsusStream.read_string(4);
+        this.phone = _tarsusStream.read_string(5);
+        this.role_name = _tarsusStream.read_string(6);
+        this.level = _tarsusStream.read_string(7);
+        this.create_time = _tarsusStream.read_string(8);
+        this.update_time = _tarsusStream.read_string(9);
 
     }
 
     // NoArgsConstructor
     public User() {
+
     }
 
     // toJson
@@ -40,3 +48,4 @@ public class User extends TarsusBodyABS {
         return o.toString();
     }
 }
+  

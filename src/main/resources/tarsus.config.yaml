@@ -1,7 +1,7 @@
 server:
-  project: '@TarsusDemoProject/JavaServer -l java -t @tarsus/ms -h 127.0.0.1 -p 12013 -w 10'
+  project: '@TarsusWord/RecordServer -l java -t @tarsus/ms -h 127.0.0.1 -p 14004 -w 10'
   database:
-    url: jdbc:mysql://127.0.0.1:3306/lmr_medical?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://127.0.0.1:3306/word_server?useSSL=false&serverTimezone=UTC
     username: root
     password: 123456
     initSize: 1

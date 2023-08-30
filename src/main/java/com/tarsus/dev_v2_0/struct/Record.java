@@ -9,25 +9,25 @@ import java.util.List;
 
 
 @TaroStruct
-public class cacheWord extends TarsusBodyABS {
-    public String en_word;
-    public String user_name;
+public class Record extends TarsusBodyABS {
+    public Integer id;
+    public String create_time;
+    public String is_register;
     public String user_id;
-    public String own_mark;
 
 
     // ListConstructor
-    public cacheWord(List<?> list) {
-        TarsusStream _tarsusStream = new TarsusStream(list, "cacheWord");
-        this.en_word = _tarsusStream.read_string(1);
-        this.user_name = _tarsusStream.read_string(2);
-        this.user_id = _tarsusStream.read_string(3);
-        this.own_mark = _tarsusStream.read_string(4);
+    public Record(List<?> list) {
+        TarsusStream _tarsusStream = new TarsusStream(list, "Record");
+        this.id = _tarsusStream.read_int(1);
+        this.create_time = _tarsusStream.read_string(2);
+        this.is_register = _tarsusStream.read_string(3);
+        this.user_id = _tarsusStream.read_string(4);
 
     }
 
     // NoArgsConstructor
-    public cacheWord() {
+    public Record() {
 
     }
 

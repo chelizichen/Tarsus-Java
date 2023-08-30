@@ -1,0 +1,68 @@
+/**
+* 分享动态服务相关的结构体
+*/
+
+java_struct_package = com.tarsus.dev_v2_0.struct.*;
+java_inf_package =  com.tarsus.dev_v2_0.taro;
+
+struct ShareParams  {
+        // 查询单词列表
+    getListBaseReq          :   {
+        1   desc            :   string; // 查询时间顺序
+        2   keyword         :   string; // 单词匹配
+        3   page            :   int;
+        4   size            :   int;
+        5   start_time      :   string;
+        6   end_time        :   string;
+        7   user_id         :   int;
+        8   type            :   int;
+    };
+
+    // 保存单词
+    ShareInfo              :     {
+        1   id            :     int;
+        2   user_id     :       int; // 英文单词
+        3   create_time     :   string; // YYYY-MM-DD
+        4   img             :   string;
+        5   update_time     :   string;
+    };
+
+    ShareDetail          :     {
+        1   id              :   int;
+        2   content         :   string;
+        3   word_ids_list   :   string; // List<int> JSON序列化后传输
+        4   share_id        :   int;
+        5   update_time     :   string;
+    };
+
+    starShareReq              :   {
+        1   share_id        :   int;
+        2   num             :   int;
+    };
+
+    shareToUserReq             :   {
+        1   share_id        :   int;
+        2   user_id         :   int;
+        3   to_user_id      :   int;
+    };
+
+    getShareListRes         :   {
+        1   code            :   int;
+        2   message         :   string;
+        3   list            :   List<ShareInfo>;
+        4   total           :   int;
+    };
+
+};
+
+
+// 测试接口
+
+interface ShareInf  {
+    int getShareList      (Request : getListBaseReq, Response : getShareListRes);
+    int shareToUser      (Request : shareToUserReq, Response : baseRes);
+    int starShare      (Request : starShareReq, Response : baseRes);
+    int saveShare       (Request : ShareInfo, Response : baseRes);
+    int saveShareDetail (Request : ShareDetail, Response :baseRes);
+    int delShare        (Request : queryIdReq, Response :baseRes);
+};

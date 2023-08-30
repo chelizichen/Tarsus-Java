@@ -33,7 +33,8 @@ public class SingletonRegistry {
             boolean is$annotation = get$interface.isAnnotationPresent(TarsusInterFace.class);
             // 没加装饰器报错
             if (!is$annotation) {
-                throw new Error(get$interface.getSimpleName() + "is not annotation present as TarsusInterFace");
+                continue;
+//                throw new Error(get$interface.getSimpleName() + "is not annotation present as TarsusInterFace");
             }
             String interFace = get$interface.getAnnotation(TarsusInterFace.class).value();
             // 接口名报错
@@ -49,7 +50,7 @@ public class SingletonRegistry {
             Method[] declaredMethods = get$interface.getMethods();
             for (Method declaredMethod : declaredMethods) {
                 if (!declaredMethod.isAnnotationPresent(TarsusMethod.class)) {
-                    return;
+                    continue;
                 }
                 String name = interFace + declaredMethod.getName();
                 System.out.println("methods " + name + " load success");
