@@ -5,7 +5,7 @@ import com.tarsus.lib.main_control.load_server.TarsusBodyABS;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public class TarsusErr<T> implements TarsusBodyABS {
+public class TarsusErr<T> extends TarsusBodyABS {
     public String message;
     public Integer code;
     public T data;

@@ -8,17 +8,17 @@ import java.util.concurrent.CompletableFuture;
 
 import java.util.function.Function;
 
-public class AsyncObserver{
-    private final Map<String, Function<TarsusBodyABS, CompletableFuture<TarsusBodyABS>>> listenersMap = new HashMap<>();
+public class AsyncObserver<T extends TarsusBodyABS>{
+    private final Map<String, Function<T, CompletableFuture<T>>> listenersMap = new HashMap<>();
 
     // 注册一个监听器
-    public void on(String uid, Function<TarsusBodyABS, CompletableFuture<TarsusBodyABS>> listener) {
+    public void on(String uid, Function<T, CompletableFuture<T>> listener) {
         listenersMap.put(uid,listener);
     }
 
     // 异步地发出一个事件，并返回每个监听器的返回值的CompletableFuture列表
-    public CompletableFuture<TarsusBodyABS> emit(String eid, TarsusBodyABS data) {
-        Function<TarsusBodyABS, CompletableFuture<TarsusBodyABS>> listeners = listenersMap.get(eid);
+    public CompletableFuture<T> emit(String eid, T data) {
+        Function<T, CompletableFuture<T>> listeners = listenersMap.get(eid);
         this.listenersMap.remove(eid);
         if (listeners != null) {
             return listeners.apply(data);

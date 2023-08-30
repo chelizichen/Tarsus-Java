@@ -10,18 +10,18 @@ import java.util.UUID;
 import java.util.function.Function;
 
 @NoArgsConstructor
-public class Transmit_Data<T extends TarsusBodyABS, R extends TarsusBodyABS> extends TarsusBodyABS {
+public class Transmit_Data<T extends TarsusBodyABS> extends TarsusBodyABS {
     public String proxy;
     public String interFace;
     public String method;
     public String timeout = "60000";
     public T data;
     public String request;
-    public R Response;
+    public T Response;
     public Function callBack;
 
-    public Transmit_Data(String proxy, String interFace, String method, String request, T data, R Response, Function callBack) {
-        Transmit_Data<T, R> transmit = new Transmit_Data<T, R>();
+    public Transmit_Data(String proxy, String interFace, String method, String request, T data, T Response, Function callBack) {
+        Transmit_Data<T> transmit = new Transmit_Data<T>();
         transmit.proxy = proxy;
         transmit.interFace = interFace;
         transmit.method = method;
@@ -45,7 +45,7 @@ public class Transmit_Data<T extends TarsusBodyABS, R extends TarsusBodyABS> ext
 
     // 由网关自行判断是Java还是NodeJS ，NodeJS处已经经过 FAST-JSON序列化加速了，
     // Java这边暂时没办法去处理，所以先直接先打成JSON，data 再给NodeJS那里去处理
-    public void CrossRequest(String interFace, Transmit_Data Request, Function<TarsusBodyABS, TarsusBodyABS> callBack) throws IOException {
+    public void CrossRequest(String interFace, Transmit_Data Request, Function<T,T> callBack) throws IOException {
         String eid = UUID.randomUUID().toString().substring(0, 8);
         String json = Request.json();
         String stringBuffer = eid +
@@ -55,7 +55,7 @@ public class Transmit_Data<T extends TarsusBodyABS, R extends TarsusBodyABS> ext
         Tarsus.reset(stringBuffer);
         // 并且生成一个异步CallBack回调
         Tarsus.asyncObserver.on(eid, data ->
-            callBack.apply((TarsusBodyABS) data)
+            callBack.apply((T) data)
         );
         // 这里注册一个 eid 的事件，同步等待回调？或者再优化
     }

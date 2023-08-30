@@ -72,7 +72,8 @@ public class Receive_Data {
             // 添加注册监听事件
             Tarsus.asyncObserver.on(getId,tarsusJsonInf -> {
                 try {
-                    Tarsus.reset(tarsusJsonInf.json());
+                    TarsusBodyABS parseToBody = (TarsusBodyABS) tarsusJsonInf;
+                    Tarsus.reset(parseToBody.json());
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
