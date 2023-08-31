@@ -20,7 +20,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>com.tarsus.dev_v1_0.TarsusServer</mainClass>
+              <mainClass>dev_v1_0.TarsusServer</mainClass>
             </manifest>
           </archive>
           <descriptorRefs>
@@ -39,7 +39,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>com.tarsus.dev_v1_0.TarsusServer</mainClass>
+                  <mainClass>dev_v1_0.TarsusServer</mainClass>
                 </transformer>
               </transformers>
             </configuration>
