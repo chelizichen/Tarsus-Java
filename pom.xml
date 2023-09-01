@@ -6,7 +6,7 @@
     <groupId>io.github.chelizichen</groupId>
     <artifactId>tarsus</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.2-SNAPSHOT</version>
     <name>tarsus</name>
     <url>https://github.com/chelizichen/Tarsus-Java</url>
     <scm>
