@@ -3,13 +3,15 @@ package dev_v3_0.category;
 
 import dev_v3_0.stream.T_WStream;
 
+import java.nio.ByteBuffer;
+
 public class T_INT8 implements T_Base {
     public static String _t_className = "int8";
 
-    private final int value;
+    private final byte value;
 
     public T_INT8(int value) {
-        this.value = value;
+        this.value = (byte) value;
     }
 
     @Override
@@ -18,9 +20,10 @@ public class T_INT8 implements T_Base {
     }
 
     @Override
-    public <K> K StreamToObject() {
+    public T_Base StreamToObject(ByteBuffer buf, T_Base T_Value, Integer ByteLength) {
         return null;
     }
+
 
     @Override
     public T_Class __getClass__() {
@@ -31,7 +34,7 @@ public class T_INT8 implements T_Base {
     }
 
     @Override
-    public Object GetValue() {
+    public Byte GetValue() {
         return this.value;
     }
 }

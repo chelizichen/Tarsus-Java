@@ -5,12 +5,12 @@ import dev_v3_0.stream.T_WStream;
 
 import java.nio.ByteBuffer;
 
-public class T_INT64 implements T_Base {
-    public static String _t_className = "int64";
+public class T_Double implements T_Base {
+    public static String _t_className = "double";
 
-    private final long value;
+    private final double value;
 
-    public T_INT64(long value) {
+    public T_Double(double value) {
         this.value = value;
     }
 
@@ -24,16 +24,17 @@ public class T_INT64 implements T_Base {
         return null;
     }
 
+
     @Override
     public T_Class __getClass__() {
         T_Class tc = new T_Class();
-        tc.className = T_INT64._t_className;
-        tc.valueType = T_INT64._t_className;
+        tc.className = T_Double._t_className;
+        tc.valueType = T_Double._t_className;
         return tc;
     }
 
     @Override
-    public Long GetValue() {
+    public Double GetValue() {
         return this.value;
     }
 }

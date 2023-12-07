@@ -5,6 +5,7 @@ import dev_v3_0.category.T_Base;
 import dev_v3_0.category.T_JceStruct;
 import dev_v3_0.category.T_Vector;
 
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -13,7 +14,17 @@ public class T_WStream {
     public ByteBuffer originBuf;
     public Integer capacity;
     public Integer position;
-    public Integer tag = 0;
+    public Integer tag;
+
+    public ByteBuffer toBuf() {
+        return this.originBuf;
+    }
+
+    public T_WStream() {
+        this.capacity = 0;
+        this.position = 0;
+        this.tag = 0;
+    }
 
     public static ByteBuffer createBuffer(Integer size) {
         return ByteBuffer.allocate(size);
@@ -31,6 +42,7 @@ public class T_WStream {
         if (!tag.equals(this.tag)) {
             throw new Exception("WriteTagError");
         }
+        this.tag++;
     }
 
     public void WriteAny(Integer tag, T_Base value) throws Exception {
@@ -105,6 +117,7 @@ public class T_WStream {
             this.originBuf.put(this.position + i, sByte);
             i++;
         }
+        this.position += bytes.length;
     }
 
     public <V extends T_Base, T extends ArrayList<V>> void WriteVector(Integer tag, T ListValue, V T_Value) throws Exception {
@@ -143,6 +156,7 @@ public class T_WStream {
             this.addTag(tag);
         }
     }
+
 
     public static void main(String[] args) {
         // 创建一个容量为10的字节缓冲区
