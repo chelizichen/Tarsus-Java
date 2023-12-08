@@ -13,7 +13,7 @@ public class T_Vector<T extends T_Base> extends ArrayList<T> implements T_Base {
     public T_Vector(T T_Value){
         super();
         this._t_value = T_Value.__getClass__().className;
-        this.isJceStruct = T_Container.Value.containsKey(this._t_value);
+        this.isJceStruct = T_Container.JCE_STRUCT.containsKey(this._t_value);
     }
 
 

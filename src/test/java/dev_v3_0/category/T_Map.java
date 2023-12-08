@@ -14,8 +14,13 @@ public class T_Map<T extends T_Base> extends HashMap<String,T> implements T_Base
     public T_Map(T T_Value){
         super();
         this._t_value = T_Value.__getClass__().className;
-        this.isJceStruct = T_Container.Value.containsKey(this._t_value);
+        this.isJceStruct = T_Container.JCE_STRUCT.containsKey(this._t_value);
     }
+
+    public T_Map(){
+        super();
+    }
+
 
     @Override
     public T_WStream ObjectToStream() throws Exception {
@@ -37,7 +42,7 @@ public class T_Map<T extends T_Base> extends HashMap<String,T> implements T_Base
     }
 
     @Override
-    public Object GetValue() {
+    public T_Map GetValue() {
         return this;
     }
 }

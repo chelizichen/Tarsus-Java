@@ -10,5 +10,5 @@ public interface T_Base {
 
     T_Class __getClass__();
 
-    Object GetValue();
+    <T>T GetValue();
 }

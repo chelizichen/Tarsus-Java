@@ -5,7 +5,6 @@ import dev_v3_0.category.T_Base;
 import dev_v3_0.category.T_JceStruct;
 import dev_v3_0.category.T_Vector;
 
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -134,29 +133,48 @@ public class T_WStream {
         this.allocate(this.position);
     }
 
-    public void WriteBuf(Integer tag, Byte[] bytes) throws Exception {
+    public void WriteBuf(Integer tag, byte[] bytes) throws Exception {
+        if (tag.equals(-1)) {
+            Integer i = 0;
+            for (byte sByte : bytes) {
+                this.originBuf.put(this.position + i, sByte);
+                i++;
+            }
+        }else {
+            this.addTag(tag);
+            this.position += 4;
+            this.allocate(4);
+            this.originBuf.putInt(this.position - 4, bytes.length);
+            this.position += bytes.length;
+            this.allocate(bytes.length);
+
+            Integer i = 0;
+            for (byte sByte : bytes) {
+                this.originBuf.put(this.position + i, sByte);
+                i++;
+            }
+            this.position += bytes.length;
+        }
+
+    }
+
+    public <T extends T_JceStruct> void WriteStruct(Integer tag, T_Base value, T TW) throws Exception {
         if (!tag.equals(-1)) {
             this.addTag(tag);
         }
+        T_WStream TwInstance = (T_WStream) TW.Write.getConstructor().newInstance();
+        T_WStream serialize = TwInstance.Serialize();
         this.position += 4;
         this.allocate(4);
-        this.originBuf.putInt(this.position - 4, bytes.length);
-        this.position += bytes.length;
-        this.allocate(bytes.length);
-
-        Integer i = 0;
-        for (byte sByte : bytes) {
-            this.originBuf.put(this.position + i, sByte);
-            i++;
-        }
+        this.originBuf.putInt(this.position - 4, serialize.position);
+        this.allocate(serialize.position);
+        this.WriteBuf(-1, serialize.toBuf().array());
+        this.position += serialize.position;
     }
 
-    public void WriteStruct(Integer tag, T_Base value, T_JceStruct TW) throws Exception {
-        if (!tag.equals(-1)) {
-            this.addTag(tag);
-        }
+    T_WStream Serialize() {
+        return this;
     }
-
 
     public static void main(String[] args) {
         // 创建一个容量为10的字节缓冲区
