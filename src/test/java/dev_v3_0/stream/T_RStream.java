@@ -85,9 +85,8 @@ public class T_RStream {
     }
 
 
-    public <R extends T_RStream, W extends T_WStream, T extends T_JceStruct<R, W>, V extends T_Base> V ReadStruct(Integer tag, T jceStruct, Class<V> target) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        Class<R> read = jceStruct.Read;
-        Constructor<R> constructor = read.getConstructor(ByteBuffer.class);
+    public <R extends T_RStream, V extends T_Base> V ReadStruct(Integer tag, Class<V> target,Class<R> Read) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        Constructor<R> constructor = Read.getConstructor(ByteBuffer.class);
         this.position += 4;
         int ByteLength = this.originBuf.getInt(this.position - 4);
         ByteBuffer buffer = this.createBuffer(ByteLength);
@@ -95,7 +94,7 @@ public class T_RStream {
         System.arraycopy(this.originBuf.array(), this.position, bytes, 0, ByteLength);
         this.position += ByteLength;
         R rs = constructor.newInstance(ByteBuffer.wrap(bytes));
-        Method deserializeMethod = read.getMethod("DeSerialize");
+        Method deserializeMethod = Read.getMethod("DeSerialize");
         T_RStream deserialize = (T_RStream) deserializeMethod.invoke(rs);
         V obj = deserialize.toObj(target);
         return this.PutTagValToMap(tag, obj);
