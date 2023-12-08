@@ -2,9 +2,9 @@ package dev_v3_0.stream;
 
 
 import dev_v3_0.category.T_Base;
-import dev_v3_0.category.T_JceStruct;
 import dev_v3_0.category.T_Vector;
 
+import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -23,6 +23,7 @@ public class T_WStream {
         this.capacity = 0;
         this.position = 0;
         this.tag = 0;
+        this.originBuf = ByteBuffer.allocate(0);
     }
 
     public static ByteBuffer createBuffer(Integer size) {
@@ -133,14 +134,12 @@ public class T_WStream {
         this.allocate(this.position);
     }
 
-    public void WriteBuf(Integer tag, byte[] bytes) throws Exception {
+    public void WriteBuf(Integer tag, byte[] bytes,Integer ByteLength) throws Exception {
         if (tag.equals(-1)) {
-            Integer i = 0;
-            for (byte sByte : bytes) {
-                this.originBuf.put(this.position + i, sByte);
-                i++;
+            for (Integer i = 0; i < ByteLength; i++) {
+                this.originBuf.put(this.position + i, bytes[i]);
             }
-        }else {
+        } else {
             this.addTag(tag);
             this.position += 4;
             this.allocate(4);
@@ -158,22 +157,22 @@ public class T_WStream {
 
     }
 
-    public <T extends T_JceStruct> void WriteStruct(Integer tag, T_Base value, T TW) throws Exception {
+    public <T extends T_Base> void WriteStruct(Integer tag, T value, Class<T_WStream> TW) throws Exception {
         if (!tag.equals(-1)) {
             this.addTag(tag);
         }
-        T_WStream TwInstance = (T_WStream) TW.Write.getConstructor().newInstance();
-        T_WStream serialize = TwInstance.Serialize();
+        T_WStream TwInstance = TW.getConstructor().newInstance();
+        for (Method method : TW.getMethods()) {
+            System.out.println("method.getName() " + method.getName());
+
+        }
+        T_WStream serialize = (T_WStream) TW.getMethod("Serialize", value.getClass()).invoke(TwInstance, value);
         this.position += 4;
         this.allocate(4);
         this.originBuf.putInt(this.position - 4, serialize.position);
         this.allocate(serialize.position);
-        this.WriteBuf(-1, serialize.toBuf().array());
+        this.WriteBuf(-1, serialize.toBuf().array(),serialize.position);
         this.position += serialize.position;
-    }
-
-    T_WStream Serialize() {
-        return this;
     }
 
     public static void main(String[] args) {

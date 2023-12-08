@@ -1,12 +1,10 @@
 package dev_v3_0.test;
 
 import dev_v3_0.category.*;
-import dev_v3_0.decorator.DefineField;
 import dev_v3_0.stream.T_RStream;
 import dev_v3_0.stream.T_WStream;
 
 import java.nio.ByteBuffer;
-import java.util.HashMap;
 
 public class BasicInfo implements T_Base {
     public T_String token;
@@ -18,13 +16,13 @@ public class BasicInfo implements T_Base {
         T_Container.Set(BasicInfo._t_className, new T_JceStruct<BasicInfo.Read, BasicInfo.Write>(BasicInfo.Read.class, BasicInfo.Write.class, BasicInfo._t_className));
     }
 
-    public<T extends T_Base> BasicInfo(T_Map<T> readStreamToObj){
+    public <T extends T_Base> BasicInfo(T_Map<T> readStreamToObj) {
         // T_Map Constructor
-        this.token =  readStreamToObj.get("token").GetValue();
-        this.traceId = readStreamToObj.get("id").GetValue();
+        this.traceId = (T_INT32) readStreamToObj.get("traceId");
+        this.token = (T_String) readStreamToObj.get("token");
     }
 
-    public BasicInfo(){
+    public BasicInfo() {
         // NoArgsConstructor
     }
 
@@ -53,9 +51,9 @@ public class BasicInfo implements T_Base {
         public T_String token;
         public T_INT32 traceId;
 
-        public void ScanFields2Tag(){
-            this.Tag2Field.put(0,"token");
-            this.Tag2Field.put(1,"traceId");
+        public void ScanFields2Tag() {
+            this.Tag2Field.put(0, "token");
+            this.Tag2Field.put(1, "traceId");
         }
 
         public Read(ByteBuffer originBuf) {
