@@ -16,7 +16,7 @@ public class QueryUserByIdResp implements T_Base {
     public static String _t_className = "Struct<User>";
 
     static {
-        T_Container.Set(QueryUserByIdResp._t_className, new T_JceStruct<QueryUserByIdResp.Read, QueryUserByIdResp.Write>(QueryUserByIdResp.Read.class, QueryUserByIdResp.Write.class, QueryUserByIdResp._t_className));
+        T_Container.JCE_STRUCT.put(QueryUserByIdResp._t_className, new T_JceStruct<QueryUserByIdResp.Read, QueryUserByIdResp.Write,QueryUserByIdResp>(QueryUserByIdResp.Read.class, QueryUserByIdResp.Write.class, QueryUserByIdResp.class,QueryUserByIdResp._t_className));
     }
 
     public <T extends T_Base> QueryUserByIdResp(T_Map<T> readStreamToObj) {
@@ -27,16 +27,6 @@ public class QueryUserByIdResp implements T_Base {
 
     public QueryUserByIdResp() {
         // NoArgsConstructor
-    }
-
-    @Override
-    public T_WStream ObjectToStream() throws Exception {
-        return null;
-    }
-
-    @Override
-    public T_Base StreamToObject(ByteBuffer buf, T_Base T_Value, Integer ByteLength) {
-        return null;
     }
 
     @Override

@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Optional;
 
 public class T_Map<T extends T_Base> extends HashMap<String,T> implements T_Base {
-    static String _t_className = "Map";
+    public static String _t_className = "Map";
     public String _t_value;
     public Boolean isJceStruct;
     public T_Map(T T_Value){
@@ -21,17 +21,6 @@ public class T_Map<T extends T_Base> extends HashMap<String,T> implements T_Base
         super();
     }
 
-
-    @Override
-    public T_WStream ObjectToStream() throws Exception {
-        T_WStream ws = new T_WStream();
-        return ws;
-    }
-
-    @Override
-    public T_Map<T> StreamToObject(ByteBuffer buf, T_Base T_Value, Integer ByteLength) {
-        return null;
-    }
 
     @Override
     public T_Class __getClass__() {

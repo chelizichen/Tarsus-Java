@@ -18,7 +18,7 @@ public class User implements T_Base {
     public static String _t_className = "Struct<User>";
 
     static {
-        T_Container.Set(User._t_className, new T_JceStruct<User.Read, User.Write>(User.Read.class, User.Write.class, User._t_className));
+        T_Container.JCE_STRUCT.put(User._t_className, new T_JceStruct<User.Read, User.Write, User>(User.Read.class, User.Write.class, User.class, User._t_className));
     }
 
     public <T extends T_Base> User(T_Map<T> readStreamToObj) {
@@ -32,16 +32,6 @@ public class User implements T_Base {
 
     public User() {
         // NoArgsConstructor
-    }
-
-    @Override
-    public T_WStream ObjectToStream() throws Exception {
-        return null;
-    }
-
-    @Override
-    public T_Base StreamToObject(ByteBuffer buf, T_Base T_Value, Integer ByteLength) {
-        return null;
     }
 
     @Override

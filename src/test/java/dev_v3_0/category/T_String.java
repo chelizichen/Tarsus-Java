@@ -14,16 +14,6 @@ public class T_String implements T_Base {
         this.value = value;
     }
 
-    @Override
-    public T_WStream ObjectToStream() throws Exception {
-        return null;
-    }
-
-    @Override
-    public T_Base StreamToObject(ByteBuffer buf, T_Base T_Value, Integer ByteLength) {
-        return null;
-    }
-
 
     @Override
     public T_Class __getClass__() {

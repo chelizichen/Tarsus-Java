@@ -1,6 +1,7 @@
 package dev_v3_0.stream;
 
 import dev_v3_0.category.*;
+import io.reactivex.rxjava3.annotations.Nullable;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -41,6 +42,53 @@ public class T_RStream {
         String field = this.Tag2Field.get(tag);
         this.readStreamToObj.put(field, value);
         return value;
+    }
+
+    public T_Base ReadAny(Integer tag, T_Base type, @Nullable String T_KEY, @Nullable String T_Value) throws Exception {
+        switch (type.__getClass__().className) {
+            case "int8": {
+                return this.ReadInt8(tag);
+            }
+            case "int16": {
+                return this.ReadInt16(tag);
+            }
+            case "int32": {
+                return this.ReadInt32(tag);
+            }
+            case "int64": {
+                return this.ReadInt64(tag);
+            }
+            case "string": {
+                return this.ReadString(tag);
+            }
+//                case T_Map._t_className:{
+//                    return this.ReadMap(tag,T_KEY,T_VALUE);
+//                }
+        }
+        return type;
+    }
+    public T_Base ReadAny(Integer tag, String type, @Nullable String T_KEY, @Nullable String T_Value) throws Exception {
+        switch (type) {
+            case "int8": {
+                return this.ReadInt8(tag);
+            }
+            case "int16": {
+                return this.ReadInt16(tag);
+            }
+            case "int32": {
+                return this.ReadInt32(tag);
+            }
+            case "int64": {
+                return this.ReadInt64(tag);
+            }
+            case "string": {
+                return this.ReadString(tag);
+            }
+//                case T_Map._t_className:{
+//                    return this.ReadMap(tag,T_KEY,T_VALUE);
+//                }
+        }
+        return null;
     }
 
     public T_INT8 ReadInt8(Integer tag) {
@@ -85,7 +133,7 @@ public class T_RStream {
     }
 
 
-    public <R extends T_RStream, V extends T_Base> V ReadStruct(Integer tag, Class<V> target,Class<R> Read) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    public <R extends T_RStream, V extends T_Base> V ReadStruct(Integer tag, Class<V> target, Class<R> Read) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         Constructor<R> constructor = Read.getConstructor(ByteBuffer.class);
         this.position += 4;
         int ByteLength = this.originBuf.getInt(this.position - 4);
@@ -100,8 +148,9 @@ public class T_RStream {
         return this.PutTagValToMap(tag, obj);
     }
 
-    public <T extends T_Base> T_Vector<T> ReadVector(Integer tag, T T_TYPE) {
-        T_Vector<T> tv = new T_Vector<T>(T_TYPE);
+    public <T extends T_Base, R extends T_RStream> T_Vector<T> ReadVector(Integer tag, Class<T> T_TYPE) throws Exception {
+        Class<R> Read = T_Container.getDeclareProtoClass(T_TYPE, "read");
+        T_Vector<T> tv = new T_Vector(Read);
         this.position += 4;
         int ByteLength = this.originBuf.getInt(this.position - 4);
         if (ByteLength == 0) {
@@ -110,8 +159,7 @@ public class T_RStream {
         ByteBuffer temp = this.createBuffer(ByteLength);
         byte[] bytes = temp.array();
         System.arraycopy(this.originBuf.array(), this.position, bytes, 0, ByteLength);
-        T_Vector<T> vector = tv.StreamToObject(ByteBuffer.wrap(bytes), T_TYPE, ByteLength);
-        return vector;
+        T_Vector<T> ts = T_Vector.streamToObj(ByteBuffer.wrap(bytes), tv, ByteLength);
+        return this.PutTagValToMap(tag, ts);
     }
-
 }

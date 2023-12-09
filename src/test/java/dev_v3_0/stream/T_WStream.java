@@ -7,7 +7,6 @@ import dev_v3_0.category.T_Vector;
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 
 public class T_WStream {
     public ByteBuffer originBuf;
@@ -120,21 +119,17 @@ public class T_WStream {
         this.position += bytes.length;
     }
 
-    public <V extends T_Base, T extends ArrayList<V>> void WriteVector(Integer tag, T ListValue, V T_Value) throws Exception {
-        T_Vector<V> value = new T_Vector<>(T_Value);
-        boolean isAddAllSuccess = value.addAll(ListValue);
-        if (isAddAllSuccess) {
-            throw new Exception("add All error");
-        }
-        T_WStream ws = value.ObjectToStream();
-        Integer position = ws.position;
+    public <T extends T_Base> void WriteVector(Integer tag, T_Vector<T> value) throws Exception {
+        this.addTag(tag);
+        T_WStream ws = T_Vector.objToStream(value);
         this.position += 4;
         this.allocate(4);
-        this.originBuf.putInt(this.position - 4, position);
+        this.originBuf.putInt(this.position - 4, ws.position);
         this.allocate(this.position);
+        this.position += ws.position;
     }
 
-    public void WriteBuf(Integer tag, byte[] bytes,Integer ByteLength) throws Exception {
+    public void WriteBuf(Integer tag, byte[] bytes, Integer ByteLength) throws Exception {
         if (tag.equals(-1)) {
             for (Integer i = 0; i < ByteLength; i++) {
                 this.originBuf.put(this.position + i, bytes[i]);
@@ -171,7 +166,7 @@ public class T_WStream {
         this.allocate(4);
         this.originBuf.putInt(this.position - 4, serialize.position);
         this.allocate(serialize.position);
-        this.WriteBuf(-1, serialize.toBuf().array(),serialize.position);
+        this.WriteBuf(-1, serialize.toBuf().array(), serialize.position);
         this.position += serialize.position;
     }
 

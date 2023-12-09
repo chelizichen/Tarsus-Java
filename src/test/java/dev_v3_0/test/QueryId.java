@@ -14,7 +14,7 @@ public class QueryId implements T_Base {
     public static String _t_className = "Struct<QueryId>";
 
     static {
-        T_Container.Set(QueryId._t_className, new T_JceStruct<QueryId.Read, QueryId.Write>(QueryId.Read.class, QueryId.Write.class, QueryId._t_className));
+        T_Container.JCE_STRUCT.put(QueryId._t_className, new T_JceStruct<QueryId.Read, QueryId.Write,QueryId>(QueryId.Read.class, QueryId.Write.class, QueryId.class,QueryId._t_className));
     }
 
     public <T extends T_Base> QueryId(T_Map<T> readStreamToObj) {
@@ -24,16 +24,6 @@ public class QueryId implements T_Base {
 
     public QueryId() {
         // NoArgsConstructor
-    }
-
-    @Override
-    public T_WStream ObjectToStream() throws Exception {
-        return null;
-    }
-
-    @Override
-    public T_Base StreamToObject(ByteBuffer buf, T_Base T_Value, Integer ByteLength) {
-        return null;
     }
 
     @Override

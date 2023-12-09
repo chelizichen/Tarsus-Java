@@ -15,17 +15,6 @@ public class T_Double implements T_Base {
     }
 
     @Override
-    public T_WStream ObjectToStream() throws Exception {
-        return null;
-    }
-
-    @Override
-    public T_Base StreamToObject(ByteBuffer buf, T_Base T_Value, Integer ByteLength) {
-        return null;
-    }
-
-
-    @Override
     public T_Class __getClass__() {
         T_Class tc = new T_Class();
         tc.className = T_Double._t_className;
