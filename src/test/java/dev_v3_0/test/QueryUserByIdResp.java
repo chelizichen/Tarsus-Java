@@ -35,6 +35,11 @@ public class QueryUserByIdResp implements T_Base {
     }
 
     @Override
+    public void SetValue(Object value) {
+
+    }
+
+    @Override
     public QueryUserByIdResp GetValue() {
         return this;
     }

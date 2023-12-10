@@ -32,6 +32,11 @@ public class BasicInfo implements T_Base {
     }
 
     @Override
+    public void SetValue(Object value) {
+
+    }
+
+    @Override
     public BasicInfo GetValue() {
         return this;
     }

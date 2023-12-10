@@ -1,6 +1,8 @@
 package dev_v3_0.category;
 
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 public class T_INT8 implements T_Base {
     public static String _t_className = "int8";
 

@@ -2,9 +2,10 @@ package dev_v3_0.category;
 
 
 import dev_v3_0.stream.T_WStream;
+import lombok.NoArgsConstructor;
 
 import java.nio.ByteBuffer;
-
+@NoArgsConstructor
 public class T_INT16 implements T_Base {
     public static String _t_className = "int16";
 

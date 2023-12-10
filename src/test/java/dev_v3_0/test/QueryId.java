@@ -32,6 +32,11 @@ public class QueryId implements T_Base {
     }
 
     @Override
+    public void SetValue(Object value) {
+
+    }
+
+    @Override
     public QueryId GetValue() {
         return this;
     }

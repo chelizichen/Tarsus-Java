@@ -45,7 +45,9 @@ public class T_WStream {
     }
 
     public void WriteAny(Integer tag, T_Base value) throws Exception {
-        switch (value.__getClass__().className) {
+        String className = value.__getClass__().className;
+        System.out.println("className : " + className);
+        switch (className) {
             case "int8": {
                 this.WriteInt8(tag, (short) value.GetValue());
                 break;
@@ -71,7 +73,6 @@ public class T_WStream {
 
     public void WriteInt8(Integer tag, short value) throws Exception {
         this.addTag(tag);
-        this.tag++;
         this.position += 1;
         this.allocate(1);
         this.originBuf.put(this.position - 1, (byte) value);
@@ -87,6 +88,8 @@ public class T_WStream {
     public void WriteInt32(Integer tag, int value) throws Exception {
         this.addTag(tag);
         this.position += 4;
+        System.out.println("this.position : " + this.position);
+        System.out.println("tag : " + tag + " value " + value);
         this.allocate(4);
         this.originBuf.putInt(this.position - 4, value);
     }
@@ -126,7 +129,9 @@ public class T_WStream {
         this.allocate(4);
         this.originBuf.putInt(this.position - 4, ws.position);
         this.allocate(this.position);
+        this.WriteBuf(-1, ws.originBuf.array(),ws.position);
         this.position += ws.position;
+
     }
 
     public void WriteBuf(Integer tag, byte[] bytes, Integer ByteLength) throws Exception {

@@ -40,6 +40,11 @@ public class User implements T_Base {
     }
 
     @Override
+    public void SetValue(Object value) {
+
+    }
+
+    @Override
     public User GetValue() {
         return this;
     }

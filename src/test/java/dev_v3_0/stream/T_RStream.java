@@ -44,7 +44,7 @@ public class T_RStream {
         return value;
     }
 
-    public T_Base ReadAny(Integer tag, T_Base type, @Nullable String T_KEY, @Nullable String T_Value) throws Exception {
+    public <V>T_Base ReadAny(Integer tag, T_Base type, @Nullable Class<V> T_KEY, @Nullable String T_Value) throws Exception {
         switch (type.__getClass__().className) {
             case "int8": {
                 return this.ReadInt8(tag);
@@ -149,8 +149,8 @@ public class T_RStream {
     }
 
     public <T extends T_Base, R extends T_RStream> T_Vector<T> ReadVector(Integer tag, Class<T> T_TYPE) throws Exception {
-        Class<R> Read = T_Container.getDeclareProtoClass(T_TYPE, "read");
-        T_Vector<T> tv = new T_Vector(Read);
+//        Class<R> Read = T_Container.getDeclareProtoClass(T_TYPE, "read");
+        T_Vector<T> tv = new T_Vector(T_TYPE);
         this.position += 4;
         int ByteLength = this.originBuf.getInt(this.position - 4);
         if (ByteLength == 0) {

@@ -15,7 +15,7 @@ public class QueryIds {
     }
 
     public <T extends T_Base> QueryIds(T_Map<T> readStreamToObj) {
-
+        this.ids = (T_Vector<T_INT32>) readStreamToObj.get("ids");
     }
 
     public QueryIds() {
@@ -37,6 +37,7 @@ public class QueryIds {
 
         public Read DeSerialize() throws Exception {
             this.ids = this.ReadVector(0, T_INT32.class);
+            System.out.println("this.ids" + this.ids);
             return this;
         }
     }
@@ -52,5 +53,19 @@ public class QueryIds {
         QueryIds queryIds = new QueryIds();
         queryIds.ids = new T_Vector<>(T_INT32.class);
         queryIds.ids.push(11);
+        queryIds.ids.push(22);
+        queryIds.ids.push(33);
+
+        Write write = new Write();
+        Write serialize = write.Serialize(queryIds);
+        ByteBuffer buf = serialize.toBuf();
+        System.out.println("serialize.position : " + serialize.position);
+        Read read = new Read(buf).DeSerialize();
+        QueryIds obj = read.toObj(QueryIds.class);
+        System.out.println(obj);
+        System.out.println(obj.ids);
+        for (T_INT32 id : obj.ids) {
+            System.out.println(id.GetValue());
+        }
     }
 }

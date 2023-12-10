@@ -1,14 +1,12 @@
 package dev_v3_0.category;
 
+import lombok.NoArgsConstructor;
 
-import dev_v3_0.stream.T_WStream;
-
-import java.nio.ByteBuffer;
-
+@NoArgsConstructor
 public class T_String implements T_Base {
     public static String _t_className = "string";
 
-    private final String value;
+    private String value;
 
     public T_String(String value) {
         this.value = value;
@@ -21,6 +19,11 @@ public class T_String implements T_Base {
         tc.className = T_String._t_className;
         tc.valueType = T_String._t_className;
         return tc;
+    }
+
+    @Override
+    public void SetValue(Object value) {
+        this.value = (String) value;
     }
 
     @Override

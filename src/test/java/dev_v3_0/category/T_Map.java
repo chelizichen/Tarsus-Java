@@ -1,7 +1,10 @@
 package dev_v3_0.category;
 
+import lombok.NoArgsConstructor;
+
 import java.util.HashMap;
 
+@NoArgsConstructor
 public class T_Map<T extends T_Base> extends HashMap<String, T> implements T_Base {
     public static String _t_className = "Map";
     public String _t_value;
@@ -12,11 +15,6 @@ public class T_Map<T extends T_Base> extends HashMap<String, T> implements T_Bas
         this._t_value = T_Value.__getClass__().className;
         this.isJceStruct = T_Container.JCE_STRUCT.containsKey(this._t_value);
     }
-
-    public T_Map() {
-        super();
-    }
-
 
     @Override
     public T_Class __getClass__() {
