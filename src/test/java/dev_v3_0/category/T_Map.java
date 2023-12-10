@@ -1,23 +1,19 @@
 package dev_v3_0.category;
 
-import dev_v3_0.stream.T_WStream;
-
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Optional;
 
-public class T_Map<T extends T_Base> extends HashMap<String,T> implements T_Base {
+public class T_Map<T extends T_Base> extends HashMap<String, T> implements T_Base {
     public static String _t_className = "Map";
     public String _t_value;
     public Boolean isJceStruct;
-    public T_Map(T T_Value){
+
+    public T_Map(T T_Value) {
         super();
         this._t_value = T_Value.__getClass__().className;
         this.isJceStruct = T_Container.JCE_STRUCT.containsKey(this._t_value);
     }
 
-    public T_Map(){
+    public T_Map() {
         super();
     }
 
@@ -31,7 +27,12 @@ public class T_Map<T extends T_Base> extends HashMap<String,T> implements T_Base
     }
 
     @Override
-    public T_Map GetValue() {
+    public void SetValue(Object value) {
+        ((HashMap) value).putAll(this);
+    }
+
+    @Override
+    public T_Map<T> GetValue() {
         return this;
     }
 }

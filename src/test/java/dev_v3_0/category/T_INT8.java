@@ -1,14 +1,10 @@
 package dev_v3_0.category;
 
 
-import dev_v3_0.stream.T_WStream;
-
-import java.nio.ByteBuffer;
-
 public class T_INT8 implements T_Base {
     public static String _t_className = "int8";
 
-    private final byte value;
+    private byte value;
 
     public T_INT8(int value) {
         this.value = (byte) value;
@@ -20,6 +16,11 @@ public class T_INT8 implements T_Base {
         tc.className = T_INT8._t_className;
         tc.valueType = T_INT8._t_className;
         return tc;
+    }
+
+    @Override
+    public void SetValue(Object value) {
+        this.value = (byte) value;
     }
 
     @Override

@@ -8,7 +8,7 @@ import java.nio.ByteBuffer;
 public class T_INT16 implements T_Base {
     public static String _t_className = "int16";
 
-    private final short value;
+    private short value;
 
     public T_INT16(short value) {
         this.value = value;
@@ -20,6 +20,11 @@ public class T_INT16 implements T_Base {
         tc.className = T_INT16._t_className;
         tc.valueType = T_INT16._t_className;
         return tc;
+    }
+
+    @Override
+    public void SetValue(Object value) {
+        this.value = (short) value;
     }
 
     @Override

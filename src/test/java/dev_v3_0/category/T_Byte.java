@@ -8,7 +8,7 @@ import java.nio.ByteBuffer;
 public class T_Byte implements T_Base {
     public static String _t_className = "byte";
 
-    private final byte value;
+    private  byte value;
 
     public T_Byte(byte value) {
         this.value = value;
@@ -20,6 +20,11 @@ public class T_Byte implements T_Base {
         tc.className = T_Byte._t_className;
         tc.valueType = T_Byte._t_className;
         return tc;
+    }
+
+    @Override
+    public void SetValue(Object value) {
+        this.value = (byte) value;
     }
 
     @Override

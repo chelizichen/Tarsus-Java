@@ -1,14 +1,10 @@
 package dev_v3_0.category;
 
 
-import dev_v3_0.stream.T_WStream;
-
-import java.nio.ByteBuffer;
-
 public class T_Double implements T_Base {
     public static String _t_className = "double";
 
-    private final double value;
+    private double value;
 
     public T_Double(double value) {
         this.value = value;
@@ -20,6 +16,11 @@ public class T_Double implements T_Base {
         tc.className = T_Double._t_className;
         tc.valueType = T_Double._t_className;
         return tc;
+    }
+
+    @Override
+    public void SetValue(Object value) {
+        this.value = (double) value;
     }
 
     @Override

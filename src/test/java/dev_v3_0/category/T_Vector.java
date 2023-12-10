@@ -4,6 +4,7 @@ import dev_v3_0.stream.T_RStream;
 import dev_v3_0.stream.T_WStream;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
@@ -11,12 +12,26 @@ public class T_Vector<T extends T_Base> extends ArrayList<T> implements T_Base {
     static String _t_className = "Vector";
     public String _t_value;
     public Boolean isJceStruct;
+    public Class<T> VALUE_CLASS;
 
     public T_Vector(Class<T> T_Value) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         super();
+        this.VALUE_CLASS = T_Value;
         T_Class tc = (T_Class) T_Value.getDeclaredMethod("__getClass__").invoke(T_Value);
         this._t_value = tc.className;
         this.isJceStruct = T_Container.JCE_STRUCT.containsKey(this._t_value);
+    }
+
+    public boolean push(Object value) {
+        try {
+            T t = this.VALUE_CLASS.getConstructor().newInstance();
+            Method setValue = this.VALUE_CLASS.getDeclaredMethod("SetValue", Object.class);
+            T invoke = (T) setValue.invoke(t, value);
+            return super.add(invoke);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -25,9 +40,9 @@ public class T_Vector<T extends T_Base> extends ArrayList<T> implements T_Base {
         for (T_Base t : target) {
             if (target.isJceStruct) {
                 T_JceStruct get = T_Container.JCE_STRUCT.get(t.__getClass__().className);
-                ws.WriteStruct(ws.tag, t, get.Write);
+                ws.WriteStruct(ws.tag++, t, get.Write);
             } else {
-                ws.WriteAny(ws.tag, t);
+                ws.WriteAny(ws.tag++, t);
             }
         }
         return ws;
@@ -56,6 +71,11 @@ public class T_Vector<T extends T_Base> extends ArrayList<T> implements T_Base {
         tClass.className = T_Vector._t_className;
         tClass.valueType = this._t_value;
         return tClass;
+    }
+
+    @Override
+    public void SetValue(Object value) {
+
     }
 
     @Override
