@@ -149,7 +149,6 @@ public class T_RStream {
     }
 
     public <T extends T_Base, R extends T_RStream> T_Vector<T> ReadVector(Integer tag, Class<T> T_TYPE) throws Exception {
-//        Class<R> Read = T_Container.getDeclareProtoClass(T_TYPE, "read");
         T_Vector<T> tv = new T_Vector(T_TYPE);
         this.position += 4;
         int ByteLength = this.originBuf.getInt(this.position - 4);
@@ -161,5 +160,18 @@ public class T_RStream {
         System.arraycopy(this.originBuf.array(), this.position, bytes, 0, ByteLength);
         T_Vector<T> ts = T_Vector.streamToObj(ByteBuffer.wrap(bytes), tv, ByteLength);
         return this.PutTagValToMap(tag, ts);
+    }
+    public <T extends T_Base>T_Map<T> ReadMap(Integer tag,Class<T> T_Value) throws Exception {
+        T_Map<T> TMap = new T_Map<>(T_Value);
+        this.position += 4;
+        int ByteLength = this.originBuf.getInt(this.position - 4);
+        if (ByteLength == 0) {
+            return TMap;
+        }
+        ByteBuffer temp = this.createBuffer(ByteLength);
+        byte[] bytes = temp.array();
+        System.arraycopy(this.originBuf.array(), this.position, bytes, 0, ByteLength);
+        T_Map<T> tv = T_Map.streamToObj(ByteBuffer.wrap(bytes), TMap, ByteLength);
+        return this.PutTagValToMap(tag, tv);
     }
 }

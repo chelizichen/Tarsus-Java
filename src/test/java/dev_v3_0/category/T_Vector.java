@@ -19,8 +19,8 @@ public class T_Vector<T extends T_Base> extends ArrayList<T> implements T_Base {
 
     public T_Vector(Class<T> T_Value) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, NoSuchFieldException {
         super();
-        this.VALUE_CLASS = T_Value;
         Field T_Name = T_Value.getDeclaredField("_t_className");
+        this.VALUE_CLASS = T_Value;
         this._t_value = (String) T_Name.get(null);
         this.isJceStruct = T_Container.JCE_STRUCT.containsKey(this._t_value);
     }
