@@ -7,7 +7,7 @@ import dev_v3_0.stream.T_WStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.net.Socket;
 import java.nio.ByteBuffer;
@@ -18,7 +18,9 @@ public class T_ClientHandler implements Runnable {
     private final Socket clientSocket;
 
     public T_ClientHandler(Socket clientSocket) {
+        System.out.println("有新的链接进入");
         this.clientSocket = clientSocket;
+//        this.run();
     }
 
     @Override
@@ -26,11 +28,13 @@ public class T_ClientHandler implements Runnable {
         // 处理客户端请求的代码
         try {
             // 读取Buffer，反序列化然后INVOKE
-            BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), StandardCharsets.UTF_8));
+            InputStreamReader inputStreamReader = new InputStreamReader(clientSocket.getInputStream(), StandardCharsets.UTF_8);
+            BufferedReader reader = new BufferedReader(inputStreamReader);
             ByteBuffer RequestBuffer = BufferReaderToStream(reader);
             ByteBuffer ResponseBuffer = ReadyToRead(RequestBuffer);
-            PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true);
-            writer.write(ResponseBuffer.asCharBuffer().array());
+            OutputStream outputStream = clientSocket.getOutputStream();
+            outputStream.write(ResponseBuffer.array());
+            outputStream.flush();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -47,11 +51,13 @@ public class T_ClientHandler implements Runnable {
         T_JceStruct RequestStruct = T_Container.JCE_STRUCT.get(InvokeRequest.GetValue());
         T_Base InvokeRequestBody = rs.ReadStruct(5, RequestStruct.Base, RequestStruct.Read);
         T_JceStruct ResponseStruct = T_RPC.METHODS.get(InvokeMethod.GetValue()).get(T_RPC.Handlers.Res);
-        T_RPC.T_Context Context = new T_RPC.T_Context(ByteLength, ModuleName, InvokeMethod, InvokeRequest, new T_String(ResponseStruct._t_className), TraceId);
-        Method getModuleMethod = T_RPC.GetModuleMethod(ModuleName.GetValue(), InvokeMethod.GetValue());
+        T_String InvokeResponse = new T_String(ResponseStruct._t_className);
+        T_RPC.T_Context Context = new T_RPC.T_Context(ByteLength, ModuleName, InvokeMethod, InvokeRequest, InvokeResponse, TraceId);
+        Method getModuleMethod = T_RPC.GetModuleMethod(ModuleName.GetValue(), InvokeMethod.GetValue(), RequestStruct.Base);
         T_Base invoke = (T_Base) getModuleMethod.invoke(T_RPC.GetModule(ModuleName.GetValue()), Context, InvokeRequestBody);
         T_WStream ws = ReadyToWrite(invoke, Context);
-        return ws.originBuf;
+        System.out.println("ws.position" + ws.position);
+        return ws.toBuf();
     }
 
     public ByteBuffer BufferReaderToStream(BufferedReader reader) throws IOException {
@@ -68,10 +74,13 @@ public class T_ClientHandler implements Runnable {
         T_WStream ws = new T_WStream();
         ws.WriteString(0, Context.ModuleName.GetValue());
         ws.WriteString(1, Context.InvokeMethod.GetValue());
-        ws.WriteString(2, Context.InvokeRequest.GetValue());
+        ws.WriteString(2, Context.InvokeResponse.GetValue());
         ws.WriteVector(3, Context.TraceId);
         T_JceStruct ResponseStruct = T_Container.JCE_STRUCT.get(Context.InvokeResponse.GetValue());
         ws.WriteStruct(4, response, ResponseStruct.Write);
-        return ws;
+        T_WStream resp = new T_WStream();
+        resp.WriteInt32(0, ws.position);
+        resp.WriteBuf(-1, ws.originBuf.array(), ws.position);
+        return resp;
     }
 }

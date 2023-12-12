@@ -44,7 +44,7 @@ public class T_RStream {
         return value;
     }
 
-    public <V>T_Base ReadAny(Integer tag, T_Base type, @Nullable Class<V> T_KEY, @Nullable String T_Value) throws Exception {
+    public <V> T_Base ReadAny(Integer tag, T_Base type, @Nullable Class<V> T_KEY, @Nullable String T_Value) throws Exception {
         switch (type.__getClass__().className) {
             case "int8": {
                 return this.ReadInt8(tag);
@@ -67,6 +67,7 @@ public class T_RStream {
         }
         return type;
     }
+
     public T_Base ReadAny(Integer tag, String type, @Nullable String T_KEY, @Nullable String T_Value) throws Exception {
         switch (type) {
             case "int8": {
@@ -137,6 +138,7 @@ public class T_RStream {
         Constructor<R> constructor = Read.getConstructor(ByteBuffer.class);
         this.position += 4;
         int ByteLength = this.originBuf.getInt(this.position - 4);
+        System.out.println("ByteLength" + ByteLength);
         ByteBuffer buffer = this.createBuffer(ByteLength);
         byte[] bytes = buffer.array();
         System.arraycopy(this.originBuf.array(), this.position, bytes, 0, ByteLength);
@@ -159,9 +161,11 @@ public class T_RStream {
         byte[] bytes = temp.array();
         System.arraycopy(this.originBuf.array(), this.position, bytes, 0, ByteLength);
         T_Vector<T> ts = T_Vector.streamToObj(ByteBuffer.wrap(bytes), tv, ByteLength);
+        this.position += ByteLength;
         return this.PutTagValToMap(tag, ts);
     }
-    public <T extends T_Base>T_Map<T> ReadMap(Integer tag,Class<T> T_Value) throws Exception {
+
+    public <T extends T_Base> T_Map<T> ReadMap(Integer tag, Class<T> T_Value) throws Exception {
         T_Map<T> TMap = new T_Map<>(T_Value);
         this.position += 4;
         int ByteLength = this.originBuf.getInt(this.position - 4);

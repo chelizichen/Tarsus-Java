@@ -88,8 +88,6 @@ public class T_WStream {
     public void WriteInt32(Integer tag, int value) throws Exception {
         this.addTag(tag);
         this.position += 4;
-        System.out.println("this.position : " + this.position);
-        System.out.println("tag : " + tag + " value " + value);
         this.allocate(4);
         this.originBuf.putInt(this.position - 4, value);
     }

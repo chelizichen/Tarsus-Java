@@ -13,6 +13,13 @@ public class T_RPC {
 
     public static HashMap<String, HashMap<Handlers, T_JceStruct>> METHODS = new HashMap<String, HashMap<Handlers, T_JceStruct>>();
 
+    public static void SetMethod(String MethodName, T_JceStruct Req, T_JceStruct Res) {
+        HashMap<Handlers, T_JceStruct> handler = new HashMap<>();
+        handler.put(Handlers.Req, Req);
+        handler.put(Handlers.Res, Res);
+        T_RPC.METHODS.put(MethodName, handler);
+    }
+
     public static class T_Context {
         public T_INT32 ByteLength;
         public T_String ModuleName;
@@ -27,6 +34,7 @@ public class T_RPC {
             InvokeMethod = invokeMethod;
             InvokeRequest = invokeRequest;
             TraceId = traceId;
+            InvokeResponse = invokeResponse;
         }
     }
 
@@ -40,8 +48,8 @@ public class T_RPC {
         return T_RPC.Modules.get(Module);
     }
 
-    public static Method GetModuleMethod(String Module,String MethodName) throws NoSuchMethodException {
+    public static <T extends T_Base>Method GetModuleMethod(String Module, String MethodName,Class<T> ResponseClass) throws NoSuchMethodException {
         Object INSTANCE = T_RPC.GetModule(Module);
-        return INSTANCE.getClass().getDeclaredMethod(MethodName, T_Context.class, T_Base.class);
+        return INSTANCE.getClass().getDeclaredMethod(MethodName, T_Context.class, ResponseClass);
     }
 }

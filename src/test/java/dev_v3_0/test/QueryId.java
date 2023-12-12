@@ -14,7 +14,7 @@ public class QueryId implements T_Base {
     public static String _t_className = "Struct<QueryId>";
 
     static {
-        T_Container.JCE_STRUCT.put(QueryId._t_className, new T_JceStruct<QueryId.Read, QueryId.Write,QueryId>(QueryId.Read.class, QueryId.Write.class, QueryId.class,QueryId._t_className));
+        T_Container.JCE_STRUCT.put(QueryId._t_className, new T_JceStruct<QueryId.Read, QueryId.Write, QueryId>(QueryId.Read.class, QueryId.Write.class, QueryId.class, QueryId._t_className));
     }
 
     public <T extends T_Base> QueryId(T_Map<T> readStreamToObj) {
@@ -57,7 +57,7 @@ public class QueryId implements T_Base {
 
         public Read DeSerialize() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
             this.id = this.ReadInt32(0);
-            this.basicInfo = this.ReadStruct(1, BasicInfo.class,T_Container.JCE_STRUCT.get(BasicInfo._t_className).Read);
+            this.basicInfo = this.ReadStruct(1, BasicInfo.class, T_Container.JCE_STRUCT.get(BasicInfo._t_className).Read);
             return this;
         }
     }
@@ -83,5 +83,6 @@ public class QueryId implements T_Base {
         System.out.println("read  " + r.id.GetValue());
         System.out.println("read  " + r.basicInfo.token.GetValue());
         System.out.println("read  " + r.basicInfo.traceId.GetValue());
+
     }
 }
