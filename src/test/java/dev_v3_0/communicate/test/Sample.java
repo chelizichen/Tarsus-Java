@@ -1,21 +1,21 @@
 package dev_v3_0.communicate.test;
 
-import dev_v3_0.category.T_INT32;
-import dev_v3_0.category.T_INT8;
-import dev_v3_0.category.T_String;
+import dev_v3_0.category.T_Container;
+import dev_v3_0.category.T_JceStruct;
 import dev_v3_0.communicate.handler.T_RPC;
+import dev_v3_0.decorator.Module;
+import dev_v3_0.test.BasicInfo;
 import dev_v3_0.test.QueryId;
 import dev_v3_0.test.User;
 
-public class Sample {
-    public User getUserById(T_RPC.T_Context ctx, QueryId req){
-        User user = new User();
-        user.userId = new T_INT32(1);
-        user.userAddress = new T_String("wuhan");
-        user.userName = new T_String("cheng");
-        user.phoneNumber = new T_String("13478812281");
-        user.createTime = new T_String("2023-12-08");
-        user.status = new T_INT8(1);
-        return user;
+@Module
+public abstract class Sample {
+    static {
+        T_Container.JCE_STRUCT.put(QueryId._t_className, new T_JceStruct(QueryId.Read.class, QueryId.Write.class, QueryId.class, QueryId._t_className));
+        T_Container.JCE_STRUCT.put(User._t_className, new T_JceStruct(User.Read.class, User.Write.class, User.class, User._t_className));
+        T_Container.JCE_STRUCT.put(BasicInfo._t_className, new T_JceStruct(BasicInfo.Read.class, BasicInfo.Write.class, BasicInfo.class, BasicInfo._t_className));
+        T_RPC.SetMethod("getUserById", T_Container.JCE_STRUCT.get(QueryId._t_className), T_Container.JCE_STRUCT.get(User._t_className));
     }
+
+    public abstract User getUserById(T_RPC.T_Context ctx, QueryId req);
 }

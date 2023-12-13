@@ -1,30 +1,31 @@
 package dev_v3_0.communicate;
 
-import dev_v3_0.category.T_Container;
-import dev_v3_0.category.T_JceStruct;
 import dev_v3_0.communicate.handler.T_ClientHandler;
 import dev_v3_0.communicate.handler.T_RPC;
-import dev_v3_0.communicate.test.Sample;
-import dev_v3_0.test.BasicInfo;
-import dev_v3_0.test.QueryId;
-import dev_v3_0.test.User;
+import dev_v3_0.communicate.test.SampleImpl;
+import dev_v3_0.decorator.Module;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.channels.SocketChannel;
 
 public class T_Server {
-    static {
-        T_Container.JCE_STRUCT.put(QueryId._t_className, new T_JceStruct(QueryId.Read.class, QueryId.Write.class, QueryId.class, QueryId._t_className));
-        T_Container.JCE_STRUCT.put(User._t_className, new T_JceStruct(User.Read.class, User.Write.class, User.class, User._t_className));
-        T_Container.JCE_STRUCT.put(BasicInfo._t_className, new T_JceStruct(BasicInfo.Read.class, BasicInfo.Write.class, BasicInfo.class, BasicInfo._t_className));
-        T_RPC.SetModule("Sample", new Sample());
-        T_RPC.SetMethod("getUserById", T_Container.JCE_STRUCT.get(QueryId._t_className), T_Container.JCE_STRUCT.get(User._t_className));
-        System.out.println("初始化服务 :" + 24511);
+    private void Initialize(Class<?> clazz) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        // Step 1 先确定abstract类是否有Module注解
+        boolean annotationPresent = clazz.getSuperclass().isAnnotationPresent(Module.class);
+        if (!annotationPresent) {
+            throw new ClassNotFoundException("TargetClass is not a Module");
+        }
+        // Step 2 创造类实例
+        Object instance = clazz.getConstructor().newInstance();
+        String moduleName = clazz.getSimpleName();
+        System.out.println("Module: " + moduleName + " is Load Success");
+        T_RPC.SetModule(moduleName, instance);
     }
 
-    T_Server() throws IOException {
+    T_Server(Class<?> clazz) throws IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        Initialize(clazz);
         int port = 24511; // 监听的端口号
         ServerSocket serverSocket = new ServerSocket(port);
         while (true) {
@@ -37,7 +38,8 @@ public class T_Server {
         }
     }
 
-    public static void main(String[] args) throws IOException {
-        new T_Server();
+    public static void main(String[] args) throws IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        System.out.println("初始化服务 :" + 24511);
+        new T_Server(SampleImpl.class);
     }
 }
