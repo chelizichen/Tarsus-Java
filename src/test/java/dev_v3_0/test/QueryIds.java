@@ -8,7 +8,7 @@ import java.nio.ByteBuffer;
 
 public class QueryIds {
     public T_Vector<T_INT32> ids;
-    public static String _t_className = "Struct<QueryIds>";
+    public static String _t_className = "Sample.Struct<QueryIds>";
 
     static {
         T_Container.JCE_STRUCT.put(QueryIds._t_className, new T_JceStruct(QueryIds.Read.class, QueryIds.Write.class, QueryIds.class, QueryId._t_className));

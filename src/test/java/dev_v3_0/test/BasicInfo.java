@@ -10,7 +10,7 @@ public class BasicInfo implements T_Base {
     public T_String token;
     public T_INT32 traceId;
 
-    public static String _t_className = "Struct<BasicInfo>";
+    public static String _t_className = "Sample.Struct<BasicInfo>";
 
     static {
         T_Container.JCE_STRUCT.put(BasicInfo._t_className, new T_JceStruct<BasicInfo.Read, BasicInfo.Write,BasicInfo>(BasicInfo.Read.class, BasicInfo.Write.class,BasicInfo.class, BasicInfo._t_className));

@@ -13,7 +13,7 @@ public class QueryUserByIdResp implements T_Base {
     public User user;
     public T_String message;
 
-    public static String _t_className = "Struct<User>";
+    public static String _t_className = "Sample.Struct<User>";
 
     static {
         T_Container.JCE_STRUCT.put(QueryUserByIdResp._t_className, new T_JceStruct<QueryUserByIdResp.Read, QueryUserByIdResp.Write,QueryUserByIdResp>(QueryUserByIdResp.Read.class, QueryUserByIdResp.Write.class, QueryUserByIdResp.class,QueryUserByIdResp._t_className));

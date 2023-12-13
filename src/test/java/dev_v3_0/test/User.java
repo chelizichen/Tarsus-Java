@@ -15,7 +15,7 @@ public class User implements T_Base {
     public T_String userAddress;
     public T_String createTime;
     public T_INT8 status;
-    public static String _t_className = "Struct<User>";
+    public static String _t_className = "Sample.Struct<User>";
 
     static {
         T_Container.JCE_STRUCT.put(User._t_className, new T_JceStruct<User.Read, User.Write, User>(User.Read.class, User.Write.class, User.class, User._t_className));

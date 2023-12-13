@@ -11,7 +11,7 @@ public class QueryId implements T_Base {
 
     public T_INT32 id;
     public BasicInfo basicInfo;
-    public static String _t_className = "Struct<QueryId>";
+    public static String _t_className = "Sample.Struct<QueryId>";
 
     static {
         T_Container.JCE_STRUCT.put(QueryId._t_className, new T_JceStruct<QueryId.Read, QueryId.Write, QueryId>(QueryId.Read.class, QueryId.Write.class, QueryId.class, QueryId._t_className));
